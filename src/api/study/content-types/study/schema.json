@@ -1,0 +1,19 @@
+{
+  "kind": "collectionType",
+  "collectionName": "studies",
+  "info": {
+    "singularName": "study",
+    "pluralName": "studies",
+    "displayName": "Study",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "text"
+    }
+  }
+}
