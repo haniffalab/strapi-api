@@ -13,7 +13,37 @@
   "pluginOptions": {},
   "attributes": {
     "name": {
-      "type": "text"
+      "type": "string"
+    },
+    "author": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::author.author"
+    },
+    "related_urls": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::url.url"
+    },
+    "datasets": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::dataset.dataset",
+      "mappedBy": "study"
+    },
+    "primary_publication": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::publication.publication"
+    },
+    "publications": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::publication.publication"
+    },
+    "slug": {
+      "type": "uid",
+      "required": true
     }
   }
 }

@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "analyses",
+  "info": {
+    "singularName": "analysis",
+    "pluralName": "analyses",
+    "displayName": "Analysis"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    }
+  }
+}

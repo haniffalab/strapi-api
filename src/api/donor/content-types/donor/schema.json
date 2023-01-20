@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "donors",
+  "info": {
+    "singularName": "donor",
+    "pluralName": "donors",
+    "displayName": "Donor"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    }
+  }
+}
