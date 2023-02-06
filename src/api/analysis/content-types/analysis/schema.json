@@ -4,7 +4,8 @@
   "info": {
     "singularName": "analysis",
     "pluralName": "analyses",
-    "displayName": "Analysis"
+    "displayName": "Analysis",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -13,6 +14,10 @@
   "attributes": {
     "title": {
       "type": "string"
+    },
+    "species": {
+      "type": "customField",
+      "customField": "plugin::ebi-ols.ncbitaxon"
     }
   }
 }
