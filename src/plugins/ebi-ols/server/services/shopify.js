@@ -4,6 +4,7 @@ const pluginId = require('../../admin/src/pluginId');
 const transformResponse = require('../utils/transform');
 
 module.exports = ({ strapi }) => {
+  return [1, 2, 3, 4, 5];
   const client = new Shopify({
     shopName: strapi.plugin(pluginId).config('shopName'),
     accessToken: strapi.plugin(pluginId).config('accessToken'),

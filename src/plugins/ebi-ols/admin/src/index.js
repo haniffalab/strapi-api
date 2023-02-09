@@ -1,6 +1,6 @@
 import Multiselect from "./components/Multiselect";
-import multipleProducts from "./fields/multiple-products";
-import singleProduct from "./fields/ncbitaxon";
+import uberon from "./fields/uberon";
+import ncbitaxon from "./fields/ncbitaxon";
 
 export default {
   register(app) {
@@ -9,7 +9,7 @@ export default {
       component: Multiselect,
     });
 
-    app.customFields.register(singleProduct);
-    app.customFields.register(multipleProducts);
+    app.customFields.register(uberon);
+    app.customFields.register(ncbitaxon);
   },
 };

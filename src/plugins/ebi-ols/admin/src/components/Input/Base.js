@@ -25,7 +25,7 @@ const Callout = styled(Stack)`
   padding: 1rem;
   border: 1px solid
     ${({ theme, variant }) =>
-      variant === 'error' ? theme.colors.danger200 : theme.colors.warning200};
+    variant === 'error' ? theme.colors.danger200 : theme.colors.warning200};
   background-color: ${({ theme, variant }) =>
     variant === 'error' ? theme.colors.danger100 : theme.colors.warning100};
 `;
@@ -34,15 +34,7 @@ const Input = ({ name, multiple, attribute, onChange, value, error }) => {
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const fetchProducts = async (pageParam) => {
-    if (pageParam) return await request(`/${pluginId}/products`, { params: pageParam });
-    else
-      return await request(`/${pluginId}/products`, {
-        params: {
-          ...attribute.options,
-          limit: 12,
-          fields: Array.from(new Set([...attribute.options.fields, 'id', 'title', 'image'])),
-        },
-      });
+    return [1, 2, 3, 4, 5];
   };
 
   const {

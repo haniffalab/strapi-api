@@ -11,7 +11,7 @@ module.exports = async ({ strapi }) => {
 
   strapi.customFields.register({
     plugin: pluginId,
-    name: 'multiple-products',
+    name: 'uberon',
     type: 'json',
   });
 };

@@ -5,6 +5,7 @@ module.exports = {
   getProducts: async (ctx) => {
     const query = getProductsParamsSchema.validateSync(ctx.query);
     const products = await strapi.plugin(pluginId).service('shopify').getProducts(query);
+    console.log(products);
     return products;
   },
   getProduct: async (ctx) => {

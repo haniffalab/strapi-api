@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import options from './options';
 
 export default {
-  name: 'multiple-products',
+  name: 'uberon',
   pluginId,
   type: 'json',
   icon: ShopifyIcon,
@@ -13,11 +13,11 @@ export default {
     Input: async () => import('../components/Input/Multiple'),
   },
   intlLabel: {
-    id: getTrad('custom-fields.multiple-products.label'),
-    defaultMessage: 'EBI – Multiple Products',
+    id: getTrad('custom-fields.uberon.label'),
+    defaultMessage: 'EBI OLS - Uber-anatomy ontology',
   },
   intlDescription: {
-    id: getTrad('custom-fields.multiple-products.description'),
+    id: getTrad('custom-fields.uberon.description'),
     defaultMessage: 'Select multiple products from Shopify',
   },
   multiple: true,

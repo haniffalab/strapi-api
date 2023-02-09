@@ -12,9 +12,9 @@
   },
   "strapi": {
     "name": "ebi-ols",
-    "description": "Use your Shopify data within Strapi",
+    "description": "Use the EMBL-EBI Ontology Lookup Service within Strapi",
     "kind": "plugin",
-    "displayName": "Shopify Fields"
+    "displayName": "EBI OLS"
   },
   "license": "MIT",
   "dependencies": {

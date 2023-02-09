@@ -14,10 +14,6 @@
   "attributes": {
     "title": {
       "type": "string"
-    },
-    "species": {
-      "type": "customField",
-      "customField": "plugin::ebi-ols.ncbitaxon"
     }
   }
 }
