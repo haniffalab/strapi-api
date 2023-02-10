@@ -1,4 +1,4 @@
 {
-    "country-select.label": "Country",
-    "country-select.description": "Select any country"
+    "ontology-term-select.label": "Ontology Term",
+    "ontology-term-select.description": "Select an ontology term"
 }

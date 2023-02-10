@@ -13,7 +13,7 @@ const IconBox = styled(Flex)`
     }
 `;
 
-const CountrySelectIcon = () => {
+const OntologyTermSelectIcon = () => {
     return (
         <IconBox justifyContent="center" alignItems="center" width={7} height={6} hasRadius aria-hidden>
             <Icon as={Globe} />
@@ -21,4 +21,4 @@ const CountrySelectIcon = () => {
     );
 };
 
-export default CountrySelectIcon;
+export default OntologyTermSelectIcon;

@@ -15,12 +15,9 @@
     "title": {
       "type": "string"
     },
-    "test": {
+    "ont": {
       "type": "customField",
-      "customField": "plugin::ebi-ols.country"
-    },
-    "date": {
-      "type": "datetime"
+      "customField": "plugin::ebi-ols.ontology"
     }
   }
 }
