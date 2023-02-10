@@ -1,17 +1,10 @@
 'use strict';
+const plugin = require('../admin/src/pluginId')
 
-const pluginId = require('../admin/src/pluginId');
-
-module.exports = async ({ strapi }) => {
-  strapi.customFields.register({
-    plugin: pluginId,
-    name: 'ncbitaxon',
-    type: 'json',
-  });
-
-  strapi.customFields.register({
-    plugin: pluginId,
-    name: 'uberon',
-    type: 'json',
-  });
+module.exports = ({ strapi }) => {
+    strapi.customFields.register({
+        name: 'country',
+        plugin,
+        type: 'string',
+    });
 };
