@@ -1,10 +1,10 @@
 {
   "name": "strapi-plugin-ebi-ols",
-  "version": "v4.0.0-beta4",
-  "description": "Use your Shopify data within Strapi",
+  "version": "0.1.0",
+  "description": "Use the EMBL-EBI Ontology Lookup Service within Strapi",
   "author": {
-    "name": "@WalkingPizza",
-    "url": "https://github.com/WalkingPizza"
+    "name": "Dave Horsfall",
+    "url": "https://github.com/davehorsfall"
   },
   "repository": {
     "type": "git",
@@ -17,9 +17,7 @@
     "displayName": "EBI OLS"
   },
   "license": "MIT",
-  "dependencies": {
-    "shopify-api-node": "3.11.1"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "@strapi/strapi": "^4.4.0",
     "lodash": "^4.17.21",
@@ -34,11 +32,7 @@
     "eslint:fix": "eslint . --fix"
   },
   "keywords": [
-    "strapi",
-    "strapi plugin",
-    "shopify",
-    "custom fields",
-    "ecommerce"
+    "strapi"
   ],
   "devDependencies": {
     "@strapi-community/eslint-config": "0.4.3",

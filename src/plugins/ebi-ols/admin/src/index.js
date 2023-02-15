@@ -12,11 +12,11 @@ export default {
       type: 'string',
       icon: OntologyTermSelectIcon,
       intlLabel: {
-        id: getTrad('ontology-term-select.label'),
+        id: getTrad('ebi-ols.ontology-term-select.label'),
         defaultMessage: 'Ontology',
       },
       intlDescription: {
-        id: getTrad('ontology-term-select.description'),
+        id: getTrad('ebi-ols.ontology-term-select.description'),
         defaultMessage: 'Select an ontology',
       },
       components: {
@@ -27,8 +27,8 @@ export default {
         base: [
           {
             sectionTitle: {
-              id: 'color-picker.color.section.format',
-              defaultMessage: 'Format',
+              id: getTrad('ebi-ols.ontology-term-select.section.select-terms'),
+              defaultMessage: 'Select terms',
             },
             items: [
               {
@@ -38,30 +38,74 @@ export default {
                   for the color value: hexadecimal or RGBA
                 */
                 intlLabel: {
-                  id: 'color-picker.color.format.label',
-                  defaultMessage: 'Color format',
+                  id: getTrad('ebi-ols.ontology-term-select.fields.ontology.label'),
+                  defaultMessage: 'Ontology',
                 },
-                name: 'options.format',
+                intlDescription: {
+                  id: getTrad('ebi-ols.ontology-term-select.fields.ontology.description'),
+                  defaultMessage: 'Ontology',
+                },
+                name: 'options.ontology',
                 type: 'select',
-                value: 'hex', // option selected by default
+                value: '', // option selected by default
                 options: [ // List all available "Color format" options
                   {
-                    key: 'hex',
-                    value: 'hex',
+                    key: 'uberon',
+                    value: 'uberon',
                     metadatas: {
                       intlLabel: {
-                        id: 'color-picker.color.format.hex',
-                        defaultMessage: 'Hexadecimal',
+                        id: getTrad('ebi-ols.ontology-term-select.fields.ontology.option.uberon'),
+                        defaultMessage: 'uberon',
                       },
                     },
                   },
                   {
-                    key: 'rgba',
-                    value: 'rgba',
+                    key: 'ncbitaxon',
+                    value: 'ncbitaxon',
                     metadatas: {
                       intlLabel: {
-                        id: 'color-picker.color.format.rgba',
-                        defaultMessage: 'RGBA',
+                        id: getTrad('ebi-ols.ontology-term-select.fields.ontology.option.ncbitaxon'),
+                        defaultMessage: 'ncbitaxon',
+                      },
+                    },
+                  },
+                  {
+                    key: 'mondo',
+                    value: 'mondo',
+                    metadatas: {
+                      intlLabel: {
+                        id: getTrad('ebi-ols.ontology-term-select.fields.ontology.option.mondo'),
+                        defaultMessage: 'mondo',
+                      },
+                    },
+                  },
+                  {
+                    key: 'pato',
+                    value: 'pato',
+                    metadatas: {
+                      intlLabel: {
+                        id: getTrad('ebi-ols.ontology-term-select.fields.ontology.option.pato'),
+                        defaultMessage: 'pato',
+                      },
+                    },
+                  },
+                  {
+                    key: 'efo',
+                    value: 'efo',
+                    metadatas: {
+                      intlLabel: {
+                        id: getTrad('ebi-ols.ontology-term-select.fields.ontology.option.efo'),
+                        defaultMessage: 'efo',
+                      },
+                    },
+                  },
+                  {
+                    key: 'cl',
+                    value: 'cl',
+                    metadatas: {
+                      intlLabel: {
+                        id: getTrad('ebi-ols.ontology-term-select.fields.ontology.option.cl'),
+                        defaultMessage: 'cl',
                       },
                     },
                   },

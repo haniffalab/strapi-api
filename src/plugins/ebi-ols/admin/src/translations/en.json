@@ -1,4 +1,13 @@
 {
-    "ontology-term-select.label": "Ontology Term",
-    "ontology-term-select.description": "Select an ontology term"
+    "ebi-ols.ontology-term-select.label": "Ontology Term",
+    "ebi-ols.ontology-term-select.description": "Select an ontology term",
+    "ebi-ols.ontology-term-select.section.select-terms": "Select terms",
+    "ebi-ols.ontology-term-select.fields.ontology.label": "Ontology",
+    "ebi-ols.ontology-term-select.fields.ontology.description": "Restrict search to a set of ontologies",
+    "ebi-ols.ontology-term-select.fields.ontology.option.uberon": "Uber-anatomy ontology",
+    "ebi-ols.ontology-term-select.fields.ontology.option.ncbitaxon": "NCBI taxonomy database",
+    "ebi-ols.ontology-term-select.fields.ontology.option.mondo": "Mondo Disease Ontology",
+    "ebi-ols.ontology-term-select.fields.ontology.option.pato": "PATO - the Phenotype And Trait Ontology",
+    "ebi-ols.ontology-term-select.fields.ontology.option.efo": "Experimental Factor Ontology",
+    "ebi-ols.ontology-term-select.fields.ontology.option.cl": "Cell Ontology"
 }
