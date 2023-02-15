@@ -24,27 +24,6 @@
     "date": {
       "type": "date"
     },
-    "media": {
-      "type": "media",
-      "multiple": true,
-      "required": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
-    "authors": {
-      "type": "component",
-      "repeatable": true,
-      "component": "publication.publication-author"
-    },
-    "groups": {
-      "type": "component",
-      "repeatable": true,
-      "component": "group.group"
-    },
     "abstract": {
       "type": "text"
     },
@@ -64,6 +43,11 @@
     },
     "url": {
       "type": "string"
+    },
+    "authors": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::person.person"
     }
   }
 }

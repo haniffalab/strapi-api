@@ -18,11 +18,6 @@
     "is_corresponding_author": {
       "type": "boolean"
     },
-    "author": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::author.author"
-    },
     "email": {
       "type": "email"
     }

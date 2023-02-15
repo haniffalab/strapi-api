@@ -20,6 +20,9 @@
     },
     "email": {
       "type": "email"
+    },
+    "orcid_id": {
+      "type": "string"
     }
   }
 }

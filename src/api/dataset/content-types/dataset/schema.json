@@ -34,12 +34,6 @@
       "relation": "oneToMany",
       "target": "api::url.url"
     },
-    "authors": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::author.author",
-      "mappedBy": "datasets"
-    },
     "count": {
       "type": "biginteger"
     },

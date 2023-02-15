@@ -15,11 +15,6 @@
     "name": {
       "type": "string"
     },
-    "author": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::author.author"
-    },
     "related_urls": {
       "type": "relation",
       "relation": "oneToMany",
@@ -30,11 +25,6 @@
       "relation": "oneToMany",
       "target": "api::dataset.dataset",
       "mappedBy": "study"
-    },
-    "primary_publication": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::publication.publication"
     },
     "publications": {
       "type": "relation",
