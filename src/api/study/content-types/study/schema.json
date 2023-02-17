@@ -34,6 +34,11 @@
     "slug": {
       "type": "uid",
       "required": true
+    },
+    "experiments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::experiment.experiment"
     }
   }
 }

@@ -14,6 +14,18 @@
   "attributes": {
     "name": {
       "type": "string"
+    },
+    "donor": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::donor.donor"
+    },
+    "organ": {
+      "type": "customField",
+      "options": {
+        "ontology": "uberon"
+      },
+      "customField": "plugin::ebi-ols.ontology"
     }
   }
 }

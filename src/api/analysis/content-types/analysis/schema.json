@@ -12,7 +12,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "title": {
+    "name": {
       "type": "string"
     },
     "ont": {
@@ -21,7 +21,7 @@
       "options": {
         "ontology": "mondo"
       },
-      "required": true
+      "required": false
     }
   }
 }

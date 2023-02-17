@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_data_data",
+  "info": {
+    "displayName": "data"
+  },
+  "options": {},
+  "attributes": {
+    "Type": {
+      "type": "enumeration",
+      "enum": [
+        "FASTQ",
+        "BAM",
+        "PROCESSED"
+      ]
+    },
+    "Url": {
+      "type": "string"
+    }
+  }
+}

@@ -334,6 +334,15 @@ const OntologyTermSelect = ({
 }) => {
   const { formatMessage, messages } = useIntl();
 
+  // @TODO
+  let selected = []
+  try {
+    selected = JSON.parse(value)
+  }
+  catch (err) {
+    console.log(err)
+  }
+
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState([]);
   const [query, setQuery] = useState('');
@@ -373,19 +382,31 @@ const OntologyTermSelect = ({
         </FieldLabel>
         <Wrapper>
           <AsyncTypeahead
-            id="async-pagination-example"
+            id="async-ebi-ols"
             isLoading={isLoading}
             labelKey="label"
             minLength={2}
             onInputChange={handleInputChange}
             onSearch={handleSearch}
             options={options}
+            //defaultSelected={value.split(',')}
+            defaultSelected={selected}
+            //selected={selected}
             placeholder="Search for an ontology term"
+            inputProps={{
+              required: { required },
+              disabled: { disabled }
+            }}
+            onChange={(selected) => {
+              console.log(selected)
+              //const value = selected.length > 0 ? Array.prototype.map.call(selected, function (item) { return item.id; }).join(",") : null;
+              const value = selected.length > 0 ? JSON.stringify(selected) : null;
+              onChange({ target: { name, value: value, type: attribute.type } })
+            }}
             renderInput={({ inputRef, referenceElementRef, ...inputProps }) => (
               <TextInput
                 placeholder={placeholder && formatMessage(placeholder)}
                 aria-label={formatMessage(intlLabel)}
-                required={required}
                 {...inputProps}
                 ref={(input) => {
                   // Be sure to correctly handle these refs. In many cases, both can simply receive
@@ -396,16 +417,16 @@ const OntologyTermSelect = ({
                 }}
               />
             )}
-            renderMenu={(results, menuProps) => (
-              <Menu {...menuProps}>
-                {results.map((result, index) => (
-                  <MenuItem option={result.id} position={index}>
-                    <span class="badge">{result.ontology_prefix}</span>
-                    <span>{result.label}</span>
-                  </MenuItem>
-                ))}
-              </Menu>
-            )}
+            // renderMenu={(results, menuProps) => (
+            //   <Menu {...menuProps}>
+            //     {results.map((result, index) => (
+            //       <MenuItem option={result.id} position={index}>
+            //         <span class="badge">{result.ontology_prefix}</span>
+            //         <span>{result.label}</span>
+            //       </MenuItem>
+            //     ))}
+            //   </Menu>
+            // )}
             // renderMenuItemChildren={(option) => (
             //     <div key={option.id}>
             //         <span>{option.ontology_prefix}</span>
