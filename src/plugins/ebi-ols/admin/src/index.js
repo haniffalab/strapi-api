@@ -3,6 +3,8 @@ import pluginPkg from '../../package.json';
 import pluginId from './pluginId';
 import Initializer from './components/Initializer';
 import PluginIcon from './components/PluginIcon';
+import OntologyTermSelectIcon from './components/OntologyTermSelectIcon';
+import getTrad from './utils/getTrad';
 
 const name = pluginPkg.strapi.name;
 
@@ -34,9 +36,141 @@ export default {
       isReady: false,
       name,
     });
+    app.customFields.register({
+      name: 'ontology-term',
+      pluginId: pluginId,
+      type: 'string',
+      icon: OntologyTermSelectIcon,
+      intlLabel: {
+        id: getTrad('ebi-ols.ontology-term-select.label'),
+        defaultMessage: 'Ontology Term',
+      },
+      intlDescription: {
+        id: getTrad('ebi-ols.ontology-term-select.description'),
+        defaultMessage: 'Select an ontology term',
+      },
+      components: {
+        Input: async () =>
+          import('./components/OntologyTermSelect'),
+      },
+      options: {
+        base: [
+          {
+            sectionTitle: {
+              id: getTrad('ebi-ols.ontology-term-select.section.select-terms'),
+              defaultMessage: 'Select terms',
+            },
+            items: [
+              {
+                /*
+                  Add a "Color format" dropdown
+                  to choose between 2 different format options
+                  for the color value: hexadecimal or RGBA
+                */
+                intlLabel: {
+                  id: getTrad('ebi-ols.ontology-term-select.fields.ontology.label'),
+                  defaultMessage: 'Ontology',
+                },
+                intlDescription: {
+                  id: getTrad('ebi-ols.ontology-term-select.fields.ontology.description'),
+                  defaultMessage: 'Ontology',
+                },
+                name: 'options.ontology',
+                type: 'select',
+                value: '', // option selected by default
+                options: [ // List all available "Color format" options
+                  {
+                    key: 'uberon',
+                    value: 'uberon',
+                    metadatas: {
+                      intlLabel: {
+                        id: getTrad('ebi-ols.ontology-term-select.fields.ontology.option.uberon'),
+                        defaultMessage: 'uberon',
+                      },
+                    },
+                  },
+                  {
+                    key: 'ncbitaxon',
+                    value: 'ncbitaxon',
+                    metadatas: {
+                      intlLabel: {
+                        id: getTrad('ebi-ols.ontology-term-select.fields.ontology.option.ncbitaxon'),
+                        defaultMessage: 'ncbitaxon',
+                      },
+                    },
+                  },
+                  {
+                    key: 'mondo',
+                    value: 'mondo',
+                    metadatas: {
+                      intlLabel: {
+                        id: getTrad('ebi-ols.ontology-term-select.fields.ontology.option.mondo'),
+                        defaultMessage: 'mondo',
+                      },
+                    },
+                  },
+                  {
+                    key: 'pato',
+                    value: 'pato',
+                    metadatas: {
+                      intlLabel: {
+                        id: getTrad('ebi-ols.ontology-term-select.fields.ontology.option.pato'),
+                        defaultMessage: 'pato',
+                      },
+                    },
+                  },
+                  {
+                    key: 'efo',
+                    value: 'efo',
+                    metadatas: {
+                      intlLabel: {
+                        id: getTrad('ebi-ols.ontology-term-select.fields.ontology.option.efo'),
+                        defaultMessage: 'efo',
+                      },
+                    },
+                  },
+                  {
+                    key: 'cl',
+                    value: 'cl',
+                    metadatas: {
+                      intlLabel: {
+                        id: getTrad('ebi-ols.ontology-term-select.fields.ontology.option.cl'),
+                        defaultMessage: 'cl',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        advanced: [
+          {
+            sectionTitle: {
+              id: 'global.settings',
+              defaultMessage: 'Settings',
+            },
+            items: [
+              {
+                name: 'required',
+                type: 'checkbox',
+                intlLabel: {
+                  id: 'form.attribute.item.requiredField',
+                  defaultMessage: 'Required field',
+                },
+                description: {
+                  id: 'form.attribute.item.requiredField.description',
+                  defaultMessage: "You won't be able to create an entry if this field is empty",
+                },
+              },
+            ],
+          },
+        ],
+      },
+    });
   },
 
-  bootstrap(app) {},
+  bootstrap(app) { },
   async registerTrads({ locales }) {
     const importedTrads = await Promise.all(
       locales.map((locale) => {

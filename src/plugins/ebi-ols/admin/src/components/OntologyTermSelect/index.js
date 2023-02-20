@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
+import pluginId from '../../pluginId';
 import { Combobox, ComboboxOption } from '@strapi/design-system/Combobox';
 import { TextInput } from '@strapi/design-system';
 import { Stack } from '@strapi/design-system/Stack';
@@ -301,6 +302,7 @@ const Wrapper = styled.div`
 `;
 
 const CACHE = {};
+//const SEARCH_URI = strapi.plugin(pluginId).config('baseUrl');
 const SEARCH_URI = 'https://www.ebi.ac.uk/ols/api/select';
 
 function makeAndHandleRequest(query, ontology) {
@@ -337,10 +339,14 @@ const OntologyTermSelect = ({
   // @TODO
   let selected = []
   try {
-    selected = JSON.parse(value)
+    // console.log(typeof value);
+    // console.log(value.length);
+    // console.log(value);
+    selected = (typeof value === "string" && value.length > 0 && value !== "null") ? JSON.parse(value) : [];
   }
   catch (err) {
     console.log(err)
+    selected = []
   }
 
   const [isLoading, setIsLoading] = useState(false);
@@ -398,8 +404,7 @@ const OntologyTermSelect = ({
               disabled: { disabled }
             }}
             onChange={(selected) => {
-              console.log(selected)
-              //const value = selected.length > 0 ? Array.prototype.map.call(selected, function (item) { return item.id; }).join(",") : null;
+              //console.log(selected)
               const value = selected.length > 0 ? JSON.stringify(selected) : null;
               onChange({ target: { name, value: value, type: attribute.type } })
             }}
