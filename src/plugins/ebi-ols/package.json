@@ -1,41 +1,25 @@
 {
-  "name": "strapi-plugin-ebi-ols",
-  "version": "0.1.0",
-  "description": "Use the EMBL-EBI Ontology Lookup Service within Strapi",
-  "author": {
-    "name": "Dave Horsfall",
-    "url": "https://github.com/davehorsfall"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/strapi-community/strapi-plugin-ebi-ols"
-  },
+  "name": "ebi-ols",
+  "version": "0.0.0",
+  "description": "This is the description of the plugin.",
   "strapi": {
     "name": "ebi-ols",
-    "description": "Use the EMBL-EBI Ontology Lookup Service within Strapi",
+    "description": "Description of Ebi Ols plugin",
     "kind": "plugin",
-    "displayName": "EBI OLS"
+    "displayName": "Ebi Ols"
   },
-  "license": "MIT",
   "dependencies": {},
-  "peerDependencies": {
-    "@strapi/strapi": "^4.4.0",
-    "lodash": "^4.17.21",
-    "yup": "^0.32.9"
+  "author": {
+    "name": "A Strapi developer"
   },
+  "maintainers": [
+    {
+      "name": "A Strapi developer"
+    }
+  ],
   "engines": {
-    "node": ">=12.x.x <=18.x.x",
+    "node": ">=14.19.1 <=18.x.x",
     "npm": ">=6.0.0"
   },
-  "scripts": {
-    "eslint": "eslint .",
-    "eslint:fix": "eslint . --fix"
-  },
-  "keywords": [
-    "strapi"
-  ],
-  "devDependencies": {
-    "@strapi-community/eslint-config": "0.4.3",
-    "eslint": "8.24.0"
-  }
+  "license": "MIT"
 }
