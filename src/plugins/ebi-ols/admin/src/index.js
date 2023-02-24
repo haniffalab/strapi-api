@@ -3,6 +3,8 @@ import pluginPkg from '../../package.json';
 import pluginId from './pluginId';
 import Initializer from './components/Initializer';
 import PluginIcon from './components/PluginIcon';
+import OntologyTermSelectIcon from './components/OntologyTermSelectIcon';
+import getTrad from './utils/getTrad';
 
 const name = pluginPkg.strapi.name;
 
@@ -34,9 +36,45 @@ export default {
       isReady: false,
       name,
     });
+    app.customFields.register({
+      name: 'ontology-term',
+      pluginId: pluginId,
+      type: 'string',
+      icon: OntologyTermSelectIcon,
+      intlLabel: {
+        id: getTrad('ebi-ols.ontology-term-select.label'),
+        defaultMessage: 'Ontology Term',
+      },
+      intlDescription: {
+        id: getTrad('ebi-ols.ontology-term-select.description'),
+        defaultMessage: 'Select an ontology term',
+      },
+      components: {
+        Input: async () =>
+          import('./components/OntologyTermSelect'),
+      },
+      Component: async () => {
+        const component = await import(/* webpackChunkName: "[request]" */ './pages/App');
+
+        return component;
+      },
+      permissions: [
+        // Uncomment to set the permissions of the plugin here
+        // {
+        //   action: '', // the action name should be plugin::plugin-name.actionType
+        //   subject: null,
+        // },
+      ],
+    });
+    app.registerPlugin({
+      id: pluginId,
+      initializer: Initializer,
+      isReady: false,
+      name,
+    });
   },
 
-  bootstrap(app) {},
+  bootstrap(app) { },
   async registerTrads({ locales }) {
     const importedTrads = await Promise.all(
       locales.map((locale) => {

@@ -20,12 +20,19 @@
       "relation": "oneToOne",
       "target": "api::donor.donor"
     },
-    "organ": {
+    "tissue": {
       "type": "customField",
       "options": {
         "ontology": "uberon"
       },
-      "customField": "plugin::ebi-ols.ontology"
+      "customField": "plugin::ebi-ols.ontology-term"
+    },
+    "organism": {
+      "type": "customField",
+      "options": {
+        "ontology": "uberon"
+      },
+      "customField": "plugin::ebi-ols.ontology-term"
     }
   }
 }

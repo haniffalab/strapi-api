@@ -6,7 +6,7 @@
     "name": "ebi-ols",
     "description": "Description of Ebi Ols plugin",
     "kind": "plugin",
-    "displayName": "Ebi Ols"
+    "displayName": "EMBL-EBI Ontology Lookup Service"
   },
   "dependencies": {},
   "author": {

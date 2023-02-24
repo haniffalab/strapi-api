@@ -17,7 +17,7 @@
     },
     "ont": {
       "type": "customField",
-      "customField": "plugin::ebi-ols.ontology",
+      "customField": "plugin::ebi-ols.ontology-term",
       "options": {
         "ontology": "mondo"
       },

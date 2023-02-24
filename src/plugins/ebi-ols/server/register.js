@@ -1,5 +1,9 @@
 'use strict';
 
 module.exports = ({ strapi }) => {
-  // registeration phase
+  strapi.customFields.register({
+    name: 'ontology-term',
+    plugin: 'ebi-ols',
+    type: 'json',
+  });
 };
