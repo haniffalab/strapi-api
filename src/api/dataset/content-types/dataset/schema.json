@@ -82,6 +82,22 @@
       "relation": "manyToMany",
       "target": "api::data-file.data-file",
       "mappedBy": "datasets"
+    },
+    "experiments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::experiment.experiment"
+    },
+    "method": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::method.method"
+    },
+    "format": {
+      "type": "enumeration",
+      "enum": [
+        "AnnData"
+      ]
     }
   }
 }
