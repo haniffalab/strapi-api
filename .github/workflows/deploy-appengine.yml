@@ -5,9 +5,9 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-    environment: production
+    environment: appengine
     env:
       APP_ENV: ${{ secrets.APP_ENV }}
       APP_HOST: ${{ secrets.APP_HOST }}
