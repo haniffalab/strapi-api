@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_contributions_people",
+  "info": {
+    "displayName": "people",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "person": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::person.person"
+    },
+    "role": {
+      "type": "enumeration",
+      "enum": [
+        "author"
+      ]
+    }
+  }
+}

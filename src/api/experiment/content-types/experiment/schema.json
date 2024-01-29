@@ -1,0 +1,73 @@
+{
+  "kind": "collectionType",
+  "collectionName": "experiments",
+  "info": {
+    "singularName": "experiment",
+    "pluralName": "experiments",
+    "displayName": "Experiment",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "experimental_factor": {
+      "type": "customField",
+      "options": {
+        "ontology": "efo"
+      },
+      "customField": "plugin::ebi-ols.ontology-term"
+    },
+    "date": {
+      "type": "date"
+    },
+    "samples": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::sample.sample"
+    },
+    "experiment_id": {
+      "type": "string"
+    },
+    "collaborator_id": {
+      "type": "string"
+    },
+    "library_type": {
+      "type": "enumeration",
+      "enum": [
+        "A3'GEX"
+      ]
+    },
+    "study": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::study.study",
+      "inversedBy": "experiments"
+    },
+    "contributors": {
+      "displayName": "people",
+      "type": "component",
+      "repeatable": true,
+      "component": "contributions.people"
+    },
+    "protocols": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::protocol.protocol",
+      "mappedBy": "experiment"
+    },
+    "datafiles": {
+      "displayName": "file",
+      "type": "component",
+      "repeatable": true,
+      "component": "data.file"
+    },
+    "dataset": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::dataset.dataset",
+      "inversedBy": "experiments"
+    }
+  }
+}

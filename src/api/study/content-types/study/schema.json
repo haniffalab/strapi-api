@@ -12,8 +12,37 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "study_id": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "required": true
+    },
     "name": {
-      "type": "text"
+      "type": "string"
+    },
+    "publications": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::publication.publication"
+    },
+    "experiments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::experiment.experiment",
+      "mappedBy": "study"
+    },
+    "datasets": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::dataset.dataset",
+      "mappedBy": "studies"
+    },
+    "analyses": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::analysis.analysis"
     }
   }
 }

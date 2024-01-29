@@ -1,0 +1,63 @@
+{
+  "kind": "collectionType",
+  "collectionName": "datasets",
+  "info": {
+    "singularName": "dataset",
+    "pluralName": "datasets",
+    "displayName": "Dataset",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "media": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "studies": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::study.study",
+      "inversedBy": "datasets"
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "scRNA-seq",
+        "CITE-seq",
+        "Smart-seq2",
+        "VDJ"
+      ]
+    },
+    "experiments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::experiment.experiment",
+      "mappedBy": "dataset"
+    },
+    "format": {
+      "type": "enumeration",
+      "enum": [
+        "AnnData",
+        "MuData",
+        "SpatialData",
+        "OME-TIFF"
+      ]
+    }
+  }
+}
