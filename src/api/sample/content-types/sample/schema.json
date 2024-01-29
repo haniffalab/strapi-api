@@ -12,7 +12,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "name": {
+    "sample_id": {
       "type": "string"
     },
     "donor": {
@@ -33,6 +33,11 @@
         "ontology": "uberon"
       },
       "customField": "plugin::ebi-ols.ontology-term"
+    },
+    "people": {
+      "type": "component",
+      "repeatable": true,
+      "component": "contributions.people"
     }
   }
 }

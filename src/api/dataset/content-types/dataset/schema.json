@@ -29,38 +29,11 @@
         "audios"
       ]
     },
-    "related_urls": {
+    "studies": {
       "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::url.url"
-    },
-    "count": {
-      "type": "biginteger"
-    },
-    "urls": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::url.url"
-    },
-    "metadata": {
-      "type": "dynamiczone",
-      "components": [
-        "metadata.iss",
-        "metadata.scrnaseq",
-        "metadata.visium"
-      ],
-      "max": 1
-    },
-    "study": {
-      "type": "relation",
-      "relation": "manyToOne",
+      "relation": "manyToMany",
       "target": "api::study.study",
       "inversedBy": "datasets"
-    },
-    "related_studies": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::study.study"
     },
     "category": {
       "type": "enumeration",
@@ -71,32 +44,19 @@
         "VDJ"
       ]
     },
-    "file": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::data-file.data-file",
-      "inversedBy": "dataset"
-    },
-    "related_files": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::data-file.data-file",
-      "mappedBy": "datasets"
-    },
     "experiments": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::experiment.experiment"
-    },
-    "method": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::method.method"
+      "target": "api::experiment.experiment",
+      "mappedBy": "dataset"
     },
     "format": {
       "type": "enumeration",
       "enum": [
-        "AnnData"
+        "AnnData",
+        "MuData",
+        "SpatialData",
+        "OME-TIFF"
       ]
     }
   }

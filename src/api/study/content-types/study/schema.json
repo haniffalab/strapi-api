@@ -12,33 +12,32 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "name": {
+    "study_id": {
       "type": "string"
     },
-    "related_urls": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::url.url"
+    "slug": {
+      "type": "uid",
+      "required": true
     },
-    "datasets": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::dataset.dataset",
-      "mappedBy": "study"
+    "name": {
+      "type": "string"
     },
     "publications": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::publication.publication"
     },
-    "slug": {
-      "type": "uid",
-      "required": true
-    },
     "experiments": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::experiment.experiment"
+      "target": "api::experiment.experiment",
+      "mappedBy": "study"
+    },
+    "datasets": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::dataset.dataset",
+      "mappedBy": "studies"
     },
     "analyses": {
       "type": "relation",

@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * method service
+ * protocol service
  */
 
 const { createCoreService } = require('@strapi/strapi').factories;
 
-module.exports = createCoreService('api::method.method');
+module.exports = createCoreService('api::protocol.protocol');

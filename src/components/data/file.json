@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_data_files",
+  "info": {
+    "displayName": "file",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "sample": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::sample.sample"
+    },
+    "assay_name": {
+      "type": "string"
+    },
+    "file_type": {
+      "type": "enumeration",
+      "enum": [
+        "bam",
+        "fastq_read1",
+        "fastq_read2",
+        "fastq_index1"
+      ]
+    }
+  }
+}

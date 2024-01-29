@@ -3,7 +3,6 @@ import pluginPkg from '../../package.json';
 import pluginId from './pluginId';
 import Initializer from './components/Initializer';
 import PluginIcon from './components/PluginIcon';
-import OntologyTermSelectIcon from './components/OntologyTermSelectIcon';
 import getTrad from './utils/getTrad';
 
 const name = pluginPkg.strapi.name;
@@ -40,7 +39,6 @@ export default {
       name: 'ontology-term',
       pluginId: pluginId,
       type: 'string',
-      icon: OntologyTermSelectIcon,
       intlLabel: {
         id: getTrad('ebi-ols.ontology-term-select.label'),
         defaultMessage: 'Ontology Term',
