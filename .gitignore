@@ -113,3 +113,8 @@ exports
 dist
 build
 .strapi-updater.json
+
+# 
+app.yaml
+app.standard.yaml
+app.flexible.yaml
