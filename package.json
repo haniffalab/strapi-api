@@ -8,7 +8,9 @@
     "start": "strapi start",
     "build": "strapi build",
     "strapi": "strapi",
-    "gcp-build": "strapi build"
+    "gcp-build": "strapi build",
+    "lint": "eslint --ext .js src",
+    "lint:fix": "eslint --ext .js src --fix"
   },
   "dependencies": {
     "@strapi/plugin-graphql": "^4.15.0",
@@ -37,6 +39,9 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "better-sqlite3": "^9.3.0"
+    "@babel/eslint-parser": "^7.23.10",
+    "@babel/preset-react": "^7.23.3",
+    "better-sqlite3": "^9.3.0",
+    "eslint": "^8.56.0"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "extends": "eslint:recommended",
   "env": {
     "commonjs": true,
@@ -8,11 +8,13 @@
     "browser": false
   },
   "parserOptions": {
+    "requireConfigFile": false,
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true,
       "jsx": false
     },
-    "sourceType": "module"
+    "sourceType": "module",
+    "babelOptions" : { "presets": [ "@babel/preset-react" ] }
   },
   "globals": {
     "strapi": true

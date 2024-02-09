@@ -316,7 +316,7 @@ function makeAndHandleRequest(query, ontology) {
         ontology_prefix: i.ontology_prefix,
         iri: i.iri,
       }));
-      const total_count = response.numFound
+      const total_count = response.numFound;
       return { options, total_count };
     });
 }
@@ -337,16 +337,16 @@ const OntologyTermSelect = ({
   const { formatMessage, messages } = useIntl();
 
   // @TODO
-  let selected = []
+  let selected = [];
   try {
     // console.log(typeof value);
     // console.log(value.length);
     // console.log(value);
-    selected = (typeof value === "string" && value.length > 0 && value !== "null") ? JSON.parse(value) : [];
+    selected = (typeof value === 'string' && value.length > 0 && value !== 'null') ? JSON.parse(value) : [];
   }
   catch (err) {
-    console.log(err)
-    selected = []
+    console.log(err);
+    selected = [];
   }
 
   const [isLoading, setIsLoading] = useState(false);
@@ -406,7 +406,7 @@ const OntologyTermSelect = ({
             onChange={(selected) => {
               //console.log(selected)
               const value = selected.length > 0 ? JSON.stringify(selected) : null;
-              onChange({ target: { name, value: value, type: attribute.type } })
+              onChange({ target: { name, value: value, type: attribute.type } });
             }}
             renderInput={({ inputRef, referenceElementRef, ...inputProps }) => (
               <TextInput
@@ -445,8 +445,8 @@ const OntologyTermSelect = ({
         <FieldError />
       </Stack>
     </Field>
-  )
-}
+  );
+};
 
 OntologyTermSelect.defaultProps = {
   description: null,
