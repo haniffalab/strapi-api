@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "datafiles",
+  "info": {
+    "singularName": "datafile",
+    "pluralName": "datafiles",
+    "displayName": "Datafile",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "related": {
+      "type": "relation",
+      "relation": "morphToMany"
+    },
+    "data": {
+      "type": "json",
+      "required": true
+    },
+    "description": {
+      "type": "string"
+    }
+  }
+}
