@@ -12,8 +12,18 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "datafile": {
+      "type": "relation",
+      "relation": "morphOne",
+      "target": "plugin::data-import.datafile",
+      "morphBy": "related",
+      "private": true,
+      "configurable": false
+    },
     "sample_id": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "unique": true
     },
     "donor": {
       "type": "relation",
@@ -38,6 +48,11 @@
       "type": "component",
       "repeatable": true,
       "component": "contributions.people"
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "sample_id",
+      "required": true
     }
   }
 }

@@ -48,6 +48,19 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::person.person"
+    },
+    "datafile": {
+      "type": "relation",
+      "relation": "morphOne",
+      "target": "plugin::data-import.datafile",
+      "morphBy": "related",
+      "private": true,
+      "configurable": false
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
     }
   }
 }

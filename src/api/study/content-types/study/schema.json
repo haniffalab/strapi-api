@@ -12,8 +12,18 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "datafile": {
+      "type": "relation",
+      "relation": "morphOne",
+      "target": "plugin::data-import.datafile",
+      "morphBy": "related",
+      "private": true,
+      "configurable": false
+    },
     "study_id": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "unique": true
     },
     "slug": {
       "type": "uid",
@@ -43,6 +53,11 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::analysis.analysis"
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "study_id",
+      "required": true
     }
   }
 }

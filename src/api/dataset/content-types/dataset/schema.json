@@ -12,8 +12,18 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "datafile": {
+      "type": "relation",
+      "relation": "morphOne",
+      "target": "plugin::data-import.datafile",
+      "morphBy": "related",
+      "private": true,
+      "configurable": false
+    },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "unique": true
     },
     "description": {
       "type": "text"
@@ -58,6 +68,14 @@
         "SpatialData",
         "OME-TIFF"
       ]
+    },
+    "url": {
+      "type": "string"
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
     }
   }
 }

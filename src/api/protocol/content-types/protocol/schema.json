@@ -4,21 +4,37 @@
   "info": {
     "singularName": "protocol",
     "pluralName": "protocols",
-    "displayName": "Protocol"
+    "displayName": "Protocol",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
+    "datafile": {
+      "type": "relation",
+      "relation": "morphOne",
+      "target": "plugin::data-import.datafile",
+      "morphBy": "related",
+      "private": true,
+      "configurable": false
+    },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "unique": true
     },
     "experiment": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::experiment.experiment",
       "inversedBy": "protocols"
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
     }
   }
 }

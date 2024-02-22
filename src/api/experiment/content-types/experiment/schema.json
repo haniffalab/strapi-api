@@ -12,6 +12,14 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "datafile": {
+      "type": "relation",
+      "relation": "morphOne",
+      "target": "plugin::data-import.datafile",
+      "morphBy": "related",
+      "private": true,
+      "configurable": false
+    },
     "experimental_factor": {
       "type": "customField",
       "options": {
@@ -22,16 +30,10 @@
     "date": {
       "type": "date"
     },
-    "samples": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::sample.sample"
-    },
     "experiment_id": {
-      "type": "string"
-    },
-    "collaborator_id": {
-      "type": "string"
+      "type": "string",
+      "unique": true,
+      "required": true
     },
     "library_type": {
       "type": "enumeration",
@@ -68,6 +70,11 @@
       "relation": "manyToOne",
       "target": "api::dataset.dataset",
       "inversedBy": "experiments"
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "experiment_id",
+      "required": true
     }
   }
 }
