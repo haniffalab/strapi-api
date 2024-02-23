@@ -5,10 +5,12 @@ const array = require('lodash/array');
 const object = require('lodash/object');
 
 
-const validateEntry = async (uid, entry, is_component=false) => {
+const validateEntry = async (uid, entry, parents, is_component=false) => {
+  parents.push(uid);
 
   if (Array.isArray(entry)){
-    throw new ValidationError(uid + ' must contain a single object');
+    throw new ValidationError(parents.join('>') +
+    ' must contain a single object');
   }
 
   let attrs;
@@ -23,8 +25,9 @@ const validateEntry = async (uid, entry, is_component=false) => {
   // Check if unrecognized fields are present
   const unrecognized = array.difference(Object.keys(entry), Object.keys(attrs));
   if (unrecognized.length) {
-    console.log('Unrecognized fields', unrecognized);
-    throw new ValidationError('Unrecognized fields ' + unrecognized);
+    console.log('Unrecognized fields', parents.concat([unrecognized]));
+    throw new ValidationError('Unrecognized fields ' +
+    unrecognized + ' in ' + parents.join('>'));
   }
 
   // Check all required fields are present
@@ -37,11 +40,12 @@ const validateEntry = async (uid, entry, is_component=false) => {
     requiredFields, Object.keys(entry)
   ).length){
     const missingFields = array.difference(requiredFields, Object.keys(entry));
-    console.log('Missing required fields in ' + uid,
-      { missingFields: missingFields });
+    console.log('Missing required fields in ' + parents.join('>'),
+      { parents: parents, missingFields: missingFields });
     throw new ValidationError(
-      'Missing required fields in ' + uid + ': ' + missingFields.join(', '),
-      { missingFields: missingFields }
+      'Missing required fields in ' + parents.join('>') +
+      ': ' + missingFields.join(', '),
+      { parents: parents, missingFields: missingFields }
     );
   }
 
@@ -62,9 +66,10 @@ const validateEntry = async (uid, entry, is_component=false) => {
           e.message !== 'Invalid relations'
         );
       if (errors.length){
-        console.log('Invalid value(s) in ' + uid, { errors: errors });
+        console.log('Invalid value(s) in ' + parents.join('>'),
+          { errors: errors });
         throw new ValidationError(
-          'Invalid value(s) in ' + uid + ': ' +
+          'Invalid value(s) in ' + parents.join('>') + ': ' +
           errors.map(e => e.path.join('.') + ' '),
           { errors: errors }
         );
@@ -79,11 +84,11 @@ const validateEntry = async (uid, entry, is_component=false) => {
     const r = relationData[idx];
     if (attrs[r].relation === 'manyToMany' ||
     attrs[r].relation === 'oneToMany'){
-      await validateData(attrs[r].target, entry[r])
+      await validateData(attrs[r].target, entry[r], parents)
         .catch((e) => { throw e; });
     }
     else if (attrs[r].relation === 'oneToOne'){
-      await validateEntry(attrs[r].target,entry[r])
+      await validateEntry(attrs[r].target,entry[r], parents)
         .catch((e) => { throw e; });
     }
   }
@@ -96,7 +101,8 @@ const validateEntry = async (uid, entry, is_component=false) => {
     const component = componentData[cd];
     if (!attrs[component].repeatable){
       await validateEntry(
-        attrs[component].component, entry[component], is_component=true
+        attrs[component].component, entry[component],
+        parents, is_component=true
       )
         .catch((e)=>{ throw e; });
     }
@@ -106,7 +112,8 @@ const validateEntry = async (uid, entry, is_component=false) => {
       }
       for (const c in entry[component]){
         const comp = entry[component][c];
-        await validateEntry(attrs[component].component, comp, is_component=true)
+        await validateEntry(attrs[component].component, comp,
+          parents, is_component=true)
           .catch((e)=>{ throw e; });
       }
     }
@@ -114,14 +121,16 @@ const validateEntry = async (uid, entry, is_component=false) => {
 
 };
 
-const validateData = async (uid, entries) => {
+const validateData = async (uid, entries, parents) => {
   
   if (!Array.isArray(entries)){
-    throw ValidationError(uid + ' must contain an array');
+    throw ValidationError(uid + ' in ' +
+    parents.join('>') + ' must contain an array');
   }
   for (const idx in entries){
     const entry = entries[idx];
-    await validateEntry(uid, entry).catch((e) => { throw e; });
+    await validateEntry(uid, entry, parents)
+      .catch((e) => { throw e; });
   }
    
 };
@@ -136,7 +145,7 @@ module.exports = {
       const uid = Object.keys(strapi.contentTypes)
         .filter((k) => strapi.contentTypes[k].collectionName === key)[0];
       if (!uid){ throw new ValidationError('Invalid type ' + key); }
-      await validateData(uid, entries).catch((e) => { throw e; });
+      await validateData(uid, entries, []).catch((e) => { throw e; });
     }
 
     console.log('Validated JSON');
