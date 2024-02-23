@@ -6,6 +6,11 @@ const object = require('lodash/object');
 
 
 const validateEntry = async (uid, entry, is_component=false) => {
+
+  if (Array.isArray(entry)){
+    throw new ValidationError(uid + ' must contain a single object');
+  }
+
   let attrs;
   if (!is_component){
     attrs = strapi.contentTypes[uid].__schema__.attributes;
@@ -13,9 +18,17 @@ const validateEntry = async (uid, entry, is_component=false) => {
   else {
     attrs = strapi.components[uid].__schema__.attributes;
   }
+  if (!attrs){ throw new ValidationError('Invalid type ' + uid); }
+
+  // Check if unrecognized fields are present
+  const unrecognized = array.difference(Object.keys(entry), Object.keys(attrs));
+  if (unrecognized.length) {
+    console.log('Unrecognized fields', unrecognized);
+    throw new ValidationError('Unrecognized fields ' + unrecognized);
+  }
 
   // Check all required fields are present
-  // except for 'uid' which gets automatically generated
+  // except for 'uid' because it is automatically generated
   const requiredFields = Object.keys(attrs)
     .filter((k) =>attrs[k].required === true && k !== 'uid');
 
@@ -24,20 +37,23 @@ const validateEntry = async (uid, entry, is_component=false) => {
     requiredFields, Object.keys(entry)
   ).length){
     const missingFields = array.difference(requiredFields, Object.keys(entry));
-    console.log('Missing required fields', { missingFields: missingFields });
+    console.log('Missing required fields in ' + uid,
+      { missingFields: missingFields });
     throw new ValidationError(
-      'Missing required fields ' + uid + ': ' + missingFields.join(', '),
+      'Missing required fields in ' + uid + ': ' + missingFields.join(', '),
       { missingFields: missingFields }
     );
   }
 
   // Loop through nonrelational fields and validate their types
+  // using strapi.entityValidator
   const ctNonrelationFields = Object.keys(attrs)
-    .filter((k) => attrs[k].type !== 'relation');
+    .filter((k) =>
+      attrs[k].type !== 'relation' && attrs[k].type !== 'component'
+    );
   await strapi.entityValidator.validateEntityCreation(
-    strapi.contentTypes[uid],
-    object.pick(entry, ctNonrelationFields),
-    {})
+    !is_component ? strapi.contentTypes[uid] : strapi.components[uid],
+    object.pick(entry, ctNonrelationFields), {})
     .catch ((error) => {
       const errors = error.details.errors
         .filter((e) =>
@@ -46,9 +62,10 @@ const validateEntry = async (uid, entry, is_component=false) => {
           e.message !== 'Invalid relations'
         );
       if (errors.length){
-        console.log('Invalid values', { errors: errors });
+        console.log('Invalid value(s) in ' + uid, { errors: errors });
         throw new ValidationError(
-          'Invalid values ' + errors.map(e => e.path.join('.') + ' '),
+          'Invalid value(s) in ' + uid + ': ' +
+          errors.map(e => e.path.join('.') + ' '),
           { errors: errors }
         );
       }
@@ -84,6 +101,9 @@ const validateEntry = async (uid, entry, is_component=false) => {
         .catch((e)=>{ throw e; });
     }
     else { // component field contains an array
+      if (!Array.isArray(entry[component])){
+        throw ValidationError(component + ' must contain an array');
+      }
       for (const c in entry[component]){
         const comp = entry[component][c];
         await validateEntry(attrs[component].component, comp, is_component=true)
@@ -96,6 +116,9 @@ const validateEntry = async (uid, entry, is_component=false) => {
 
 const validateData = async (uid, entries) => {
   
+  if (!Array.isArray(entries)){
+    throw ValidationError(uid + ' must contain an array');
+  }
   for (const idx in entries){
     const entry = entries[idx];
     await validateEntry(uid, entry).catch((e) => { throw e; });
@@ -108,11 +131,15 @@ module.exports = {
   async beforeCreate(event) {
     const { data } = event.params;
 
+    console.log('Validating JSON');
     for (const [key, entries] of Object.entries(data.data)) {
       const uid = Object.keys(strapi.contentTypes)
         .filter((k) => strapi.contentTypes[k].collectionName === key)[0];
+      if (!uid){ throw new ValidationError('Invalid type ' + key); }
       await validateData(uid, entries).catch((e) => { throw e; });
     }
+
+    console.log('Validated JSON');
 
     console.log('Stopping');
     throw new ApplicationError('stop', {});
