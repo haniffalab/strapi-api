@@ -5,11 +5,12 @@ module.exports = {
     const full_name = data.first_name + ' ' + data.last_name;
     event.params.data.full_name = full_name;
 
-    event.params.data.uid = await strapi.service('plugin::content-manager.uid').generateUIDField({
-      contentTypeUID: 'api::person.person',
-      field: 'uid',
-      data: event.params.data
-    });
+    event.params.data.uid = await strapi.service('plugin::content-manager.uid')
+      .generateUIDField({
+        contentTypeUID: 'api::person.person',
+        field: 'uid',
+        data: event.params.data
+      });
   },
   async beforeUpdate(event) {
     const { data, where } = event.params;
@@ -19,11 +20,12 @@ module.exports = {
     
     if (entry.full_name !== full_name){
       event.params.data.full_name = full_name;
-      event.params.data.uid = await strapi.service('plugin::content-manager.uid').generateUIDField({
-        contentTypeUID: 'api::person.person',
-        field: 'uid',
-        data: event.params.data
-      });
+      event.params.data.uid = await strapi.service('plugin::content-manager.uid')
+        .generateUIDField({
+          contentTypeUID: 'api::person.person',
+          field: 'uid',
+          data: event.params.data
+        });
     }
   },
 };

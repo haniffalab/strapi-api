@@ -22,7 +22,7 @@
     },
     "first_name": {
       "type": "string",
-      "required": false
+      "required": true
     },
     "last_name": {
       "type": "string",
@@ -44,6 +44,12 @@
       "type": "uid",
       "targetField": "full_name",
       "required": true
+    },
+    "publications": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::publication.publication",
+      "inversedBy": "authors"
     }
   }
 }

@@ -12,6 +12,14 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "datafile": {
+      "type": "relation",
+      "relation": "morphOne",
+      "target": "plugin::data-import.datafile",
+      "morphBy": "related",
+      "private": true,
+      "configurable": false
+    },
     "title": {
       "type": "string",
       "unique": true,
@@ -46,16 +54,9 @@
     },
     "authors": {
       "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::person.person"
-    },
-    "datafile": {
-      "type": "relation",
-      "relation": "morphOne",
-      "target": "plugin::data-import.datafile",
-      "morphBy": "related",
-      "private": true,
-      "configurable": false
+      "relation": "manyToMany",
+      "target": "api::person.person",
+      "inversedBy": "publications"
     },
     "uid": {
       "type": "uid",
