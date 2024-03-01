@@ -8,20 +8,26 @@ const { createCoreService } = require('@strapi/strapi').factories;
 
 module.exports = createCoreService('api::person.person', ({strapi}) => ({
   async findByUid(ctx){
+    const ctUid = 'api::person.person';
+    const attrs = strapi.contentTypes[ctUid].__schema__.attributes;
     const { full_name, first_name, last_name } = ctx.params;
-    let entity;
+    
+    let where;
     if (!full_name){
-      entity = await strapi.db.query('api::person.person').findOne({
-        where: { first_name: first_name, last_name: last_name },
-        populate: true
-      });
+      where = { first_name: first_name, last_name: last_name };
     }
     else {
-      entity = await strapi.db.query('api::person.person').findOne({
-        where: { full_name: full_name },
-        populate: true
-      });
+      where = { full_name: full_name };
     }
+
+    const populateParams = strapi.config.functions.getPopulateParams(attrs);
+    
+    let entity = await strapi.db.query(ctUid).findOne({
+      where: where,
+      populate: populateParams
+    });
+
+    entity = strapi.config.functions.reduceComponentData(attrs, entity);
 
     return entity;
   }

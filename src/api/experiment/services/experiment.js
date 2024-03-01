@@ -6,17 +6,22 @@
 
 const { createCoreService } = require('@strapi/strapi').factories;
 
+
 module.exports = createCoreService('api::experiment.experiment', ({strapi}) => ({
   async findByUid(ctx){
     const ctUid = 'api::experiment.experiment';
     const attrs = strapi.contentTypes[ctUid].__schema__.attributes;
     const uidTarget = attrs['uid'].targetField;
     const { [uidTarget]: uidTargetValue } = ctx.params;
+
+    const populateParams = strapi.config.functions.getPopulateParams(attrs);
     
-    const entity = await strapi.db.query(ctUid).findOne({
+    let entity = await strapi.db.query(ctUid).findOne({
       where: { [uidTarget]: uidTargetValue },
-      populate: true
+      populate: populateParams
     });
+
+    entity = strapi.config.functions.reduceComponentData(attrs, entity);
 
     return entity;
   }

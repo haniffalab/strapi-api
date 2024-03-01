@@ -18,15 +18,15 @@ const createOrUpdate = async (uid, entry, datafile_id) => {
 
   if (data) {
     // update
+
     // get previous relations to append to them, not overwrite them
     const ctRelationFields = Object.keys(attrs)
-      .filter((k) => attrs[k].type === 'relation');
+      .filter((k) => attrs[k].type === 'relation' && 
+      (attrs[k].relation === 'manyToMany' || attrs[k].relation === 'oneToMany'));
     const relationData = array.intersection(Object.keys(entry), ctRelationFields);
     for (const idx in relationData){
       const r = relationData[idx];
-      if (Array.isArray(entry[r])){ // TODO: change to get only relation fields with relation manyToX
-        entry[r] = array.union(r in data ? data[r] : [], entry[r]);
-      }
+      entry[r] = array.union(r in data ? data[r].map((d) => d.id) : [], entry[r]);
     }
 
     // get previous repeatable components to append to them, not overwrite them
@@ -35,7 +35,6 @@ const createOrUpdate = async (uid, entry, datafile_id) => {
     const componentData = array.intersection(Object.keys(entry), ctComponentFields);
     for (const idx in componentData){
       const c = componentData[idx];
-      // TODO: populate component attrs in findByUid and remove 'id' field to deduplicate
       entry[c] = array.unionWith(c in data ? data[c] : null, entry[c], isEqual);
     }
 
@@ -94,15 +93,15 @@ const importEntry = async (uid, entry, datafile_id) => {
   const componentData = array.intersection(Object.keys(entry), componentFields);
   for (const cd in componentData){
     const component = componentData[cd];
-    const componentAttrs = strapi.components[attrs[component].component].__schema__.attributes;
-    const compRelationFields = Object.keys(componentAttrs)
-      .filter((k) => componentAttrs[k].type == 'relation');
+    const cAttrs = strapi.components[attrs[component].component].__schema__.attributes;
+    const compRelationFields = Object.keys(cAttrs)
+      .filter((k) => cAttrs[k].type == 'relation');
     if(!attrs[component].repeatable){
       const comp = entry[component];
       const relationData = array.intersection(Object.keys(comp), compRelationFields);
       for (const idx in relationData){
         const r = relationData[idx];
-        const rId = await importRelations(componentAttrs, r, comp[r], datafile_id)
+        const rId = await importRelations(cAttrs, r, comp[r], datafile_id)
           .catch((e) => { throw e; });
         entry[component][r] = rId;
       }
@@ -113,7 +112,7 @@ const importEntry = async (uid, entry, datafile_id) => {
         const relationData = array.intersection(Object.keys(comp), compRelationFields);
         for (const idx in relationData){
           const r = relationData[idx];
-          const rId = await importRelations(componentAttrs, r, comp[r], datafile_id)
+          const rId = await importRelations(cAttrs, r, comp[r], datafile_id)
             .catch((e) => { throw e; });
           entry[component][c][r] = rId;
         }

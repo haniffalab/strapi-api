@@ -14,10 +14,14 @@ module.exports = createCoreService('api::sample.sample', ({strapi}) => ({
     console.log('uidTarget', uidTarget);
     const { [uidTarget]: uidTargetValue } = ctx.params;
     
-    const entity = await strapi.db.query(ctUid).findOne({
+    const populateParams = strapi.config.functions.getPopulateParams(attrs);
+    
+    let entity = await strapi.db.query(ctUid).findOne({
       where: { [uidTarget]: uidTargetValue },
-      populate: true
+      populate: populateParams
     });
+
+    entity = strapi.config.functions.reduceComponentData(attrs, entity);
 
     console.log('entity', entity);
     return entity;
