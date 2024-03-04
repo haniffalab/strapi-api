@@ -11,7 +11,6 @@ module.exports = createCoreService('api::sample.sample', ({strapi}) => ({
     const ctUid = 'api::sample.sample';
     const attrs = strapi.contentTypes[ctUid].__schema__.attributes;
     const uidTarget = attrs['uid'].targetField;
-    console.log('uidTarget', uidTarget);
     const { [uidTarget]: uidTargetValue } = ctx.params;
     
     const populateParams = strapi.config.functions.getPopulateParams(attrs);
@@ -23,7 +22,6 @@ module.exports = createCoreService('api::sample.sample', ({strapi}) => ({
 
     entity = strapi.config.functions.reduceComponentData(attrs, entity);
 
-    console.log('entity', entity);
     return entity;
   }
 }));

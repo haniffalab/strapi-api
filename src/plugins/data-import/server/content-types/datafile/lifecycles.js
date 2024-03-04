@@ -1,6 +1,6 @@
 'use strict';
 
-const { ApplicationError, ValidationError } = require('@strapi/utils').errors;
+const { ValidationError } = require('@strapi/utils').errors;
 const { validateEntries } = require('./validation');
 const { importEntries } = require('./import');
 
@@ -19,26 +19,24 @@ module.exports = {
     }
 
     console.log('Validated JSON');
+  },
 
-    // Import should be moved to afterCreate
+  async afterCreate(event) {
+    const { result, params } = event;
+    const {id} = result;
+    const {data} = params;
+
     console.log('Importing JSON data');
-
-    const dummyId = 1; // should be datafile id obtained in afterCreate
 
     for (const [key, entries] of Object.entries(data.data)){
       const uid = Object.keys(strapi.contentTypes)
         .filter((k) => strapi.contentTypes[k].collectionName === key)[0];
-      await importEntries(uid, entries, dummyId).catch((e) => { throw e; });
+      await importEntries(uid, entries, id, data.publish_on_import)
+        .catch((e) => { throw e; });
     }
 
     console.log('Imported data');
 
-    console.log('Stopping');
-    throw new ApplicationError('stop', {});
-  },
-
-  async afterCreate(event){
-    const { result, params } = event;
   }
 
 };

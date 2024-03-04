@@ -4,10 +4,13 @@ const array = require('lodash/array');
 const object = require('lodash/object');
 const { isEqual } = require('lodash/lang');
 
-const createOrUpdate = async (uid, entry, datafile_id) => {
-  // Search for entry in database
+const createOrUpdate = async (uid, entry, datafile_id, publish_on_import) => {
+
+  entry.datafile = datafile_id;
+
   const attrs = strapi.contentTypes[uid].__schema__.attributes;
 
+  // Search for entry in database
   const ctFields = Object.keys(attrs)
     .filter((k) => 
       attrs[k].type !== 'relation' && attrs[k].type !== 'component');
@@ -38,6 +41,11 @@ const createOrUpdate = async (uid, entry, datafile_id) => {
       entry[c] = array.unionWith(c in data ? data[c] : null, entry[c], isEqual);
     }
 
+    // published if unpublished
+    if (publish_on_import && data.publishedAt == null) {
+      entry.publishedAt = Date.now();
+    }
+
     console.log('updating ' + uid + ' id: ' + data.id);
     const dbEntry = await strapi.entityService.update(uid, data.id, {
       data: entry
@@ -48,6 +56,12 @@ const createOrUpdate = async (uid, entry, datafile_id) => {
   }
   else {
     // create
+
+    // publish entry
+    if (publish_on_import) {
+      entry.publishedAt = Date.now();
+    } 
+
     // set a dummy 'uid'; if it is missing it will throw an error
     // it will be generated in the beforeCreate lifecycle anyways
     console.log('creating ' + uid);
@@ -59,20 +73,20 @@ const createOrUpdate = async (uid, entry, datafile_id) => {
   }
 };
 
-const importRelations = async(attrs, r, data, datafile_id) => {
+const importRelations = async(attrs, r, data, datafile_id, publish_on_import) => {
   if (Array.isArray(data)) {
-    const ids = await importEntries(attrs[r].target, data, datafile_id)
+    const ids = await importEntries(attrs[r].target, data, datafile_id, publish_on_import)
       .catch((e) => { throw e; });
     return ids;
   }
   else {
-    const id = await importEntry(attrs[r].target, data, datafile_id)
+    const id = await importEntry(attrs[r].target, data, datafile_id, publish_on_import)
       .catch((e) => { throw e; });
     return id;
   }
 };
 
-const importEntry = async (uid, entry, datafile_id) => {
+const importEntry = async (uid, entry, datafile_id, publish_on_import) => {
   let attrs;
   attrs = strapi.contentTypes[uid].__schema__.attributes;
 
@@ -82,7 +96,7 @@ const importEntry = async (uid, entry, datafile_id) => {
   const relationData = array.intersection(Object.keys(entry), ctRelationFields);
   for (const idx in relationData){
     const r = relationData[idx];
-    const rId = await importRelations(attrs, r, entry[r], datafile_id)
+    const rId = await importRelations(attrs, r, entry[r], datafile_id, publish_on_import)
       .catch((e) => { throw e; });
     entry[r] = rId;
   }
@@ -101,7 +115,7 @@ const importEntry = async (uid, entry, datafile_id) => {
       const relationData = array.intersection(Object.keys(comp), compRelationFields);
       for (const idx in relationData){
         const r = relationData[idx];
-        const rId = await importRelations(cAttrs, r, comp[r], datafile_id)
+        const rId = await importRelations(cAttrs, r, comp[r], datafile_id, publish_on_import)
           .catch((e) => { throw e; });
         entry[component][r] = rId;
       }
@@ -112,7 +126,7 @@ const importEntry = async (uid, entry, datafile_id) => {
         const relationData = array.intersection(Object.keys(comp), compRelationFields);
         for (const idx in relationData){
           const r = relationData[idx];
-          const rId = await importRelations(cAttrs, r, comp[r], datafile_id)
+          const rId = await importRelations(cAttrs, r, comp[r], datafile_id, publish_on_import)
             .catch((e) => { throw e; });
           entry[component][c][r] = rId;
         }
@@ -121,19 +135,18 @@ const importEntry = async (uid, entry, datafile_id) => {
   }
 
   console.log('creating/updating!');
-  console.log(entry);
-  const id = await createOrUpdate(uid, entry, datafile_id)
+  const id = await createOrUpdate(uid, entry, datafile_id, publish_on_import)
     .catch((e) => { throw e; });
 
   return id;
   
 };
 
-const importEntries = async (uid, entries, datafile_id) => {
+const importEntries = async (uid, entries, datafile_id, publish_on_import) => {
   const ids = [];
   for (const idx in entries){
     const entry = entries[idx];
-    const id = await importEntry(uid, entry, datafile_id)
+    const id = await importEntry(uid, entry, datafile_id, publish_on_import)
       .catch((e) => { throw e; });
     ids.push(id);
   }

@@ -24,7 +24,8 @@
     },
     "related": {
       "type": "relation",
-      "relation": "morphToMany"
+      "relation": "morphToMany",
+      "configurable": false
     }
   }
 }

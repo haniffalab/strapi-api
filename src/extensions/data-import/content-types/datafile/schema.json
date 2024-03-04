@@ -21,6 +21,10 @@
     },
     "description": {
       "type": "string"
+    },
+    "publish_on_import": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
