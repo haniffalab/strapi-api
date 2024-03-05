@@ -4,7 +4,7 @@
   "description": "This is the description of the plugin.",
   "strapi": {
     "name": "data-import",
-    "description": "Plugin to import data through a CSV file.",
+    "description": "Plugin to import data through a JSON string.",
     "kind": "plugin",
     "displayName": "Data Import"
   },

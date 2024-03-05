@@ -1,5 +1,5 @@
 'use strict';
-
+// TODO: move functions to data-import plugin
 const array = require('lodash/array');
 
 module.exports = {
