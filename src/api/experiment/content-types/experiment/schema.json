@@ -35,17 +35,28 @@
       "unique": true,
       "required": true
     },
-    "library_type": {
+    "assay": {
       "type": "enumeration",
       "enum": [
-        "A3'GEX"
+        "Drop-Seq",
+        "Smart-Seq",
+        "Smart-Seq2",
+        "CITE-seq",
+        "CEL-Seq",
+        "CEL-Seq2",
+        "Fluidigm_C1",
+        "Seq-well",
+        "library 10x_3'_v1",
+        "library 10x_3'_v2",
+        "library 10x_3'_v3",
+        "library 10x_3'_NG3.1",
+        "library 10x_5'_v1",
+        "library 10x_5'_v1.1",
+        "library 10x_5'_v2",
+        "library 10x_5'_NG",
+        "library 10x_ATAC",
+        "Visium"
       ]
-    },
-    "study": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::study.study",
-      "inversedBy": "experiments"
     },
     "contributors": {
       "displayName": "people",
@@ -56,25 +67,36 @@
     "protocols": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::protocol.protocol",
-      "mappedBy": "experiment"
+      "target": "api::protocol.protocol"
     },
-    "datafiles": {
+    "data_archives": {
       "displayName": "file",
       "type": "component",
       "repeatable": true,
       "component": "data.file"
     },
-    "dataset": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::dataset.dataset",
-      "inversedBy": "experiments"
-    },
     "uid": {
       "type": "uid",
       "targetField": "experiment_id",
       "required": true
+    },
+    "datasets": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::dataset.dataset",
+      "mappedBy": "experiments"
+    },
+    "study": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::study.study",
+      "inversedBy": "experiments"
+    },
+    "samples": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sample.sample",
+      "mappedBy": "experiments"
     }
   }
 }

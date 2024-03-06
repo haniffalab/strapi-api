@@ -1,7 +1,7 @@
 {
   "collectionName": "components_contributions_people",
   "info": {
-    "displayName": "people",
+    "displayName": "person",
     "description": ""
   },
   "options": {},
@@ -16,6 +16,11 @@
       "enum": [
         "author"
       ]
+    },
+    "affiliations": {
+      "type": "component",
+      "repeatable": true,
+      "component": "contributions.affiliations"
     }
   }
 }

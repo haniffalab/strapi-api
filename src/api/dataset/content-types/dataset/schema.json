@@ -39,9 +39,9 @@
         "audios"
       ]
     },
-    "studies": {
+    "study": {
       "type": "relation",
-      "relation": "manyToMany",
+      "relation": "manyToOne",
       "target": "api::study.study",
       "inversedBy": "datasets"
     },
@@ -53,12 +53,6 @@
         "Smart-seq2",
         "VDJ"
       ]
-    },
-    "experiments": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::experiment.experiment",
-      "mappedBy": "dataset"
     },
     "format": {
       "type": "enumeration",
@@ -76,6 +70,15 @@
       "type": "uid",
       "targetField": "name",
       "required": true
+    },
+    "metadata": {
+      "type": "json"
+    },
+    "experiments": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::experiment.experiment",
+      "inversedBy": "datasets"
     }
   }
 }

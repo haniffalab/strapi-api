@@ -44,7 +44,7 @@
       },
       "customField": "plugin::ebi-ols.ontology-term"
     },
-    "people": {
+    "contributors": {
       "type": "component",
       "repeatable": true,
       "component": "contributions.people"
@@ -53,6 +53,26 @@
       "type": "uid",
       "targetField": "sample_id",
       "required": true
+    },
+    "experiments": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::experiment.experiment",
+      "inversedBy": "samples"
+    },
+    "metadata": {
+      "type": "json"
+    },
+    "disease": {
+      "type": "string",
+      "default": "None"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "fresh",
+        "frozen"
+      ]
     }
   }
 }

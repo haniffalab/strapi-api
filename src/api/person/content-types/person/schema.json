@@ -50,6 +50,11 @@
       "relation": "manyToMany",
       "target": "api::publication.publication",
       "inversedBy": "authors"
+    },
+    "affiliations": {
+      "type": "component",
+      "repeatable": true,
+      "component": "contributions.affiliations"
     }
   }
 }

@@ -56,7 +56,7 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::person.person",
-      "inversedBy": "publications"
+      "mappedBy": "publications"
     },
     "uid": {
       "type": "uid",

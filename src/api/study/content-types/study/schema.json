@@ -37,18 +37,6 @@
       "relation": "oneToMany",
       "target": "api::publication.publication"
     },
-    "experiments": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::experiment.experiment",
-      "mappedBy": "study"
-    },
-    "datasets": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::dataset.dataset",
-      "mappedBy": "studies"
-    },
     "analyses": {
       "type": "relation",
       "relation": "oneToMany",
@@ -58,6 +46,18 @@
       "type": "uid",
       "targetField": "study_id",
       "required": true
+    },
+    "experiments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::experiment.experiment",
+      "mappedBy": "study"
+    },
+    "datasets": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::dataset.dataset",
+      "mappedBy": "study"
     }
   }
 }
