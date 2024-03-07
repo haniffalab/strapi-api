@@ -51,7 +51,10 @@
         "scRNA-seq",
         "CITE-seq",
         "Smart-seq2",
-        "VDJ"
+        "VDJ",
+        "Visium",
+        "Xenium",
+        "MERFISH"
       ]
     },
     "format": {
