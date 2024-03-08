@@ -134,7 +134,6 @@ const importEntry = async (uid, entry, datafile_id, publish_on_import) => {
     }
   }
 
-  console.log('creating/updating!');
   const id = await createOrUpdate(uid, entry, datafile_id, publish_on_import)
     .catch((e) => { throw e; });
 

@@ -25,6 +25,10 @@
     "publish_on_import": {
       "type": "boolean",
       "default": false
+    },
+    "succeeded": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

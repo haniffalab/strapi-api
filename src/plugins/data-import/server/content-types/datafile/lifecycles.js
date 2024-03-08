@@ -22,7 +22,8 @@ module.exports = {
   },
 
   async afterCreate(event) {
-    const { result, params } = event;
+    const { result, params, model } = event;
+    const {uid} = model;
     const {id} = result;
     const {data} = params;
 
@@ -35,7 +36,15 @@ module.exports = {
         .catch((e) => { throw e; });
     }
 
+    await strapi.entityService.update(uid, id, {
+      data: {
+        succeeded: true
+      }
+    }).catch((e) => { throw e; });
+
     console.log('Imported data');
+
+    
 
   }
 

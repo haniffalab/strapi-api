@@ -21,7 +21,9 @@ module.exports = createCoreService('api::experiment.experiment', ({strapi}) => (
       populate: populateParams
     });
 
-    entity = strapi.config.functions.reduceComponentData(attrs, entity);
+    if (entity){
+      entity = strapi.config.functions.reduceComponentData(attrs, entity);
+    }
 
     return entity;
   }
