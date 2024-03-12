@@ -24,6 +24,7 @@
     "react-bootstrap-typeahead": "^6.3.2",
     "react-dom": "^18.2.0",
     "react-router-dom": "^5.3.4",
+    "semver": "^7.6.0",
     "styled-components": "5.3.3",
     "typescript": "^5.3.3"
   },
