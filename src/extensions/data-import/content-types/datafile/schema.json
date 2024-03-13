@@ -13,7 +13,8 @@
   "attributes": {
     "related": {
       "type": "relation",
-      "relation": "morphToMany"
+      "relation": "morphToMany",
+      "configurable": false
     },
     "data": {
       "type": "json",
@@ -28,7 +29,8 @@
     },
     "succeeded": {
       "type": "boolean",
-      "default": false
+      "default": false,
+      "configurable": false
     }
   }
 }
