@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import pluginId from '../../pluginId';
 import { Combobox, ComboboxOption } from '@strapi/design-system/Combobox';
 import { TextInput } from '@strapi/design-system';
 import { Stack } from '@strapi/design-system/Stack';
@@ -303,10 +302,10 @@ const Wrapper = styled.div`
 
 const CACHE = {};
 //const SEARCH_URI = strapi.plugin(pluginId).config('baseUrl');
-const SEARCH_URI = 'https://www.ebi.ac.uk/ols/api/select';
+const SEARCH_URI = 'https://www.ebi.ac.uk/ols4/api/select';
 
-function makeAndHandleRequest(query, ontology) {
-  return fetch(`${SEARCH_URI}?q=${query}&ontology=${ontology}&rows=50`)
+async function makeAndHandleRequest(query, ontology) {
+  return await fetch(`${SEARCH_URI}?q=${query}&ontology=${ontology}&rows=50`)
     .then((resp) => resp.json())
     .then(({ response }) => {
       const options = response.docs.map((i) => ({
@@ -318,6 +317,9 @@ function makeAndHandleRequest(query, ontology) {
       }));
       const total_count = response.numFound;
       return { options, total_count };
+    })
+    .catch((err) => {
+      return { error: err.message }; 
     });
 }
 
@@ -332,7 +334,7 @@ const OntologyTermSelect = ({
   description,
   placeholder,
   disabled,
-  error,
+  error: propsError,
 }) => {
   const { formatMessage, messages } = useIntl();
 
@@ -349,29 +351,38 @@ const OntologyTermSelect = ({
     selected = [];
   }
 
+  const [error, setError] = useState(propsError);
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState([]);
   const [query, setQuery] = useState('');
 
   const handleInputChange = (q) => {
+    setError(null);
     setQuery(q);
   };
 
   // `handleInputChange` updates state and triggers a re-render, so
   // use `useCallback` to prevent the debounced search handler from
   // being cancelled.
-  const handleSearch = useCallback((q) => {
+  const handleSearch = useCallback(async (q) => {
     if (CACHE[q]) {
       setOptions(CACHE[q].options);
       return;
     }
 
+    setError(null);
     setIsLoading(true);
-    makeAndHandleRequest(q, attribute.options.ontology).then((resp) => {
-      CACHE[q] = { ...resp };
+    await makeAndHandleRequest(q, attribute.options.ontology).then((resp) => {
+      const { error: respError, options: respOptions } = resp;
 
+      if (respError){
+        setError(respError);
+        setIsLoading(false);
+      }
+
+      CACHE[q] = { ...resp };
       setIsLoading(false);
-      setOptions(resp.options);
+      setOptions(respOptions);
     });
   }, []);
 
