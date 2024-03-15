@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_affiliations_affiliations",
+  "info": {
+    "displayName": "affiliation",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "affiliation": {
+      "type": "string"
+    }
+  }
+}

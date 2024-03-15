@@ -12,17 +12,49 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "datafile": {
+      "type": "relation",
+      "relation": "morphOne",
+      "target": "plugin::data-import.datafile",
+      "morphBy": "related",
+      "private": true,
+      "configurable": false
+    },
     "first_name": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "last_name": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "email": {
-      "type": "email"
+      "type": "email",
+      "unique": true
     },
     "orcid_id": {
       "type": "string"
+    },
+    "full_name": {
+      "type": "string",
+      "unique": true,
+      "required": false
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "full_name",
+      "required": true
+    },
+    "publications": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::publication.publication",
+      "inversedBy": "authors"
+    },
+    "affiliations": {
+      "type": "component",
+      "repeatable": true,
+      "component": "contributions.affiliations"
     }
   }
 }

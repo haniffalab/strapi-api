@@ -12,8 +12,18 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "datafile": {
+      "type": "relation",
+      "relation": "morphOne",
+      "target": "plugin::data-import.datafile",
+      "morphBy": "related",
+      "private": true,
+      "configurable": false
+    },
     "study_id": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "unique": true
     },
     "slug": {
       "type": "uid",
@@ -27,6 +37,16 @@
       "relation": "oneToMany",
       "target": "api::publication.publication"
     },
+    "analyses": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::analysis.analysis"
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "study_id",
+      "required": true
+    },
     "experiments": {
       "type": "relation",
       "relation": "oneToMany",
@@ -35,14 +55,9 @@
     },
     "datasets": {
       "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::dataset.dataset",
-      "mappedBy": "studies"
-    },
-    "analyses": {
-      "type": "relation",
       "relation": "oneToMany",
-      "target": "api::analysis.analysis"
+      "target": "api::dataset.dataset",
+      "mappedBy": "study"
     }
   }
 }

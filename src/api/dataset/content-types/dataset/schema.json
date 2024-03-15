@@ -12,8 +12,18 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "datafile": {
+      "type": "relation",
+      "relation": "morphOne",
+      "target": "plugin::data-import.datafile",
+      "morphBy": "related",
+      "private": true,
+      "configurable": false
+    },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "unique": true
     },
     "description": {
       "type": "text"
@@ -29,9 +39,9 @@
         "audios"
       ]
     },
-    "studies": {
+    "study": {
       "type": "relation",
-      "relation": "manyToMany",
+      "relation": "manyToOne",
       "target": "api::study.study",
       "inversedBy": "datasets"
     },
@@ -41,14 +51,11 @@
         "scRNA-seq",
         "CITE-seq",
         "Smart-seq2",
-        "VDJ"
+        "VDJ",
+        "Visium",
+        "Xenium",
+        "MERFISH"
       ]
-    },
-    "experiments": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::experiment.experiment",
-      "mappedBy": "dataset"
     },
     "format": {
       "type": "enumeration",
@@ -58,6 +65,23 @@
         "SpatialData",
         "OME-TIFF"
       ]
+    },
+    "url": {
+      "type": "string"
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "metadata": {
+      "type": "json"
+    },
+    "experiments": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::experiment.experiment",
+      "inversedBy": "datasets"
     }
   }
 }
