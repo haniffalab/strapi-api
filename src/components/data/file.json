@@ -9,10 +9,9 @@
     "file_type": {
       "type": "enumeration",
       "enum": [
-        "bam",
-        "fastq_read1",
-        "fastq_read2",
-        "fastq_index1"
+        "h5ad",
+        "zarr",
+        "tif"
       ]
     },
     "url": {
