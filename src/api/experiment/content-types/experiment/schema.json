@@ -101,6 +101,9 @@
       "relation": "manyToMany",
       "target": "api::sample.sample",
       "mappedBy": "experiments"
+    },
+    "metadata": {
+      "type": "json"
     }
   }
 }

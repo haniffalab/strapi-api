@@ -10,12 +10,44 @@
       "type": "enumeration",
       "enum": [
         "h5ad",
+        "h5",
+        "h5mu",
         "zarr",
-        "tif"
+        "tif",
+        "zip",
+        "h5seurat",
+        "rds",
+        "csv",
+        "txt",
+        "xlsx",
+        "json",
+        "link",
+        "other"
       ]
     },
     "url": {
       "type": "string"
+    },
+    "format": {
+      "type": "enumeration",
+      "enum": [
+        "AnnData",
+        "Seurat",
+        "MuData",
+        "SpatialData",
+        "Raw OME-TIFF",
+        "Label OME-TIFF",
+        "OME-TIFF",
+        "CellRanger",
+        "SpaceRanger",
+        "WebAtlas config",
+        "metadata",
+        "other"
+      ],
+      "required": true
+    },
+    "metadata": {
+      "type": "json"
     }
   }
 }
