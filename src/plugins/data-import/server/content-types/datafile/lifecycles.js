@@ -44,8 +44,6 @@ module.exports = {
 
     console.log('Imported data');
 
-    
-
   }
 
 };

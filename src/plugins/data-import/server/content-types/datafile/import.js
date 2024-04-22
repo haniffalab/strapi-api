@@ -6,14 +6,21 @@ const { isEqual } = require('lodash/lang');
 
 const createOrUpdate = async (uid, entry, datafile_id, publish_on_import) => {
 
-  entry.datafile = datafile_id;
-
   const attrs = strapi.contentTypes[uid].__schema__.attributes;
+
+  if (typeof entry === 'string'){
+    const targetField = attrs['uid'].targetField;
+    const entityData = {[targetField] : entry};
+    const data = await strapi.service(uid).findByUid({params: entityData})
+      .catch((e) => { throw e; });
+    return data.id;
+  }
+
+  entry.datafile = datafile_id;
 
   // Search for entry in database
   const ctFields = Object.keys(attrs)
-    .filter((k) => 
-      attrs[k].type !== 'relation' && attrs[k].type !== 'component');
+    .filter((k) => attrs[k].type !== 'component');
   const entityData = object.pick(entry, ctFields);
 
   const data = await strapi.service(uid).findByUid({params: entityData})
