@@ -4,6 +4,8 @@ const array = require('lodash/array');
 const object = require('lodash/object');
 const { isEqual } = require('lodash/lang');
 
+const MAX_IDS = 500;
+
 const createOrUpdate = async (uid, entry, datafile_id, publish_on_import) => {
 
   const attrs = strapi.contentTypes[uid].__schema__.attributes;
@@ -36,7 +38,10 @@ const createOrUpdate = async (uid, entry, datafile_id, publish_on_import) => {
     const relationData = array.intersection(Object.keys(entry), ctRelationFields);
     for (const idx in relationData){
       const r = relationData[idx];
-      entry[r] = array.union(r in data ? data[r].map((d) => d.id) : [], entry[r]);
+      entry[r] = array.union(
+        r in data ? data[r].map((d) => d.id) : [],
+        Array.isArray(entry[r]) ? entry[r] : [entry[r]]
+      );
     }
 
     // get previous repeatable components to append to them, not overwrite them
@@ -45,7 +50,11 @@ const createOrUpdate = async (uid, entry, datafile_id, publish_on_import) => {
     const componentData = array.intersection(Object.keys(entry), ctComponentFields);
     for (const idx in componentData){
       const c = componentData[idx];
-      entry[c] = array.unionWith(c in data ? data[c] : null, entry[c], isEqual);
+      entry[c] = array.unionWith(
+        c in data ? data[c] : null,
+        Array.isArray(entry[c]) ? entry[c] : [entry[c]],
+        isEqual
+      );
     }
 
     // published if unpublished
@@ -97,6 +106,8 @@ const importEntry = async (uid, entry, datafile_id, publish_on_import) => {
   let attrs;
   attrs = strapi.contentTypes[uid].__schema__.attributes;
 
+  let excessData = [];
+
   // Loop through 'relation' fields
   const ctRelationFields = Object.keys(attrs)
     .filter((k) => attrs[k].type === 'relation');
@@ -106,6 +117,9 @@ const importEntry = async (uid, entry, datafile_id, publish_on_import) => {
     const rId = await importRelations(attrs, r, entry[r], datafile_id, publish_on_import)
       .catch((e) => { throw e; });
     entry[r] = rId;
+    if (Array.isArray(entry[r]) && entry[r].length > MAX_IDS){
+      excessData.push(r);
+    }
   }
 
   // Loop through 'relation' fields in 'component' fields
@@ -138,14 +152,67 @@ const importEntry = async (uid, entry, datafile_id, publish_on_import) => {
           entry[component][c][r] = rId;
         }
       }
+      if (Array.isArray(entry[component]) && entry[component].length > MAX_IDS){
+        excessData.push(component);
+      }
     }
   }
 
-  const id = await createOrUpdate(uid, entry, datafile_id, publish_on_import)
+  // Check if relations or components are too many for single import
+  // if above 500 underlying SQL throws error about compound SELECT
+  let id;
+  if (!excessData.length){
+    id = await createOrUpdate(uid, entry, datafile_id, publish_on_import)
+      .catch((e) => { throw e; });
+  }
+  else {
+    id = await inverseUpdate(uid, entry, datafile_id, publish_on_import, excessData)
+      .catch((e) => { throw e; });
+  }
+  
+  return id;
+};
+
+const inverseUpdate = async (uid, entry, datafile_id, publish_on_import, excessData) => {
+  console.log('Attempting inverse updates');
+  const attrs = strapi.contentTypes[uid].__schema__.attributes;
+
+  let baseEntry = entry;
+  let excessIds = {};
+  for (const idx in excessData){
+    const r = excessData[idx];
+    excessIds[r] = entry[r];
+    delete baseEntry[r];
+  }
+
+  // Initial create/update without relations/components that exceed MAX_IDS 
+  const id = await createOrUpdate(uid, baseEntry, datafile_id, publish_on_import)
     .catch((e) => { throw e; });
 
+  for (const r in excessIds) {
+    const foreignUid = attrs[r].target;
+    const foreignAttrs = strapi.contentTypes[foreignUid].__schema__.attributes;
+    const foreignUidField = foreignAttrs['uid'].targetField;
+    const foreignTarget = attrs[r]['mappedBy'] || attrs[r]['inversedBy'];
+    for (const idx in excessIds[r]) {
+      const foreignId = excessIds[r][idx];
+      const foreignData = await strapi.entityService.findOne(foreignUid, foreignId, {
+        fields: [foreignUidField],
+      }).catch((e) => { throw e; });
+      const foreignEntry = {
+        [foreignUidField]: foreignData[foreignUidField],
+        [foreignTarget]: id
+      };
+      const fId = await createOrUpdate(foreignUid, foreignEntry, datafile_id, publish_on_import)
+        .catch((e) => { throw e; });
+      if (fId !== foreignId) {
+        console.log('Inverse update returned wrond id');
+        throw new Error('Inverse update returned wrong id');
+      }
+    }
+  }
+    
   return id;
-  
 };
 
 const importEntries = async (uid, entries, datafile_id, publish_on_import) => {
