@@ -9,6 +9,7 @@ const validateEntry = async (uid, entry, parents, is_component=false) => {
   parents.push(uid);
 
   if (Array.isArray(entry)){
+    console.log(parents.join('>') + ' must contain a single object');
     throw new ValidationError(parents.join('>') +
     ' must contain a single object');
   }
@@ -16,6 +17,10 @@ const validateEntry = async (uid, entry, parents, is_component=false) => {
   let attrs;
   if (!is_component){
     attrs = strapi.contentTypes[uid].__schema__.attributes;
+    if (!attrs['uid'].targetField) {
+      console.log(uid + ' "uid" field has no "targetField".');
+      throw new ValidationError(uid + ' "uid" field has no "targetField".');
+    }
   }
   else {
     attrs = strapi.components[uid].__schema__.attributes;

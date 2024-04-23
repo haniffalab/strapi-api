@@ -152,13 +152,10 @@ const importEntry = async (uid, entry, datafile_id, publish_on_import) => {
           entry[component][c][r] = rId;
         }
       }
-      if (Array.isArray(entry[component]) && entry[component].length > MAX_IDS){
-        excessData.push(component);
-      }
     }
   }
 
-  // Check if relations or components are too many for single import
+  // Check if relations are too many for single import
   // if above 500 underlying SQL throws error about compound SELECT
   let id;
   if (!excessData.length){
@@ -185,7 +182,7 @@ const inverseUpdate = async (uid, entry, datafile_id, publish_on_import, excessD
     delete baseEntry[r];
   }
 
-  // Initial create/update without relations/components that exceed MAX_IDS 
+  // Initial create/update without relations that exceed MAX_IDS 
   const id = await createOrUpdate(uid, baseEntry, datafile_id, publish_on_import)
     .catch((e) => { throw e; });
 
