@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_disease_organs",
+  "info": {
+    "displayName": "organ",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    }
+  }
+}
