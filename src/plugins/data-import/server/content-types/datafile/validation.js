@@ -9,6 +9,7 @@ const validateEntry = async (uid, entry, parents, is_component=false) => {
   parents.push(uid);
 
   if (Array.isArray(entry)){
+    console.log(parents.join('>') + ' must contain a single object');
     throw new ValidationError(parents.join('>') +
     ' must contain a single object');
   }
@@ -16,18 +17,41 @@ const validateEntry = async (uid, entry, parents, is_component=false) => {
   let attrs;
   if (!is_component){
     attrs = strapi.contentTypes[uid].__schema__.attributes;
+    if (!attrs['uid'].targetField) {
+      console.log(uid + ' "uid" field has no "targetField".');
+      throw new ValidationError(uid + ' "uid" field has no "targetField".');
+    }
   }
   else {
     attrs = strapi.components[uid].__schema__.attributes;
   }
   if (!attrs){ throw new ValidationError('Invalid type ' + uid); }
 
+  // Check if only 'uid' value was given and exists (oneToOne, oneToMany relations)
+  if (typeof(entry) === 'string'){
+    const targetField = attrs['uid'].targetField;
+    if (attrs[targetField].type !== 'string'){
+      console.log(uid + ' uid targetField type should be of type string.');
+      throw new ValidationError(uid + 'uid targetField type should be of type string.' +
+        'Update contentType.');
+    }
+    const entityData = {[targetField] : entry};
+    const data = await strapi.service(uid).findByUid({params: entityData})
+      .catch((e) => { throw e; });
+    if (!data) {
+      console.log(uid + 'with ' + targetField + ' = ' + entry + 'does not exist yet.');
+      throw new ValidationError(uid + 'with ' + targetField + ' = ' + entry + 'does not exist yet.' +
+        'Create it first before using only ' + targetField + ' to set the relation.');
+    }
+    return;
+  }
+
   // Check if unrecognized fields are present
   const unrecognized = array.difference(Object.keys(entry), Object.keys(attrs));
   if (unrecognized.length) {
     console.log('Unrecognized fields', parents.concat([unrecognized]));
     throw new ValidationError('Unrecognized fields ' +
-    unrecognized + ' in ' + parents.join('>'));
+      unrecognized + ' in ' + parents.join('>'));
   }
 
   // Check all required fields are present
@@ -110,7 +134,7 @@ const validateEntry = async (uid, entry, parents, is_component=false) => {
     }
     else if (attrs[r].relation === 'oneToOne' ||
     attrs[r].relation === 'manyToOne'){
-      await validateEntry(attrs[r].target,entry[r], parents)
+      await validateEntry(attrs[r].target, entry[r], parents)
         .catch((e) => { throw e; });
     }
   }
