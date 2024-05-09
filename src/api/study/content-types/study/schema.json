@@ -58,6 +58,11 @@
       "relation": "oneToMany",
       "target": "api::dataset.dataset",
       "mappedBy": "study"
+    },
+    "disease_datasets": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::disease-dataset.disease-dataset"
     }
   }
 }

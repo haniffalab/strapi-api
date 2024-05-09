@@ -1,0 +1,71 @@
+{
+  "kind": "collectionType",
+  "collectionName": "disease_genes",
+  "info": {
+    "singularName": "disease-gene",
+    "pluralName": "disease-genes",
+    "displayName": "DiseaseGene",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "datafile": {
+      "type": "relation",
+      "relation": "morphOne",
+      "target": "plugin::data-import.datafile",
+      "morphBy": "related",
+      "private": true,
+      "configurable": false
+    },
+    "gene_name": {
+      "type": "string",
+      "required": true
+    },
+    "gene_id": {
+      "type": "string",
+      "required": true
+    },
+    "disease_name": {
+      "type": "string",
+      "required": true
+    },
+    "disease_id": {
+      "type": "string",
+      "required": true
+    },
+    "confidence": {
+      "type": "enumeration",
+      "enum": [
+        "limited",
+        "moderate",
+        "strong",
+        "definitive",
+        "unspecified"
+      ],
+      "default": "unspecified"
+    },
+    "disease_datasets": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::disease-dataset.disease-dataset",
+      "inversedBy": "disease_genes"
+    },
+    "disease_gene": {
+      "type": "string",
+      "unique": true
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "disease_gene",
+      "required": false
+    },
+    "organs": {
+      "type": "component",
+      "repeatable": true,
+      "component": "disease.organ"
+    }
+  }
+}

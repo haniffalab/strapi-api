@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "disease_datasets",
+  "info": {
+    "singularName": "disease-dataset",
+    "pluralName": "disease-datasets",
+    "displayName": "DiseaseDataset",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "datafile": {
+      "type": "relation",
+      "relation": "morphOne",
+      "target": "plugin::data-import.datafile",
+      "morphBy": "related",
+      "private": true,
+      "configurable": false
+    },
+    "disease_genes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::disease-gene.disease-gene",
+      "mappedBy": "disease_datasets"
+    }
+  }
+}
