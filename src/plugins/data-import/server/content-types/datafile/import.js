@@ -6,6 +6,38 @@ const { isEqual } = require('lodash/lang');
 
 const MAX_IDS = 500;
 
+const getEbiFieldData = async (data, ontology) => {
+  let id, iri, short_form, label;
+  if (typeof data === 'string') { // consider as `label`
+    label = data;
+  }
+  else if (typeof data === 'object' && !Array.isArray(data) && data !== null){
+    ({ id, iri, short_form, label } = data);
+  }
+  const res = await strapi.config.functions.queryOLS(id || iri || short_form || label, ontology).catch((e)=> {throw e;});
+  let options;
+  const { error } = res;
+  ({options} = res);
+
+  if (error) {
+    throw new Error(error);
+  }
+  else if (!options || !options.length){
+    throw new Error('Data does not match to any ontology');
+  }
+
+  if (label){
+    options = options.filter((o) => 
+      o.label.toLowerCase() === label.toLowerCase()
+    );
+  }
+  if (options.length > 1){
+    throw new Error('Data does not match to a single ontology');
+  }
+
+  return options[0];
+};
+
 const createOrUpdate = async (uid, entry, datafile_id, publish_on_import) => {
 
   const attrs = strapi.contentTypes[uid].__schema__.attributes;
@@ -152,6 +184,18 @@ const importEntry = async (uid, entry, datafile_id, publish_on_import) => {
           entry[component][c][r] = rId;
         }
       }
+    }
+  }
+
+  // Get EBI ontology data for custom EBI fields
+  const ebiFields = Object.keys(attrs)
+    .filter((k) => (
+      attrs[k].type === 'customField' && attrs[k].customField === 'plugin::ebi-ols.ontology-term')
+    );
+  for (const idx in ebiFields){
+    if (entry[ebiFields[idx]]){
+      entry[ebiFields[idx]] = await getEbiFieldData(entry[ebiFields[idx]], attrs[ebiFields[idx]].options.ontology)
+        .catch((e) => { throw e; });
     }
   }
 

@@ -7,6 +7,7 @@ import { Field, FieldLabel, FieldError, FieldHint } from '@strapi/design-system/
 import { useIntl } from 'react-intl';
 import { AsyncTypeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
 import styled from 'styled-components';
+import { queryOLS } from '../../../../../../../config/functions';
 
 const Wrapper = styled.div`
 .rbt-menu.dropdown-menu {
@@ -302,26 +303,6 @@ const Wrapper = styled.div`
 
 const CACHE = {};
 //const SEARCH_URI = strapi.plugin(pluginId).config('baseUrl');
-const SEARCH_URI = 'https://www.ebi.ac.uk/ols4/api/select';
-
-async function makeAndHandleRequest(query, ontology) {
-  return await fetch(`${SEARCH_URI}?q=${query}&ontology=${ontology}&rows=50`)
-    .then((resp) => resp.json())
-    .then(({ response }) => {
-      const options = response.docs.map((i) => ({
-        id: i.short_form,
-        label: i.label,
-        short_form: i.short_form,
-        ontology_prefix: i.ontology_prefix,
-        iri: i.iri,
-      }));
-      const total_count = response.numFound;
-      return { options, total_count };
-    })
-    .catch((err) => {
-      return { error: err.message }; 
-    });
-}
 
 const OntologyTermSelect = ({
   value,
@@ -338,18 +319,7 @@ const OntologyTermSelect = ({
 }) => {
   const { formatMessage, messages } = useIntl();
 
-  // @TODO
-  let selected = [];
-  try {
-    // console.log(typeof value);
-    // console.log(value.length);
-    // console.log(value);
-    selected = (typeof value === 'string' && value.length > 0 && value !== 'null') ? JSON.parse(value) : [];
-  }
-  catch (err) {
-    console.log(err);
-    selected = [];
-  }
+  const selected = value && value !== 'null' ? (Array.isArray(JSON.parse(value)) ? JSON.parse(value) : [JSON.parse(value)]) : [];
 
   const [error, setError] = useState(propsError);
   const [isLoading, setIsLoading] = useState(false);
@@ -372,7 +342,7 @@ const OntologyTermSelect = ({
 
     setError(null);
     setIsLoading(true);
-    await makeAndHandleRequest(q, attribute.options.ontology).then((resp) => {
+    await queryOLS(q, attribute.options.ontology).then((resp) => {
       const { error: respError, options: respOptions } = resp;
 
       if (respError){
@@ -406,17 +376,14 @@ const OntologyTermSelect = ({
             onInputChange={handleInputChange}
             onSearch={handleSearch}
             options={options}
-            //defaultSelected={value.split(',')}
             defaultSelected={selected}
-            //selected={selected}
             placeholder="Search for an ontology term"
             inputProps={{
               required: { required },
               disabled: { disabled }
             }}
             onChange={(selected) => {
-              //console.log(selected)
-              const value = selected.length > 0 ? JSON.stringify(selected) : null;
+              const value = selected && selected.length ? JSON.stringify(selected?.[0]) : null;
               onChange({ target: { name, value: value, type: attribute.type } });
             }}
             renderInput={({ inputRef, referenceElementRef, ...inputProps }) => (
@@ -433,22 +400,6 @@ const OntologyTermSelect = ({
                 }}
               />
             )}
-            // renderMenu={(results, menuProps) => (
-            //   <Menu {...menuProps}>
-            //     {results.map((result, index) => (
-            //       <MenuItem option={result.id} position={index}>
-            //         <span class="badge">{result.ontology_prefix}</span>
-            //         <span>{result.label}</span>
-            //       </MenuItem>
-            //     ))}
-            //   </Menu>
-            // )}
-            // renderMenuItemChildren={(option) => (
-            //     <div key={option.id}>
-            //         <span>{option.ontology_prefix}</span>
-            //         <span>{option.label}</span>
-            //     </div>
-            // )}
             useCache={false}
           />
         </Wrapper>

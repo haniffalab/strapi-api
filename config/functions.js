@@ -55,5 +55,25 @@ module.exports = {
     }
 
     return entity;
+  },
+  
+  async queryOLS(query, ontology) {
+    const SEARCH_URI = 'https://www.ebi.ac.uk/ols4/api/select';
+    return await fetch(`${SEARCH_URI}?q=${query}&ontology=${ontology}&rows=50`)
+      .then((resp) => resp.json())
+      .then(({ response }) => {
+        const options = response.docs.map((i) => ({
+          id: i.id,
+          label: i.label,
+          short_form: i.short_form,
+          ontology_name: i.ontology_name,
+          iri: i.iri,
+        }));
+        const total_count = response.numFound;
+        return { options, total_count };
+      })
+      .catch((err) => {
+        return { error: err.message }; 
+      });
   }
 };
