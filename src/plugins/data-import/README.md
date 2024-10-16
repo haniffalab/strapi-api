@@ -75,3 +75,7 @@ In order to correctly populate an entry's attributes to make an update the `find
 The first level of the JSON data must contain as key(s) the *collection name* of the content-types, e.g. `datasets`, `studies`, as defined. This must contain an array of objects, each populated by the conten-type attributes. Each attribute must have an appropriate value given the content-type schema, otherwise the validation step will error out.
 
 Relation attributes can contain either an array of objects or a single object, depending on the type of relation, e.g. `manyToOne`, `oneToOne`, etc. The correct type, array or object, is also checked by the validation step. Within the relation value the plugin expects the related content-type nested inside.
+
+# EBI OLS plugin
+
+When importing data with the data-import plugin, the plugin will expect the value for this custom field to be either a string that would map to `label` or an object with at least one of the following keys: `id`, `iri`, `short_form`. The plugin will check if this data is provided when validating. When importing, the plugin will query OBLs and if there is a single entry that matches the data it will then assing it to the field. If there is none or more than one entry from OBLs then the import process will error out.

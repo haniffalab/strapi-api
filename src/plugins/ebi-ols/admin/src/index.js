@@ -17,7 +17,7 @@ export default {
     app.customFields.register({
       name: 'ontology-term',
       pluginId: pluginId,
-      type: 'string',
+      type: 'json',
       intlLabel: {
         id: getTrad('ebi-ols.ontology-term-select.label'),
         defaultMessage: 'Ontology Term',
