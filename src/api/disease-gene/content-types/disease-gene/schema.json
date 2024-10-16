@@ -66,6 +66,9 @@
       "type": "component",
       "repeatable": true,
       "component": "disease.organ"
+    },
+    "metadata": {
+      "type": "json"
     }
   }
 }
