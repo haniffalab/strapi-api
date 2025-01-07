@@ -1,4 +1,4 @@
-module.exports = {
+module.exports = ({ env }) => ({
   'ebi-ols': {
     enabled: true,
     resolve: './src/plugins/ebi-ols',
@@ -10,4 +10,16 @@ module.exports = {
     enabled: true,
     resolve: './src/plugins/data-import'
   },
-};
+  email: {
+    config: {
+      provider: 'sendgrid',
+      providerOptions: {
+        apiKey: '',
+      },
+      settings: {
+        defaultFrom: 'no-reply@cellatlas.io',
+        defaultReplyTo: 'no-reply@cellatlas.io',
+      },
+    },
+  },
+});

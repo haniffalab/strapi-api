@@ -119,3 +119,5 @@ build
 app.yaml
 app.standard.yaml
 app.flexible.yaml
+
+.strapi
