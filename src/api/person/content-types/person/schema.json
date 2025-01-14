@@ -35,14 +35,13 @@
     "orcid_id": {
       "type": "string"
     },
-    "full_name": {
+    "display_name": {
       "type": "string",
       "unique": true,
       "required": false
     },
     "uid": {
       "type": "uid",
-      "targetField": "full_name",
       "required": true
     },
     "publications": {
@@ -51,10 +50,15 @@
       "target": "api::publication.publication",
       "inversedBy": "authors"
     },
-    "affiliations": {
-      "type": "component",
-      "repeatable": true,
-      "component": "contributions.affiliations"
+    "avatar": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }

@@ -78,15 +78,27 @@
     },
     "tissues": {
       "type": "customField",
-      "customField": "plugin::ebi-ols.ontology-term"
+      "customField": "plugin::ebi-ols.ontology-term",
+      "options": {
+        "ontology": "uberon"
+      }
     },
     "organisms": {
       "type": "customField",
-      "customField": "plugin::ebi-ols.ontology-term"
+      "customField": "plugin::ebi-ols.ontology-term",
+      "options": {
+        "ontology": "uberon"
+      }
     },
-    "experimental_factor": {
+    "assays": {
       "type": "customField",
-      "customField": "plugin::ebi-ols.ontology-term"
+      "customField": "plugin::ebi-ols.ontology-term",
+      "options": {
+        "ontology": "cl"
+      }
+    },
+    "count": {
+      "type": "integer"
     }
   }
 }

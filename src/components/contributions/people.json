@@ -17,10 +17,8 @@
         "author"
       ]
     },
-    "affiliations": {
-      "type": "component",
-      "repeatable": true,
-      "component": "contributions.affiliations"
+    "is_lead": {
+      "type": "boolean"
     }
   }
 }
