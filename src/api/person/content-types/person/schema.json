@@ -35,11 +35,6 @@
     "orcid_id": {
       "type": "string"
     },
-    "display_name": {
-      "type": "string",
-      "unique": true,
-      "required": false
-    },
     "uid": {
       "type": "uid",
       "required": true
@@ -51,14 +46,15 @@
       "inversedBy": "authors"
     },
     "avatar": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
     }
   }
 }
