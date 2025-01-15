@@ -75,6 +75,30 @@
       "type": "component",
       "repeatable": true,
       "component": "data.file"
+    },
+    "tissues": {
+      "type": "customField",
+      "customField": "plugin::ebi-ols.ontology-term",
+      "options": {
+        "ontology": "uberon"
+      }
+    },
+    "organisms": {
+      "type": "customField",
+      "customField": "plugin::ebi-ols.ontology-term",
+      "options": {
+        "ontology": "uberon"
+      }
+    },
+    "assays": {
+      "type": "customField",
+      "customField": "plugin::ebi-ols.ontology-term",
+      "options": {
+        "ontology": "cl"
+      }
+    },
+    "count": {
+      "type": "integer"
     }
   }
 }

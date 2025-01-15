@@ -63,6 +63,25 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::disease-dataset.disease-dataset"
+    },
+    "contributors": {
+      "type": "component",
+      "repeatable": true,
+      "component": "contributions.people"
+    },
+    "view_count": {
+      "type": "integer"
+    },
+    "teams": {
+      "type": "component",
+      "repeatable": true,
+      "component": "contributions.team"
+    },
+    "cell_count": {
+      "type": "integer"
+    },
+    "subtitle": {
+      "type": "text"
     }
   }
 }

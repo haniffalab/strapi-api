@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "journals",
+  "collectionName": "teams",
   "info": {
-    "singularName": "journal",
-    "pluralName": "journals",
-    "displayName": "Journal",
+    "singularName": "team",
+    "pluralName": "teams",
+    "displayName": "Team",
     "description": ""
   },
   "options": {
@@ -21,24 +21,27 @@
       "configurable": false
     },
     "name": {
-      "type": "string",
-      "required": true,
-      "unique": true
-    },
-    "uid": {
-      "type": "uid",
-      "targetField": "name",
-      "required": true
+      "type": "string"
     },
     "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
     }
   }
 }

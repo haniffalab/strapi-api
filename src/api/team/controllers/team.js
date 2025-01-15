@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * donor controller
+ * team controller
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
 
-module.exports = createCoreController('api::donor.donor');
+module.exports = createCoreController('api::team.team');
