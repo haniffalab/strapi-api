@@ -43,25 +43,16 @@
       "relation": "oneToOne",
       "target": "api::journal.journal"
     },
-    "volume": {
-      "type": "string"
-    },
-    "issue": {
-      "type": "string"
-    },
     "url": {
       "type": "string"
-    },
-    "authors": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::person.person",
-      "mappedBy": "publications"
     },
     "uid": {
       "type": "uid",
       "targetField": "title",
       "required": true
+    },
+    "is_preprint": {
+      "type": "boolean"
     }
   }
 }

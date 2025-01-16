@@ -39,12 +39,6 @@
       "type": "uid",
       "required": true
     },
-    "publications": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::publication.publication",
-      "inversedBy": "authors"
-    },
     "avatar": {
       "type": "media",
       "multiple": false,
@@ -55,6 +49,14 @@
         "videos",
         "audios"
       ]
+    },
+    "position": {
+      "type": "string"
+    },
+    "team": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::team.team"
     }
   }
 }

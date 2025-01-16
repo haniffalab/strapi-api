@@ -14,7 +14,19 @@
     "role": {
       "type": "enumeration",
       "enum": [
-        "author"
+        "Data curation",
+        "Formal analysis",
+        "Funding acquisition",
+        "Investigation",
+        "Methodology",
+        "Project administration",
+        "Software",
+        "Resources",
+        "Supervision",
+        "Validation",
+        "Visualisation",
+        "Writing",
+        "Reviewing and Editing"
       ]
     },
     "is_lead": {
