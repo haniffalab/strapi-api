@@ -87,14 +87,14 @@
       "type": "customField",
       "customField": "plugin::ebi-ols.ontology-term",
       "options": {
-        "ontology": "uberon"
+        "ontology": "ncbitaxon"
       }
     },
     "assays": {
       "type": "customField",
       "customField": "plugin::ebi-ols.ontology-term",
       "options": {
-        "ontology": "cl"
+        "ontology": "efo"
       }
     },
     "count": {
