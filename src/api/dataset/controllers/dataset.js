@@ -47,7 +47,7 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
 
     return this.transformResponse(dataset);
   },
-  async findTissues(_ctx) {
+  async findTissues(ctx) {
     const datasets = await strapi.entityService.findMany('api::dataset.dataset', {
       fields: ['tissues'],
     });
