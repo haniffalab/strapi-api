@@ -13,11 +13,11 @@
     "lint:fix": "eslint --ext .js src --fix"
   },
   "dependencies": {
-    "@strapi/plugin-i18n": "^4.25.19",
-    "@strapi/plugin-users-permissions": "^4.25.19",
-    "@strapi/provider-email-sendgrid": "^4.25.19",
+    "@strapi/plugin-i18n": "4.25.19",
+    "@strapi/plugin-users-permissions": "4.25.19",
+    "@strapi/provider-email-sendgrid": "4.25.19",
     "@strapi/strapi": "4.25.19",
-    "@strapi/utils": "^4.25.19",
+    "@strapi/utils": "4.25.19",
     "ajv": "^8.17.1",
     "bloodhound-js": "^1.2.3",
     "i18n-iso-countries": "^7.8.0",
