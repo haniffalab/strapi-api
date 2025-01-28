@@ -5,6 +5,7 @@
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
+const _ = require('lodash');
 
 module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
   async find(ctx) {
@@ -45,5 +46,14 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
     });
 
     return this.transformResponse(dataset);
+  },
+  async findTissues(_ctx) {
+    const datasets = await strapi.entityService.findMany('api::dataset.dataset', {
+      fields: ['tissues'],
+    });
+
+    const tissues = _.compact(_.flatMap(datasets, (n) => n.tissues));
+
+    return this.transformResponse(tissues);
   }
 }));

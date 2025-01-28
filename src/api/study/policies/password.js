@@ -1,5 +1,4 @@
 const bcrypt = require('bcryptjs');
-const study = require('../routes/study');
 const { ForbiddenError, NotFoundError, ValidationError } = require('@strapi/utils').errors;
 
 module.exports = async (policyContext, _config, {strapi}) => {

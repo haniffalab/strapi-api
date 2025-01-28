@@ -8,16 +8,13 @@ module.exports = async (policyContext, _config, {strapi}) => {
     where: { id },
     populate: { study: { password: true } }
   });
-
   if (!entry) {
     throw new NotFoundError('Dataset not found');
   }
 
   const {password: studyPassword} = entry.study;
-
   if (studyPassword) {
     const authHeader = policyContext.request.header['authorization'];
-
     if (!authHeader || !authHeader.startsWith('Basic ')) {
       throw new ForbiddenError('Invalid authorization');
     }
