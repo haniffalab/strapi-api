@@ -9,31 +9,22 @@ const _ = require('lodash');
 
 module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
   async find(ctx) {
-    const query = {
+    ctx.query = {
       ...ctx.query,
-    };
-
-    const { results: datasets, pagination } =
-      await strapi.entityService.findPage('api::dataset.dataset', {
-        ...query.pagination,
-        sort: query.sort,
-        filters: query.filters,
-        fields: [
-          'name', 'category', 'tissues', 'organisms'
-        ],
-        populate: {
-          study: {
-            fields: ['name', 'slug'],
-          }
+      fields: [
+        'name', 'category', 'tissues', 'organisms'
+      ],
+      populate: {
+        study: {
+          fields: ['name', 'slug'],
         }
-      });
-
-    return this.transformResponse(datasets, { pagination });
+      }
+    };
+    return await super.find(ctx);
   },
   async findOne(ctx) {
-    const {id} = ctx.params;
-
-    const dataset = await strapi.entityService.findOne('api::dataset.dataset', id, {
+    ctx.query = {
+      ...ctx.query,
       fields: [
         'name', 'category', 'tissues', 'organisms',
       ],
@@ -43,9 +34,8 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
         },
         data: true,
       }
-    });
-
-    return this.transformResponse(dataset);
+    };
+    return await super.findOne(ctx);
   },
   async findTissues(ctx) {
     const datasets = await strapi.entityService.findMany('api::dataset.dataset', {
