@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const { ForbiddenError, NotFoundError, ValidationError } = require('@strapi/utils').errors;
+const { UnauthorizedError, NotFoundError, ValidationError } = require('@strapi/utils').errors;
 
 module.exports = async (policyContext, _config, {strapi}) => {
   const { id, slug } = policyContext.params;
@@ -29,7 +29,7 @@ module.exports = async (policyContext, _config, {strapi}) => {
     const authHeader = policyContext.request.header['authorization'];
 
     if (!authHeader || !authHeader.startsWith('Basic ')) {
-      throw new ForbiddenError('Invalid authorization');
+      throw new UnauthorizedError('Invalid authorization');
     }
 
     const base64Credentials = authHeader.split(' ')[1];
@@ -38,12 +38,12 @@ module.exports = async (policyContext, _config, {strapi}) => {
     const [_, password] = decodedCredentials.split(':');
 
     if (!password) {
-      throw new ForbiddenError('Password is required');
+      throw new UnauthorizedError('Password is required');
     }
 
     const validPassword = await bcrypt.compare(password, studyPassword);
     if (!validPassword) {
-      throw new ForbiddenError('Invalid password');
+      throw new UnauthorizedError('Invalid password');
     }
   }
 
