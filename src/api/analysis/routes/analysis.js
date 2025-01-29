@@ -6,4 +6,6 @@
 
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::analysis.analysis');
+module.exports = createCoreRouter('api::analysis.analysis', {
+  only: ['find', 'findOne'],
+});
