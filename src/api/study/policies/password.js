@@ -27,23 +27,46 @@ module.exports = async (policyContext, _config, {strapi}) => {
 
   if (studyPassword) {
     const authHeader = policyContext.request.header['authorization'];
+    const [authType, authValue] = authHeader.split(' ');
 
-    if (!authHeader || !authHeader.startsWith('Basic ')) {
+    if (!authHeader || !['Basic', 'Bearer'].includes(authType)) {
       throw new UnauthorizedError('Invalid authorization');
     }
 
-    const base64Credentials = authHeader.split(' ')[1];
-    const decodedCredentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+    if (authType === 'Basic') {
+      const base64Credentials = authHeader.split(' ')[1];
+      const decodedCredentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+      const [_, password] = decodedCredentials.split(':');
 
-    const [_, password] = decodedCredentials.split(':');
+      if (!password) {
+        throw new UnauthorizedError('Password is required');
+      }
 
-    if (!password) {
-      throw new UnauthorizedError('Password is required');
+      const validPassword = await bcrypt.compare(password, studyPassword);
+      if (!validPassword) {
+        throw new UnauthorizedError('Invalid password');
+      }
     }
+    else if (authType === 'Bearer') {
+      const { id } = await strapi.plugins['users-permissions'].services.jwt.verify(authValue);
+      const user = await strapi.query('plugin::users-permissions.user').findOne({
+        where: { id },
+        populate: { user_groups: {
+          populate: { studies: { select: ['id', 'slug'] } }
+        } } 
+      });
 
-    const validPassword = await bcrypt.compare(password, studyPassword);
-    if (!validPassword) {
-      throw new UnauthorizedError('Invalid password');
+      if (!user) {
+        throw new UnauthorizedError('Invalid token');
+      }
+      
+      const hasUserGroupAccess = user.user_groups.some(group =>
+        group.studies.some(study => study.id === entry.id && study.slug === entry.slug)
+      );
+
+      if (!hasUserGroupAccess) {
+        throw new UnauthorizedError('User does not have access to study');
+      }
     }
   }
 
