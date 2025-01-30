@@ -1,8 +1,9 @@
 'use strict';
-// TODO: move functions to data-import plugin
 const array = require('lodash/array');
+const bcrypt = require('bcryptjs');
 
 module.exports = {
+  // TODO: move function to data-import plugin
   getPopulateParams(attrs) {
     // Specify repeatable components attributes to populate
     const repComponentFields = Object.keys(attrs)
@@ -27,6 +28,7 @@ module.exports = {
     return { ...nonRCPopulate, ...repComponentsPopulate };
   },
 
+  // TODO: move function to data-import plugin
   reduceComponentData(attrs, entity){
     // Remove component 'id' and simplify relations' objects to id only
     const repComponentFields = Object.keys(attrs)
@@ -55,5 +57,54 @@ module.exports = {
     }
 
     return entity;
+  },
+
+  async validateStudyAccess(study, request){
+    const { password: studyPassword } = study;
+
+    if (studyPassword) {
+      const authHeader = request.header['authorization'];
+      const [authType, authValue] = authHeader.split(' ');
+  
+      if (!authHeader || !['Basic', 'Bearer'].includes(authType)) {
+        return 'Invalid authorization';
+      }
+  
+      if (authType === 'Basic') {
+        const base64Credentials = authHeader.split(' ')[1];
+        const decodedCredentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+        const [_, password] = decodedCredentials.split(':');
+  
+        if (!password) {
+          return 'Password is required';
+        }
+  
+        const validPassword = await bcrypt.compare(password, studyPassword);
+        if (!validPassword) {
+          return 'Invalid password';
+        }
+      }
+      else if (authType === 'Bearer') {
+        const { id } = await strapi.plugins['users-permissions'].services.jwt.verify(authValue);
+        const user = await strapi.query('plugin::users-permissions.user').findOne({
+          where: { id },
+          populate: { user_groups: {
+            populate: { studies: { select: ['id', 'slug'] } }
+          } } 
+        });
+  
+        if (!user) {
+          return 'Invalid token';
+        }
+        
+        const hasUserGroupAccess = user.user_groups.some(group =>
+          group.studies.some(group_study => group_study.id === study.id && group_study.slug === study.slug)
+        );
+  
+        if (!hasUserGroupAccess) {
+          return 'User does not have access to study';
+        }
+      }
+    }
   }
 };
