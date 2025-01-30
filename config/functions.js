@@ -64,11 +64,12 @@ module.exports = {
 
     if (studyPassword) {
       const authHeader = request.header['authorization'];
-      const [authType, authValue] = authHeader.split(' ');
-  
-      if (!authHeader || !['Basic', 'Bearer'].includes(authType)) {
-        return 'Invalid authorization';
+
+      if (!authHeader) {
+        return 'Authorization header is required';
       }
+
+      const [authType, authValue] = authHeader.split(' ');
   
       if (authType === 'Basic') {
         const base64Credentials = authHeader.split(' ')[1];
@@ -104,6 +105,9 @@ module.exports = {
         if (!hasUserGroupAccess) {
           return 'User does not have access to study';
         }
+      }
+      else {
+        return 'Invalid authorization';
       }
     }
   }
