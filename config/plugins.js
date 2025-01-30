@@ -1,4 +1,8 @@
 module.exports = ({ env }) => ({
+  'custom-fields': {
+    enabled: true,
+    resolve: './src/plugins/custom-fields',
+  },
   'ebi-ols': {
     enabled: true,
     resolve: './src/plugins/ebi-ols',

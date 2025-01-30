@@ -95,7 +95,8 @@
       ]
     },
     "password": {
-      "type": "string",
+      "type": "customField",
+      "customField": "plugin::custom-fields.customPassword",
       "private": true
     }
   }
