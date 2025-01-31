@@ -115,7 +115,7 @@ const OntologyTermSelect = ({
             disabled: { disabled }
           }}
           onChange={(selected) => {
-            const newValue = _.unionBy(parsedValue, selected, 'id');
+            const newValue = _.sortBy(_.unionBy(parsedValue, selected, 'id'), 'label');
             onChange({ target: { name, value: JSON.stringify(newValue), type: attribute.type } });
           }}
           renderInput={({ inputRef, referenceElementRef, ...inputProps }) => (
@@ -131,6 +131,12 @@ const OntologyTermSelect = ({
                 referenceElementRef(input);
               }}
             />
+          )}
+          renderMenuItemChildren={(option) => (
+            <Flex justifyContent="space-between">
+              <div>{option.label}</div>
+              <div><small>{option.short_form}</small></div>
+            </Flex>
           )}
           useCache={false}
         />
