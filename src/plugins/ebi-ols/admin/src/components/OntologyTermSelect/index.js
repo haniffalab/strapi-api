@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box, IconButton, Table, Tbody, Td, TextInput, Tr } from '@strapi/design-system';
+import { Box, Flex, TextInput, Tooltip, Tag } from '@strapi/design-system';
 import { Cross } from '@strapi/icons';
 import { Stack } from '@strapi/design-system/Stack';
 import { Field, FieldLabel, FieldError, FieldHint } from '@strapi/design-system/Field';
@@ -136,24 +136,18 @@ const OntologyTermSelect = ({
         />
         {parsedValue && 
         <Box paddingTop={2}>
-          <Table colCount={3}>
-            <Tbody>
-              {parsedValue.map((item, index) => (
-                <Tr key={item.id}>
-                  <Td>{item.label}</Td>
-                  <Td>{item.id}</Td>
-                  <Td>
-                    <IconButton
-                      label="Remove"
-                      variant="ghost"
-                      onClick={()=> handleRemove(index)}>
-                      <Cross/>
-                    </IconButton>
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
+          <Flex wrap="wrap" gap={1}>
+            {parsedValue.map((item, index) => (
+              <Tooltip label={item.id}>
+                <Tag 
+                  icon={<Cross aria-hidden />}
+                  onClick={()=> handleRemove(index)}
+                >
+                  {item.label}
+                </Tag>
+              </Tooltip>
+            ))}
+          </Flex>
         </Box>
         }
         {description && <FieldHint>{description}</FieldHint>}
