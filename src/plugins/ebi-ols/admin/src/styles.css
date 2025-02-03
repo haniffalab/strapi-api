@@ -283,3 +283,7 @@ border-bottom-left-radius: 0;
 border-top-right-radius: 0;
 border-bottom-right-radius: 0;
 }
+
+.rbt-menu .dropdown-item.fallback {
+color: #dc3545;
+}

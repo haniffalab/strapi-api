@@ -1,17 +1,24 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Flex, TextInput, Tooltip, Tag } from '@strapi/design-system';
 import { Cross } from '@strapi/icons';
 import { Stack } from '@strapi/design-system/Stack';
 import { Field, FieldLabel, FieldError, FieldHint } from '@strapi/design-system/Field';
 import { useIntl } from 'react-intl';
-import { AsyncTypeahead } from 'react-bootstrap-typeahead';
+import { AsyncTypeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
 import { stringify } from 'qs';
 import _ from 'lodash';
 import '../../styles.css';
 
 const CACHE = {};
 const SEARCH_URI = 'https://www.ebi.ac.uk/ols4/api/select';
+
+const FALLBACK_OPTION = {
+  id: -1,
+  short_form: -1,
+  ontology_prefix: -1,
+  iri: -1,
+};
 
 async function makeAndHandleRequest(query, ontology) {
   const params = stringify({
@@ -64,13 +71,13 @@ const OntologyTermSelect = ({
   // use `useCallback` to prevent the debounced search handler from
   // being cancelled.
   const handleSearch = useCallback(async (q) => {
+    setIsLoading(true);
     if (CACHE[q]) {
       setOptions(CACHE[q].options);
+      setIsLoading(false);
+      setError(null);
       return;
     }
-
-    setError(null);
-    setIsLoading(true);
     await makeAndHandleRequest(q, attribute.options.ontology).then((resp) => {
       const { error: respError, options: respOptions } = resp;
       if (respError){
@@ -90,6 +97,50 @@ const OntologyTermSelect = ({
     onChange({ target: { name, value: JSON.stringify(newValue), type: attribute.type }});
   };
 
+  const renderInput = ({...inputProps}) => (
+    <TextInput
+      id={name}
+      key={name}
+      placeholder={placeholder && formatMessage(placeholder)}
+      aria-label={formatMessage(intlLabel)}
+      {...inputProps}
+    />
+  );
+
+  const renderMenuItemChildren = (option) => (
+    <Flex key={option.id} justifyContent="space-between">
+      <div>{option.label}</div>
+      <div><small>{option.short_form}</small></div>
+    </Flex>
+  );
+
+  const renderMenu = useCallback((results, {renderMenuItemChildren, ...menuProps}, state) => {
+    const fallbackOption = !isLoading && !results.length ?
+      {label: state.text, ...FALLBACK_OPTION} : null;
+    return (
+      <Menu id={name} key={name} {...menuProps}>
+        {isLoading ? <MenuItem disabled>Searching...</MenuItem> :
+          results.map((option) => (
+            <MenuItem key={option.id} option={option}>
+              {renderMenuItemChildren(option)}
+            </MenuItem>
+          ))}
+        {fallbackOption &&
+        <>
+          <MenuItem disabled>No matches found.</MenuItem>
+          <Menu.Divider />
+          <MenuItem key={-1} option={fallbackOption} className="fallback">
+            <Flex key={fallbackOption.id} justifyContent="space-between">
+              <div>{fallbackOption.label}</div>
+              <div><small>Add without matching ontology</small></div>
+            </Flex>
+          </MenuItem>
+        </>
+        }
+      </Menu>
+    );
+  }, [isLoading]);
+
   return (
     <Field
       name={name}
@@ -102,7 +153,8 @@ const OntologyTermSelect = ({
           {formatMessage(intlLabel)}
         </FieldLabel>
         <AsyncTypeahead
-          id="async-ebi-ols"
+          id={name + '-typeahead'}
+          key={name + '-typeahead'}
           isLoading={isLoading}
           labelKey="label"
           minLength={2}
@@ -110,41 +162,24 @@ const OntologyTermSelect = ({
           onSearch={handleSearch}
           options={options}
           placeholder="Search for an ontology term"
-          inputProps={{
-            required: { required },
-            disabled: { disabled }
-          }}
           onChange={(selected) => {
             const newValue = _.sortBy(_.unionBy(parsedValue, selected, 'id'), 'label');
             onChange({ target: { name, value: JSON.stringify(newValue), type: attribute.type } });
           }}
-          renderInput={({ inputRef, referenceElementRef, ...inputProps }) => (
-            <TextInput
-              placeholder={placeholder && formatMessage(placeholder)}
-              aria-label={formatMessage(intlLabel)}
-              {...inputProps}
-              ref={(input) => {
-                // Be sure to correctly handle these refs. In many cases, both can simply receive
-                // the underlying input node, but `referenceElementRef can receive a wrapper node if
-                // your custom input is more complex (See TypeaheadInputMulti for an example).
-                inputRef(input);
-                referenceElementRef(input);
-              }}
-            />
-          )}
-          renderMenuItemChildren={(option) => (
-            <Flex justifyContent="space-between">
-              <div>{option.label}</div>
-              <div><small>{option.short_form}</small></div>
-            </Flex>
-          )}
+          inputProps={{
+            required: required,
+            disabled: disabled
+          }}
+          renderInput={renderInput}
+          renderMenuItemChildren={renderMenuItemChildren}
+          renderMenu={renderMenu}
           useCache={false}
         />
         {parsedValue && 
         <Box paddingTop={2}>
           <Flex wrap="wrap" gap={1}>
             {parsedValue.map((item, index) => (
-              <Tooltip label={item.id}>
+              <Tooltip key={item.id} label={item.id}>
                 <Tag 
                   icon={<Cross aria-hidden />}
                   onClick={()=> handleRemove(index)}
@@ -173,7 +208,7 @@ OntologyTermSelect.propTypes = {
   error: PropTypes.string,
   labelAction: PropTypes.object,
   required: PropTypes.bool,
-  value: PropTypes.array,
+  value: PropTypes.string,
 };
 
 export default OntologyTermSelect;

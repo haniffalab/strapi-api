@@ -30,11 +30,6 @@ export default {
         Input: async () =>
           import('./components/OntologyTermSelect'),
       },
-      Component: async () => {
-        const component = await import(/* webpackChunkName: "[request]" */ './pages/App');
-
-        return component;
-      },
 
       options: {
         base: [
