@@ -15,9 +15,9 @@ const SEARCH_URI = 'https://www.ebi.ac.uk/ols4/api/select';
 
 const FALLBACK_OPTION = {
   id: -1,
-  short_form: -1,
-  ontology_prefix: -1,
-  iri: -1,
+  short_form: null,
+  ontology_prefix: null,
+  iri: null,
 };
 
 async function makeAndHandleRequest(query, ontology) {
@@ -97,6 +97,7 @@ const OntologyTermSelect = ({
     onChange({ target: { name, value: JSON.stringify(newValue), type: attribute.type }});
   };
 
+  // @TODO: fix ref issues 
   const renderInput = ({...inputProps}) => (
     <TextInput
       id={name}
@@ -108,7 +109,7 @@ const OntologyTermSelect = ({
   );
 
   const renderMenuItemChildren = (option) => (
-    <Flex key={option.id} justifyContent="space-between">
+    <Flex key={`${option.id}-${option.label}`} justifyContent="space-between">
       <div>{option.label}</div>
       <div><small>{option.short_form}</small></div>
     </Flex>
@@ -163,7 +164,10 @@ const OntologyTermSelect = ({
           options={options}
           placeholder="Search for an ontology term"
           onChange={(selected) => {
-            const newValue = _.sortBy(_.unionBy(parsedValue, selected, 'id'), 'label');
+            const newValue = _.sortBy(
+              _.unionBy(parsedValue, selected, (item) => `${item.id}-${item.label}`),
+              'label'
+            );
             onChange({ target: { name, value: JSON.stringify(newValue), type: attribute.type } });
           }}
           inputProps={{
@@ -179,7 +183,7 @@ const OntologyTermSelect = ({
         <Box paddingTop={2}>
           <Flex wrap="wrap" gap={1}>
             {parsedValue.map((item, index) => (
-              <Tooltip key={item.id} label={item.id}>
+              <Tooltip key={`${item.id}-${item.label}`} label={item.id}>
                 <Tag 
                   icon={<Cross aria-hidden />}
                   onClick={()=> handleRemove(index)}
