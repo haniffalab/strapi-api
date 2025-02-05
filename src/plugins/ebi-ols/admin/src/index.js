@@ -17,7 +17,7 @@ export default {
     app.customFields.register({
       name: 'ontology-term',
       pluginId: pluginId,
-      type: 'string',
+      type: 'json',
       intlLabel: {
         id: getTrad('ebi-ols.ontology-term-select.label'),
         defaultMessage: 'Ontology Term',
@@ -29,11 +29,6 @@ export default {
       components: {
         Input: async () =>
           import('./components/OntologyTermSelect'),
-      },
-      Component: async () => {
-        const component = await import(/* webpackChunkName: "[request]" */ './pages/App');
-
-        return component;
       },
 
       options: {
@@ -60,8 +55,8 @@ export default {
                 },
                 name: 'options.ontology',
                 type: 'select',
-                value: '', // option selected by default
-                options: [ // List all available "Color format" options
+                value: null, // option selected by default
+                options: [
                   {
                     key: 'uberon',
                     value: 'uberon',
