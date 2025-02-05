@@ -1,4 +1,3 @@
-const bcrypt = require('bcryptjs');
 const { UnauthorizedError, NotFoundError } = require('@strapi/utils').errors;
 
 module.exports = async (policyContext, _config, {strapi}) => {
@@ -12,26 +11,9 @@ module.exports = async (policyContext, _config, {strapi}) => {
     throw new NotFoundError('Dataset not found');
   }
 
-  const {password: studyPassword} = entry.study;
-  if (studyPassword) {
-    const authHeader = policyContext.request.header['authorization'];
-    if (!authHeader || !authHeader.startsWith('Basic ')) {
-      throw new UnauthorizedError('Invalid authorization');
-    }
-
-    const base64Credentials = authHeader.split(' ')[1];
-    const decodedCredentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
-
-    const [_, password] = decodedCredentials.split(':');
-
-    if (!password) {
-      throw new UnauthorizedError('Password is required');
-    }
-
-    const validPassword = await bcrypt.compare(password, studyPassword);
-    if (!validPassword) {
-      throw new UnauthorizedError('Invalid password');
-    }
+  const error = await strapi.config.functions.validateStudyAccess(entry.study, policyContext.request);
+  if (error) {
+    throw new UnauthorizedError(error);
   }
 
   return true;
