@@ -28,8 +28,10 @@ module.exports = {
         });
     }
 
-    event.params.data.password = data.password?.length ?
-      bcrypt.hashSync(data.password, 10) :
-      null;
+    if (data.password !== entry.password){
+      event.params.data.password = data.password?.length ?
+        bcrypt.hashSync(data.password, 10) :
+        null;
+    }
   },
 };
