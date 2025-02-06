@@ -16,7 +16,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
         where: { name: collection },
         populate: { studies: { select: ['id'] } },
       });
-      
+
       const ids = collectionEntry?.studies.map(({ id }) => id);
       if (!ids?.length) { return this.transformResponse([]); }
 
@@ -72,6 +72,8 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
     return await super.find(ctx);
   },
   async findOne(ctx) {
+    // @TODO: check collection query parameter
+    // and return 404 if not in collection
     const { slug } = ctx.params;
 
     const query = {

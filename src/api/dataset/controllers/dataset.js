@@ -17,7 +17,7 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
         where: { name: collection },
         populate: { studies: { populate: { datasets: { select: ['id'] } } } }
       });
-      
+
       const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id));
       if (!ids?.length) { return this.transformResponse([]); }
 
@@ -41,6 +41,8 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
     return await super.find(ctx);
   },
   async findOne(ctx) {
+    // @TODO: check collection query parameter
+    // and return 404 if not in collection
     ctx.query = {
       ...ctx.query,
       fields: [
