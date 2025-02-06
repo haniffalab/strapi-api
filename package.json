@@ -13,6 +13,7 @@
     "lint:fix": "eslint --ext .js src --fix"
   },
   "dependencies": {
+    "@strapi-community/strapi-provider-upload-google-cloud-storage": "^4.10.5",
     "@strapi/plugin-i18n": "4.25.19",
     "@strapi/plugin-users-permissions": "4.25.19",
     "@strapi/provider-email-sendgrid": "4.25.19",
