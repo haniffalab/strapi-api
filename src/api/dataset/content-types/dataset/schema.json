@@ -12,8 +12,18 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "datafile": {
+      "type": "relation",
+      "relation": "morphOne",
+      "target": "plugin::data-import.datafile",
+      "morphBy": "related",
+      "private": true,
+      "configurable": false
+    },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "unique": true
     },
     "description": {
       "type": "text"
@@ -29,9 +39,9 @@
         "audios"
       ]
     },
-    "studies": {
+    "study": {
       "type": "relation",
-      "relation": "manyToMany",
+      "relation": "manyToOne",
       "target": "api::study.study",
       "inversedBy": "datasets"
     },
@@ -41,23 +51,54 @@
         "scRNA-seq",
         "CITE-seq",
         "Smart-seq2",
-        "VDJ"
+        "VDJ",
+        "Visium",
+        "Xenium",
+        "MERFISH"
       ]
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "metadata": {
+      "type": "json"
     },
     "experiments": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToMany",
       "target": "api::experiment.experiment",
-      "mappedBy": "dataset"
+      "inversedBy": "datasets"
     },
-    "format": {
-      "type": "enumeration",
-      "enum": [
-        "AnnData",
-        "MuData",
-        "SpatialData",
-        "OME-TIFF"
-      ]
+    "data": {
+      "type": "component",
+      "repeatable": true,
+      "component": "data.file"
+    },
+    "tissues": {
+      "type": "customField",
+      "customField": "plugin::ebi-ols.ontology-term",
+      "options": {
+        "ontology": "uberon"
+      }
+    },
+    "organisms": {
+      "type": "customField",
+      "customField": "plugin::ebi-ols.ontology-term",
+      "options": {
+        "ontology": "ncbitaxon"
+      }
+    },
+    "assays": {
+      "type": "customField",
+      "customField": "plugin::ebi-ols.ontology-term",
+      "options": {
+        "ontology": "efo"
+      }
+    },
+    "count": {
+      "type": "integer"
     }
   }
 }

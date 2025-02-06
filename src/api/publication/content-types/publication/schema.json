@@ -12,6 +12,14 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "datafile": {
+      "type": "relation",
+      "relation": "morphOne",
+      "target": "plugin::data-import.datafile",
+      "morphBy": "related",
+      "private": true,
+      "configurable": false
+    },
     "title": {
       "type": "string",
       "unique": true,
@@ -35,19 +43,16 @@
       "relation": "oneToOne",
       "target": "api::journal.journal"
     },
-    "volume": {
-      "type": "string"
-    },
-    "issue": {
-      "type": "string"
-    },
     "url": {
       "type": "string"
     },
-    "authors": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::person.person"
+    "uid": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "is_preprint": {
+      "type": "boolean"
     }
   }
 }

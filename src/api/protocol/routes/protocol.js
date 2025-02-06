@@ -6,4 +6,6 @@
 
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::protocol.protocol');
+module.exports = createCoreRouter('api::protocol.protocol', {
+  only: ['find', 'findOne'],
+});

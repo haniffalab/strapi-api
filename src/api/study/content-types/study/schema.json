@@ -12,8 +12,18 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "datafile": {
+      "type": "relation",
+      "relation": "morphOne",
+      "target": "plugin::data-import.datafile",
+      "morphBy": "related",
+      "private": true,
+      "configurable": false
+    },
     "study_id": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "unique": true
     },
     "slug": {
       "type": "uid",
@@ -27,6 +37,16 @@
       "relation": "oneToMany",
       "target": "api::publication.publication"
     },
+    "analyses": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::analysis.analysis"
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "study_id",
+      "required": true
+    },
     "experiments": {
       "type": "relation",
       "relation": "oneToMany",
@@ -35,14 +55,49 @@
     },
     "datasets": {
       "type": "relation",
-      "relation": "manyToMany",
+      "relation": "oneToMany",
       "target": "api::dataset.dataset",
-      "mappedBy": "studies"
+      "mappedBy": "study"
     },
-    "analyses": {
+    "disease_datasets": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::analysis.analysis"
+      "target": "api::disease-dataset.disease-dataset"
+    },
+    "contributors": {
+      "type": "component",
+      "repeatable": true,
+      "component": "contributions.people"
+    },
+    "view_count": {
+      "type": "integer"
+    },
+    "teams": {
+      "type": "component",
+      "repeatable": true,
+      "component": "contributions.team"
+    },
+    "cell_count": {
+      "type": "integer"
+    },
+    "subtitle": {
+      "type": "text"
+    },
+    "cover_image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "password": {
+      "type": "customField",
+      "customField": "plugin::custom-fields.customPassword",
+      "private": true
     }
   }
 }

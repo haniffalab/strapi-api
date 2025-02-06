@@ -8,20 +8,27 @@
     "start": "strapi start",
     "build": "strapi build",
     "strapi": "strapi",
-    "gcp-build": "strapi build"
+    "gcp-build": "strapi build",
+    "lint": "eslint --ext .js src",
+    "lint:fix": "eslint --ext .js src --fix"
   },
   "dependencies": {
-    "@strapi/plugin-graphql": "^4.15.0",
-    "@strapi/plugin-i18n": "^4.15.0",
-    "@strapi/plugin-users-permissions": "^4.15.0",
-    "@strapi/strapi": "4.15.0",
+    "@strapi/plugin-i18n": "4.25.19",
+    "@strapi/plugin-users-permissions": "4.25.19",
+    "@strapi/provider-email-sendgrid": "4.25.19",
+    "@strapi/strapi": "4.25.19",
+    "@strapi/utils": "4.25.19",
+    "ajv": "^8.17.1",
     "bloodhound-js": "^1.2.3",
     "i18n-iso-countries": "^7.8.0",
+    "lodash": "^4.17.21",
     "mysql": "^2.18.1",
     "react": "^18.2.0",
-    "react-bootstrap-typeahead": "^6.3.2",
+    "react-bootstrap-typeahead": "^6.4.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^5.3.4",
+    "semver": "^7.6.0",
+    "sharp": "^0.33.5",
     "styled-components": "5.3.3",
     "typescript": "^5.3.3"
   },
@@ -32,11 +39,15 @@
     "uuid": "ef523884-e001-4354-862a-d889fbe73214"
   },
   "engines": {
-    "node": ">=14.19.1 <=18.x.x",
+    "node": ">=14.19.1 <=20.x.x",
     "npm": ">=6.0.0"
   },
   "license": "MIT",
   "devDependencies": {
-    "better-sqlite3": "^9.3.0"
+    "@babel/core": "^7.26.7",
+    "@babel/eslint-parser": "^7.23.10",
+    "@babel/preset-react": "^7.23.3",
+    "better-sqlite3": "^9.3.0",
+    "eslint": "^8.56.0"
   }
 }

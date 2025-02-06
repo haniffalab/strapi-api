@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "datafiles",
+  "info": {
+    "singularName": "datafile",
+    "pluralName": "datafiles",
+    "displayName": "Datafile",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "related": {
+      "type": "relation",
+      "relation": "morphToMany",
+      "configurable": false
+    },
+    "data": {
+      "type": "json",
+      "required": true
+    },
+    "description": {
+      "type": "string"
+    },
+    "publish_on_import": {
+      "type": "boolean",
+      "default": false
+    },
+    "succeeded": {
+      "type": "boolean",
+      "default": false,
+      "configurable": false
+    }
+  }
+}

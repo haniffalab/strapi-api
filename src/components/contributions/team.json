@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_contributions_teams",
+  "info": {
+    "displayName": "team",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "team": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::team.team"
+    },
+    "is_lead": {
+      "type": "boolean"
+    }
+  }
+}

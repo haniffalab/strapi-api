@@ -6,4 +6,6 @@
 
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::journal.journal');
+module.exports = createCoreRouter('api::journal.journal', {
+  only: ['find', 'findOne'],
+});
