@@ -8,6 +8,24 @@ const { createCoreController } = require('@strapi/strapi').factories;
 
 module.exports = createCoreController('api::study.study', ({ strapi }) => ({
   async find(ctx) {
+
+    // Check if 'collection' query parameter is present
+    const { collection } = ctx.query;
+    if (collection) {
+      const collectionEntry = await strapi.db.query('api::collection.collection').findOne({
+        where: { name: collection },
+        populate: { studies: { select: ['id'] } },
+      });
+      
+      const ids = collectionEntry?.studies.map(({ id }) => id);
+      if (!ids?.length) { return this.transformResponse([]); }
+
+      ctx.query.filters = {
+        ...ctx.query.filters,
+        id: { $in: ids },
+      };
+    }
+
     ctx.query = {
       ...ctx.query,
       fields: [
@@ -101,7 +119,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
       },
     };
 
-    const [study, ..._] = await strapi.entityService.findMany(
+    const [study] = await strapi.entityService.findMany(
       'api::study.study',
       query
     );
