@@ -1,4 +1,9 @@
-const serviceAccount = JSON.parse(Buffer.from(process.env.GCS_SERVICE_ACCOUNT, 'base64').toString('utf8'));
+let serviceAccount;
+try {
+  serviceAccount = JSON.parse(Buffer.from(process.env.GCS_SERVICE_ACCOUNT, 'base64').toString('utf8'));
+} catch (error) {
+  console.error('Failed to parse GCS service account JSON:', error);
+}
 
 module.exports = ({ env }) => ({
   'custom-fields': {
