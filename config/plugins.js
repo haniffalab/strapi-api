@@ -1,10 +1,3 @@
-let serviceAccount;
-try {
-  serviceAccount = JSON.parse(Buffer.from(process.env.GCS_SERVICE_ACCOUNT, 'base64').toString('utf8'));
-} catch (error) {
-  console.error('Failed to parse GCS service account JSON:', error);
-}
-
 module.exports = ({ env }) => ({
   'custom-fields': {
     enabled: true,
@@ -37,12 +30,12 @@ module.exports = ({ env }) => ({
     config: {
       provider: '@strapi-community/strapi-provider-upload-google-cloud-storage',
       providerOptions: {
-        bucketName: env('GCS_BUCKET_NAME'),
-        publicFiles: env('GCS_PUBLIC_FILES'),
-        uniform: env('GCS_UNIFORM'),
-        serviceAccount: serviceAccount,
-        baseUrl: env('GCS_BASE_URL'),
-        basePath: env('GCS_BASE_PATH'),
+        bucketName: env('GCS_BUCKET_NAME', ''),
+        publicFiles: env.bool('GCS_PUBLIC_FILES', true),
+        uniform: env.bool('GCS_UNIFORM', false),
+        serviceAccount: env('GCS_SERVICE_ACCOUNT') ? JSON.parse(Buffer.from(env('GCS_SERVICE_ACCOUNT'), 'base64').toString('ascii')) : {},
+        baseUrl: env('GCS_BASE_URL', ''),
+        basePath: env('GCS_BASE_PATH', ''),
       },
     },
   },
