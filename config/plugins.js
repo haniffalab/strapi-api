@@ -1,10 +1,3 @@
-let serviceAccount;
-try {
-  serviceAccount = JSON.parse(Buffer.from(process.env.GCS_SERVICE_ACCOUNT, 'base64').toString('utf8'));
-} catch (error) {
-  console.error('Failed to parse GCS service account JSON:', error);
-}
-
 module.exports = ({ env }) => ({
   'custom-fields': {
     enabled: true,
@@ -40,7 +33,7 @@ module.exports = ({ env }) => ({
         bucketName: env('GCS_BUCKET_NAME'),
         publicFiles: env('GCS_PUBLIC_FILES'),
         uniform: env('GCS_UNIFORM'),
-        serviceAccount: serviceAccount,
+        serviceAccount: env.json('GCP_SERVICE_ACCOUNT'),
         baseUrl: env('GCS_BASE_URL'),
         basePath: env('GCS_BASE_PATH'),
       },
