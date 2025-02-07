@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "collections",
+  "info": {
+    "singularName": "collection",
+    "pluralName": "collections",
+    "displayName": "Collection",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "datafile": {
+      "type": "relation",
+      "relation": "morphOne",
+      "target": "plugin::data-import.datafile",
+      "morphBy": "related",
+      "private": true,
+      "configurable": false
+    },
+    "studies": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::study.study"
+    },
+    "name": {
+      "type": "string",
+      "unique": true
+    }
+  }
+}

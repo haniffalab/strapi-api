@@ -9,6 +9,24 @@ const _ = require('lodash');
 
 module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
   async find(ctx) {
+
+    // Check if 'collection' query parameter is present
+    const { collection } = ctx.query;
+    if (collection) {
+      const collectionEntry = await strapi.db.query('api::collection.collection').findOne({
+        where: { name: collection },
+        populate: { studies: { populate: { datasets: { select: ['id'] } } } }
+      });
+
+      const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id));
+      if (!ids?.length) { return this.transformResponse([]); }
+
+      ctx.query.filters = {
+        ...ctx.query.filters,
+        id: { $in: ids },
+      };
+    }
+
     ctx.query = {
       ...ctx.query,
       fields: [
@@ -23,6 +41,8 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
     return await super.find(ctx);
   },
   async findOne(ctx) {
+    // @TODO: check collection query parameter
+    // and return 404 if not in collection
     ctx.query = {
       ...ctx.query,
       fields: [
@@ -37,14 +57,33 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
     };
     return await super.findOne(ctx);
   },
-  async findTissues() {
+  async findTissues(ctx) {
+
+    // Check if 'collection' query parameter is present
+    const { collection } = ctx.query;
+    if (collection) {
+      const collectionEntry = await strapi.db.query('api::collection.collection').findOne({
+        where: { name: collection },
+        populate: { studies: { populate: { datasets: { select: ['id'] } } } }
+      });
+
+      const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id));
+      if (!ids?.length) { return this.transformResponse([]); }
+
+      ctx.query.filters = {
+        ...ctx.query.filters,
+        id: { $in: ids },
+      };
+    }
+
     const datasets = await strapi.entityService.findMany('api::dataset.dataset', {
       fields: ['tissues'],
       populate: {
         study: {
           fields: ['slug'],
         }
-      }
+      },
+      filters: ctx.query.filters,
     });
 
     const tissues = _.values(_.reduce(datasets, (res, d) => {
