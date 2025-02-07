@@ -34,6 +34,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
           populate: {
             team: {
               fields: ['name', 'website', 'description'],
+              populate: ['logo'],
             },
           },
         },
@@ -83,6 +84,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
           populate: {
             team: {
               fields: ['name', 'website', 'description'],
+              populate: ['logo'],
             },
           },
         },
