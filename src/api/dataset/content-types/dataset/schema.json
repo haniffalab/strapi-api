@@ -99,6 +99,13 @@
     },
     "count": {
       "type": "integer"
+    },
+    "diseases": {
+      "type": "customField",
+      "options": {
+        "ontology": "mondo"
+      },
+      "customField": "plugin::ebi-ols.ontology-term"
     }
   }
 }
