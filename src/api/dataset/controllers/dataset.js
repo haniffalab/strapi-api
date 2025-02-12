@@ -5,6 +5,7 @@
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
+const { NotFoundError } = require('@strapi/utils').errors;
 const _ = require('lodash');
 
 const findTerms = async (ctx, ontologyField) => {
@@ -16,7 +17,7 @@ const findTerms = async (ctx, ontologyField) => {
       populate: { studies: { populate: { datasets: { select: ['id'] } } } }
     });
 
-    const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id));
+    const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id)) || [];
     if (!ids?.length) { return []; }
 
     ctx.query.filters = {
@@ -65,7 +66,7 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
         populate: { studies: { populate: { datasets: { select: ['id'] } } } }
       });
 
-      const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id));
+      const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id)) || [];
       if (!ids?.length) { return this.transformResponse([]); }
 
       ctx.query.filters = {
@@ -89,8 +90,6 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
   },
   async findOne(ctx) {
 
-    // @TODO: check collection query parameter
-    // and return 404 if not in collection
     ctx.query = {
       ...ctx.query,
       fields: [
@@ -103,7 +102,22 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
         data: true,
       }
     };
-    return await super.findOne(ctx);
+    const dataset = await super.findOne(ctx);
+
+    // Check if 'collection' query parameter is present
+    const { collection } = ctx.query;
+    if (collection) {
+      const collectionEntry = await strapi.db.query('api::collection.collection').findOne({
+        where: { name: collection },
+        populate: { studies: { populate: { datasets: { select: ['id'] } } } }
+      });
+
+      const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id)) || [];
+      if (!ids.length || !ids.includes(dataset.id)) {
+        throw new NotFoundError('Dataset not found in collection');
+      }
+    }
+    return dataset;
   },
   async findTissues(ctx) {
     const tissues = await findTerms(ctx, 'tissues');

@@ -5,6 +5,7 @@
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
+const { NotFoundError } = require('@strapi/utils').errors;
 
 module.exports = createCoreController('api::study.study', ({ strapi }) => ({
   async find(ctx) {
@@ -17,7 +18,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
         populate: { studies: { select: ['id'] } },
       });
 
-      const ids = collectionEntry?.studies.map(({ id }) => id);
+      const ids = collectionEntry?.studies.map(({ id }) => id) || [];
       if (!ids?.length) { return this.transformResponse([]); }
 
       ctx.query.filters = {
@@ -73,8 +74,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
     return await super.find(ctx);
   },
   async findOne(ctx) {
-    // @TODO: check collection query parameter
-    // and return 404 if not in collection
+
     const { slug } = ctx.params;
 
     const query = {
@@ -127,6 +127,20 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
       'api::study.study',
       query
     );
+
+    // Check if 'collection' query parameter is present
+    const { collection } = ctx.query;
+    if (collection) {
+      const collectionEntry = await strapi.db.query('api::collection.collection').findOne({
+        where: { name: collection },
+        populate: { studies: { select: ['id'] } },
+      });
+
+      const ids = collectionEntry?.studies.map(({ id }) => id) || [];
+      if (!ids.length || !ids.includes(study.id)){
+        throw new NotFoundError('Study not found in collection');
+      }
+    }
 
     return this.transformResponse(study);
   },
