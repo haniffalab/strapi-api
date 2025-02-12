@@ -1,6 +1,7 @@
 'use strict';
 const array = require('lodash/array');
 const bcrypt = require('bcryptjs');
+const _ = require('lodash');
 
 module.exports = {
   // TODO: move function to data-import plugin
@@ -110,5 +111,52 @@ module.exports = {
         return 'Invalid authorization';
       }
     }
+  },
+
+  async findTerms(ctx, ontologyField){
+    // Check if 'collection' query parameter is present
+    const { collection } = ctx.query;
+    if (collection) {
+      const collectionEntry = await strapi.db.query('api::collection.collection').findOne({
+        where: { name: collection },
+        populate: { studies: { populate: { datasets: { select: ['id'] } } } }
+      });
+    
+      const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id)) || [];
+      if (!ids?.length) { return []; }
+    
+      ctx.query.filters = {
+        ...ctx.query.filters,
+        id: { $in: ids },
+      };
+    }
+    
+    const datasets = await strapi.entityService.findMany('api::dataset.dataset', {
+      fields: [ontologyField],
+      populate: {
+        study: {
+          fields: ['slug'],
+        }
+      },
+      filters: ctx.query.filters,
+    });
+    
+    const terms = _.values(_.reduce(datasets, (res, d) => {
+      _.forEach(d[ontologyField], t => {
+        var compositeId = `${t.id}-${t.label}`;
+        if (!res[compositeId]) {
+          res[compositeId] = { ...t, datasets: [], studies: [] };
+        }
+        if (!res[compositeId].datasets.includes(d.id)) {
+          res[compositeId].datasets.push(d.id);
+        }
+        if (!res[compositeId].studies.includes(d.study.slug)) {
+          res[compositeId].studies.push(d.study.slug);
+        }
+      });
+      return res;
+    }, {}));
+    
+    return terms;
   }
 };
