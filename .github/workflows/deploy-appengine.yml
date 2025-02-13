@@ -29,7 +29,7 @@ jobs:
       GCS_BASE_URL: ${{ secrets.GCS_BASE_URL }}
       GCS_PUBLIC_FILES: ${{ secrets.GCS_PUBLIC_FILES }}
       GCS_UNIFORM: ${{ secrets.GCS_UNIFORM }}
-      GCS_SERVICE_ACCOUNT: ${{ secrets.GCS_SERVICE_ACCOUNT }}
+      GCS_SERVICE_ACCOUNT: ${{ secrets.GCP_SA_KEY }}
       
     steps:
       - uses: actions/checkout@v3

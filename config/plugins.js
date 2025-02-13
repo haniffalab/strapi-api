@@ -33,7 +33,7 @@ module.exports = ({ env }) => ({
         bucketName: env('GCS_BUCKET_NAME', ''),
         publicFiles: env.bool('GCS_PUBLIC_FILES', true),
         uniform: env.bool('GCS_UNIFORM', false),
-        serviceAccount: env('GCS_SERVICE_ACCOUNT') ? JSON.parse(Buffer.from(env('GCS_SERVICE_ACCOUNT'), 'base64').toString('ascii')) : {},
+        serviceAccount: env.json('GCS_SERVICE_ACCOUNT', {}),
         baseUrl: env('GCS_BASE_URL', ''),
         basePath: env('GCS_BASE_PATH', ''),
       },
