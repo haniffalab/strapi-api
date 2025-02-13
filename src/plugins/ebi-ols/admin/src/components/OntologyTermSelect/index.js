@@ -56,6 +56,7 @@ const OntologyTermSelect = ({
   required = false,
   description = null,
   disabled = false,
+  showFallback = true,
   error: propsError = null,
 }) => {
   const { formatMessage } = useIntl();
@@ -116,7 +117,7 @@ const OntologyTermSelect = ({
   );
 
   const renderMenu = useCallback((results, {renderMenuItemChildren, ...menuProps}, state) => {
-    const fallbackOption = !isLoading && !results.length ?
+    const fallbackOption = showFallback && !isLoading ?
       {label: state.text, ...FALLBACK_OPTION} : null;
     return (
       <Menu id={name} key={name} {...menuProps}>
@@ -126,9 +127,9 @@ const OntologyTermSelect = ({
               {renderMenuItemChildren(option)}
             </MenuItem>
           ))}
+        {!results.length && <MenuItem disabled>No matches found.</MenuItem> }
         {fallbackOption &&
         <>
-          <MenuItem disabled>No matches found.</MenuItem>
           <Menu.Divider />
           <MenuItem key={-1} option={fallbackOption} className="fallback">
             <Flex key={fallbackOption.id} justifyContent="space-between">
@@ -140,7 +141,7 @@ const OntologyTermSelect = ({
         }
       </Menu>
     );
-  }, [isLoading]);
+  }, [isLoading, showFallback]);
 
   return (
     <Field
@@ -213,6 +214,7 @@ OntologyTermSelect.propTypes = {
   labelAction: PropTypes.object,
   required: PropTypes.bool,
   value: PropTypes.string,
+  showFallback: PropTypes.bool,
 };
 
 export default OntologyTermSelect;
