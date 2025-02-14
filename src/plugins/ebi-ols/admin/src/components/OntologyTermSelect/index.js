@@ -127,7 +127,7 @@ const OntologyTermSelect = ({
               {renderMenuItemChildren(option)}
             </MenuItem>
           ))}
-        {!results.length && <MenuItem disabled>No matches found.</MenuItem> }
+        {!isLoading && !results.length && <MenuItem disabled>No matches found.</MenuItem> }
         {fallbackOption &&
         <>
           <Menu.Divider />
