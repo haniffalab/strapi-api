@@ -1,6 +1,7 @@
 'use strict';
 const array = require('lodash/array');
 const bcrypt = require('bcryptjs');
+const qs = require('qs');
 const _ = require('lodash');
 
 module.exports = {
@@ -60,17 +61,25 @@ module.exports = {
     return entity;
   },
   
+  // @TODO: unify with OntologyTermSelect component
   async queryOLS(query, ontology) {
     const SEARCH_URI = 'https://www.ebi.ac.uk/ols4/api/select';
-    return await fetch(`${SEARCH_URI}?q=${query}&ontology=${ontology}&rows=50`)
+    const params = qs.stringify({
+      q: query,
+      ontology,
+      rows: 50,
+    }, { addQueryPrefix: true });
+
+    return await fetch(SEARCH_URI + params)
       .then((resp) => resp.json())
       .then(({ response }) => {
         const options = response.docs.map((i) => ({
-          id: i.id,
+          id: i.short_form,
           label: i.label,
           short_form: i.short_form,
-          ontology_name: i.ontology_name,
+          ontology_prefix: i.ontology_prefix,
           iri: i.iri,
+          obo_id: i.obo_id,
         }));
         const total_count = response.numFound;
         return { options, total_count };
@@ -95,7 +104,7 @@ module.exports = {
       if (authType === 'Basic') {
         const base64Credentials = authHeader.split(' ')[1];
         const decodedCredentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
-        const [_, password] = decodedCredentials.split(':');
+        const [_username, password] = decodedCredentials.split(':');
   
         if (!password) {
           return 'Password is required';

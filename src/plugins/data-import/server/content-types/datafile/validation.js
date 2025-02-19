@@ -5,17 +5,28 @@ const { parseType } = require('@strapi/utils');
 const array = require('lodash/array');
 const object = require('lodash/object');
 
+// Check EbiField is an array of strings or objects
 const validateEbiField = (data) => {
-  if (typeof data === 'string') { // consider as `label`
-    return true;
-  }
-  else if (typeof data === 'object' && !Array.isArray(data) && data !== null){
-    const { id, iri, short_form, label } = data;
-    return id || iri || short_form || label;
-  }
-  else {
+  if (!Array.isArray(data)){
     return false;
   }
+  for (const idx in data){
+    let valid;
+    if (typeof data[idx] === 'string') { // consider as `label`
+      valid = true;
+    }
+    else if (typeof data[idx] === 'object' && !Array.isArray(data[idx]) && data[idx] !== null){
+      const { id, iri, short_form, label } = data[idx];
+      valid = id || iri || short_form || label;
+    }
+    else {
+      valid = false;
+    }
+    if (!valid){
+      return false;
+    }
+  }
+  return true;
 };
 
 const validateEntry = async (uid, entry, parents, is_component=false) => {
@@ -142,10 +153,10 @@ const validateEntry = async (uid, entry, parents, is_component=false) => {
       throw new ValidationError(ebiFields[idx] + ' must have an ontology value in its attributes\' options');
     }
     if (entry[ebiFields[idx]] && !validateEbiField(entry[ebiFields[idx]])){
-      console.log(ebiFields[idx] + ' should be a string representing the ontology `label`' +
-      ' or an object that must contain one of the following: `id`, `iri`, `short_form`, `label`');
-      throw new ValidationError(ebiFields[idx] + ' should be a string representing the ontology `label`' +
-      ' or an object that must contain one of the following: `id`, `iri`, `short_form`, `label`');
+      console.log(ebiFields[idx] + ' should be an array of strings representing the ontologies `label`' +
+      ' or objects that must contain one of the following: `id`, `iri`, `short_form`, `label`');
+      throw new ValidationError(ebiFields[idx] + ' should be an array of strings representing the ontologies `label`' +
+      ' or objects that must contain one of the following: `id`, `iri`, `short_form`, `label`');
     }
   }
 

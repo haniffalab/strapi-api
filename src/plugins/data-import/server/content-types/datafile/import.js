@@ -14,7 +14,8 @@ const getEbiFieldData = async (data, ontology) => {
   else if (typeof data === 'object' && !Array.isArray(data) && data !== null){
     ({ id, iri, short_form, label } = data);
   }
-  const res = await strapi.config.functions.queryOLS(id || iri || short_form || label, ontology).catch((e)=> {throw e;});
+  const q = id || iri || short_form || label;
+  const res = await strapi.config.functions.queryOLS(q, ontology).catch((e)=> {throw e;});
   let options;
   const { error } = res;
   ({options} = res);
@@ -23,7 +24,7 @@ const getEbiFieldData = async (data, ontology) => {
     throw new Error(error);
   }
   else if (!options || !options.length){
-    throw new Error('Data does not match to any ontology');
+    throw new Error(`Provided data ${q} does not match to any ontology`);
   }
 
   if (label){
@@ -32,7 +33,7 @@ const getEbiFieldData = async (data, ontology) => {
     );
   }
   if (options.length > 1){
-    throw new Error('Data does not match to a single ontology');
+    throw new Error(`Provided data ${q} does not match to a single ontology`);
   }
 
   return options[0];
@@ -86,6 +87,21 @@ const createOrUpdate = async (uid, entry, datafile_id, publish_on_import) => {
         c in data ? data[c] : null,
         Array.isArray(entry[c]) ? entry[c] : [entry[c]],
         isEqual
+      );
+    }
+
+    // get previous EBI ontology data to append to them, not overwrite them
+    const ebiFields = Object.keys(attrs)
+      .filter((k) => (
+        attrs[k].type === 'customField' && attrs[k].customField === 'plugin::ebi-ols.ontology-term')
+      );
+    const ebiData = array.intersection(Object.keys(entry), ebiFields);
+    for (const idx in ebiData){
+      const e = ebiData[idx];
+      entry[e] = array.unionBy(
+        e in data ? data[e] : null,
+        Array.isArray(entry[e]) ? entry[e] : [entry[e]],
+        'id'
       );
     }
 
@@ -194,8 +210,13 @@ const importEntry = async (uid, entry, datafile_id, publish_on_import) => {
     );
   for (const idx in ebiFields){
     if (entry[ebiFields[idx]]){
-      entry[ebiFields[idx]] = await getEbiFieldData(entry[ebiFields[idx]], attrs[ebiFields[idx]].options.ontology)
-        .catch((e) => { throw e; });
+      let data = [];
+      for (const i in entry[ebiFields[idx]]){
+        const res = await getEbiFieldData(entry[ebiFields[idx]][i], attrs[ebiFields[idx]].options.ontology)
+          .catch((e) => { throw e; });
+        data.push(res);
+      }
+      entry[ebiFields[idx]] = data;
     }
   }
 

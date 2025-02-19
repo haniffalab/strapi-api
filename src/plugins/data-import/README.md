@@ -78,4 +78,4 @@ Relation attributes can contain either an array of objects or a single object, d
 
 # EBI OLS plugin
 
-When importing data with the data-import plugin, the plugin will expect the value for this custom field to be either a string that would map to `label` or an object with at least one of the following keys: `id`, `iri`, `short_form`. The plugin will check if this data is provided when validating. When importing, the plugin will query OBLs and if there is a single entry that matches the data it will then assing it to the field. If there is none or more than one entry from OBLs then the import process will error out.
+When importing data with the data-import plugin, the plugin will expect the value for this custom field to be either a string that would map to `label` or an object with at least one of the following keys: `id`, `iri`, `short_form`. The plugin will check if this data is provided when validating. When importing, the plugin will query OBLs and if there is a single entry that matches the data it will then assign it to the field. If there is none or more than one entry from OBLs then the import process will error out.
