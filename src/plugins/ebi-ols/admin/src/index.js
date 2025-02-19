@@ -112,6 +112,16 @@ export default {
                       },
                     },
                   },
+                  {
+                    key: 'hsapdv',
+                    value: 'hsapdv',
+                    metadatas: {
+                      intlLabel: {
+                        id: getTrad('ebi-ols.ontology-term-select.fields.ontology.option.hsapdv'),
+                        defaultMessage: 'hsapdv',
+                      },
+                    },
+                  },
                 ],
               },
             ],
