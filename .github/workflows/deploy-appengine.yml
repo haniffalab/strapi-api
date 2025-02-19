@@ -24,6 +24,12 @@ jobs:
       MIN_INSTANCES: ${{ secrets.MIN_INSTANCES }}
       MAX_INSTANCES: ${{ secrets.MAX_INSTANCES }}
       TARGET_CPU_UTILIZATION: ${{ secrets.TARGET_CPU_UTILIZATION }}
+      GCS_BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
+      GCS_BASE_PATH: ${{ secrets.GCS_BASE_PATH }}
+      GCS_BASE_URL: ${{ secrets.GCS_BASE_URL }}
+      GCS_PUBLIC_FILES: ${{ secrets.GCS_PUBLIC_FILES }}
+      GCS_UNIFORM: ${{ secrets.GCS_UNIFORM }}
+      GCS_SERVICE_ACCOUNT: ${{ secrets.GCP_SA_KEY }}
       
     steps:
       - uses: actions/checkout@v3

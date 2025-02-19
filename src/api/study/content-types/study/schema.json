@@ -63,6 +63,41 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::disease-dataset.disease-dataset"
+    },
+    "contributors": {
+      "type": "component",
+      "repeatable": true,
+      "component": "contributions.people"
+    },
+    "view_count": {
+      "type": "integer"
+    },
+    "teams": {
+      "type": "component",
+      "repeatable": true,
+      "component": "contributions.team"
+    },
+    "cell_count": {
+      "type": "integer"
+    },
+    "subtitle": {
+      "type": "text"
+    },
+    "cover_image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "password": {
+      "type": "customField",
+      "customField": "plugin::custom-fields.customPassword",
+      "private": true
     }
   }
 }

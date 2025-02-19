@@ -48,6 +48,16 @@
       "type": "uid",
       "targetField": "name",
       "required": true
+    },
+    "card_image": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }

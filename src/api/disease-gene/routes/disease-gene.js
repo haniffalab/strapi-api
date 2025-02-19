@@ -6,4 +6,6 @@
 
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::disease-gene.disease-gene');
+module.exports = createCoreRouter('api::disease-gene.disease-gene', {
+  only: ['find', 'findOne'],
+});

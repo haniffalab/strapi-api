@@ -5,20 +5,143 @@
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
+const { NotFoundError } = require('@strapi/utils').errors;
 
 module.exports = createCoreController('api::study.study', ({ strapi }) => ({
-  async findOne(ctx) {
-    const { slug } = ctx.params;
-  
-    const query = {
-      filters: { slug },
+  async find(ctx) {
+
+    // Check if 'collection' query parameter is present
+    const { collection } = ctx.query;
+    if (collection) {
+      const collectionEntry = await strapi.db.query('api::collection.collection').findOne({
+        where: { name: collection },
+        populate: { studies: { select: ['id'] } },
+      });
+
+      const ids = collectionEntry?.studies.map(({ id }) => id) || [];
+      if (!ids?.length) { return this.transformResponse([]); }
+
+      ctx.query.filters = {
+        ...ctx.query.filters,
+        id: { $in: ids },
+      };
+    }
+
+    ctx.query = {
       ...ctx.query,
+      fields: [
+        'name',
+        'slug',
+        'createdAt',
+        'updatedAt',
+        'view_count',
+        'cell_count',
+      ],
+      populate: {
+        cover_image: true,
+        publications: {
+          fields: ['title', 'doi', 'url'],
+          populate: {
+            journal: {
+              fields: ['name'],
+              populate: ['logo'],
+            },
+          },
+        },
+        teams: {
+          fields: ['is_lead'],
+          populate: {
+            team: {
+              fields: ['name', 'website', 'description'],
+              populate: ['logo'],
+            },
+          },
+        },
+        contributors: {
+          fields: ['is_lead', 'role'],
+          populate: {
+            person: {
+              fields: ['first_name', 'last_name'],
+              populate: ['avatar'],
+            },
+          },
+        },
+        datasets: {
+          fields: ['name', 'description', 'tissues', 'organisms', 'assays'],
+        },
+      },
     };
-  
-    const study = await strapi.entityService.findMany('api::study.study', query);
-  
-    //   const sanitizedEntity = await this.sanitizeOutput(study);
-  
-    return this.transformResponse(study[0]);
+    return await super.find(ctx);
+  },
+  async findOne(ctx) {
+
+    const { slug } = ctx.params;
+
+    const query = {
+      ...ctx.query,
+      filters: { slug },
+      fields: [
+        'name',
+        'slug',
+        'createdAt',
+        'updatedAt',
+        'view_count',
+        'cell_count',
+      ],
+      populate: {
+        cover_image: true,
+        publications: {
+          fields: ['title', 'doi', 'url'],
+          populate: {
+            journal: {
+              fields: ['name'],
+              populate: ['logo'],
+            },
+          },
+        },
+        teams: {
+          fields: ['is_lead'],
+          populate: {
+            team: {
+              fields: ['name', 'website', 'description'],
+              populate: ['logo'],
+            },
+          },
+        },
+        contributors: {
+          fields: ['is_lead', 'role'],
+          populate: {
+            person: {
+              fields: ['first_name', 'last_name'],
+              populate: ['avatar'],
+            },
+          },
+        },
+        datasets: {
+          fields: ['name', 'description', 'tissues', 'organisms', 'assays'],
+        },
+      },
+    };
+
+    const [study] = await strapi.entityService.findMany(
+      'api::study.study',
+      query
+    );
+
+    // Check if 'collection' query parameter is present
+    const { collection } = ctx.query;
+    if (collection) {
+      const collectionEntry = await strapi.db.query('api::collection.collection').findOne({
+        where: { name: collection },
+        populate: { studies: { select: ['id'] } },
+      });
+
+      const ids = collectionEntry?.studies.map(({ id }) => id) || [];
+      if (!ids.length || !ids.includes(study.id)){
+        throw new NotFoundError('Study not found in collection');
+      }
+    }
+
+    return this.transformResponse(study);
   },
 }));

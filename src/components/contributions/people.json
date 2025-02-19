@@ -14,13 +14,23 @@
     "role": {
       "type": "enumeration",
       "enum": [
-        "author"
+        "Data curation",
+        "Formal analysis",
+        "Funding acquisition",
+        "Investigation",
+        "Methodology",
+        "Project administration",
+        "Software",
+        "Resources",
+        "Supervision",
+        "Validation",
+        "Visualisation",
+        "Writing",
+        "Reviewing and Editing"
       ]
     },
-    "affiliations": {
-      "type": "component",
-      "repeatable": true,
-      "component": "contributions.affiliations"
+    "is_lead": {
+      "type": "boolean"
     }
   }
 }

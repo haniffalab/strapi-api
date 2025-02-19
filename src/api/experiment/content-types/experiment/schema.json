@@ -96,12 +96,6 @@
       "target": "api::study.study",
       "inversedBy": "experiments"
     },
-    "samples": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::sample.sample",
-      "mappedBy": "experiments"
-    },
     "metadata": {
       "type": "json"
     }

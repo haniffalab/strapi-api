@@ -1,360 +1,147 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Combobox, ComboboxOption } from '@strapi/design-system/Combobox';
-import { TextInput } from '@strapi/design-system';
+import { Box, Flex, TextInput, Tooltip, Tag } from '@strapi/design-system';
+import { Cross } from '@strapi/icons';
 import { Stack } from '@strapi/design-system/Stack';
 import { Field, FieldLabel, FieldError, FieldHint } from '@strapi/design-system/Field';
 import { useIntl } from 'react-intl';
 import { AsyncTypeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
-import styled from 'styled-components';
-import { queryOLS } from '../../../../../../../config/functions';
-
-const Wrapper = styled.div`
-.rbt-menu.dropdown-menu {
-  position: absolute;
-  top: 102%!important;
-  left: 0;
-  z-index: 1000;
-  width: 100%;
-  float: left;
-  min-width: 10rem;
-  padding: 0.5rem 0;
-  margin: 0.125rem 0 0;
-  font-size: 1rem;
-  color: #212529;
-  text-align: left;
-  list-style: none;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid rgba(0,0,0,.15);
-  border-radius: 0.25rem;
-}
-
-.rbt-menu .dropdown-item  {
-  display: block;
-  width: 100 %;
-  padding: 0.25rem 1.5rem;
-  clear: both;
-  font - weight: 400;
-  color: #212529;
-  text - align: inherit;
-  white - space: nowrap;
-  background - color: transparent;
-  border: 0;
-  text-decoration: none;
-}
-
-.rbt-menu .dropdown-item .badge {
-  display: inline-block;
-  padding: 0.25em 0.4em;
-  font-size: 75%;
-  font-weight: 700;
-  line-height: 1;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-  border-radius: 0.25rem;
-  color: #fff;
-  background-color: #6c757d;
-  margin-right: 1em;
-}
-
-.rbt-menu .dropdown-item .icon {
-  display: inline-block;
-  padding: 0.25em 0.4em;
-  font-size: 75%;
-  font-weight: 700;
-  line-height: 1;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-  border-radius: 0.25rem;
-  color: #fff;
-  background-color: #6c757d;
-  z-index: 1001;
-
-}
-
-.rbt .rbt-input-main::-ms-clear {
-  display: none;
-}
-
-/**
- * Menu
- */
-.rbt-menu {
-  margin-bottom: 2px;
-}
-.rbt-menu > .dropdown-item {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.rbt-menu > .dropdown-item:focus {
-  outline: none;
-}
-.rbt-menu-pagination-option {
-  text-align: center;
-}
-
-/**
- * Multi-select Input
- */
-.rbt-input-multi {
-  cursor: text;
-  overflow: hidden;
-  position: relative;
-}
-.rbt-input-multi.focus {
-  border-color: #80bdff;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-  color: #495057;
-  outline: 0;
-}
-.rbt-input-multi.form-control {
-  height: auto;
-}
-.rbt-input-multi.disabled {
-  background-color: #e9ecef;
-  opacity: 1;
-}
-.rbt-input-multi.is-invalid.focus {
-  border-color: #dc3545;
-  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-}
-.rbt-input-multi.is-valid.focus {
-  border-color: #28a745;
-  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-}
-.rbt-input-multi input::-moz-placeholder {
-  color: #6c757d;
-  opacity: 1;
-}
-.rbt-input-multi input:-ms-input-placeholder {
-  color: #6c757d;
-}
-.rbt-input-multi input::-webkit-input-placeholder {
-  color: #6c757d;
-}
-.rbt-input-multi .rbt-input-wrapper {
-  align-items: flex-start;
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: -4px;
-  margin-top: -1px;
-  overflow: hidden;
-}
-.rbt-input-multi .rbt-input-main {
-  margin: 1px 0 4px;
-}
-
-/**
- * Close Button
- */
-.rbt-close {
-  z-index: 1;
-}
-.rbt-close-lg {
-  font-size: 1.5rem;
-}
-
-/**
- * Token
- */
-.rbt-token {
-  background-color: #e7f4ff;
-  border: 0;
-  border-radius: 0.25rem;
-  color: #007bff;
-  display: inline-flex;
-  line-height: 1rem;
-  margin: 1px 3px 2px 0;
-}
-.rbt-token .rbt-token-label {
-  padding: 0.25rem 0.5rem;
-}
-.rbt-token .rbt-token-label:not(:last-child) {
-  padding-right: 0.25rem;
-}
-.rbt-token-disabled {
-  background-color: rgba(0, 0, 0, 0.1);
-  color: #495057;
-  pointer-events: none;
-}
-.rbt-token-removeable {
-  cursor: pointer;
-}
-.rbt-token-active {
-  background-color: #007bff;
-  color: #fff;
-  outline: none;
-  text-decoration: none;
-}
-.rbt-token .rbt-token-remove-button {
-  background-image: none;
-  border-bottom-left-radius: 0;
-  border-top-left-radius: 0;
-  box-shadow: none;
-  color: inherit;
-  display: flex;
-  justify-content: center;
-  font-size: inherit;
-  font-weight: normal;
-  opacity: 1;
-  outline: none;
-  padding: 0.25rem 0.5rem;
-  padding-left: 0;
-  text-shadow: none;
-}
-.rbt-token .rbt-token-remove-button .rbt-close-content {
-  display: block;
-}
-
-//
-// Rotating border
-//
-
-@keyframes spinner-border {
-  to { transform: rotate(360deg); }
-}
-
-.spinner-border {
-  display: inline-block;
-  width: 2rem;
-  height: 2rem;
-  vertical-align: text-bottom;
-  border: .25em solid currentColor;
-  border-right-color: transparent;
-  border-radius: 50%;
-  animation: spinner-border .75s linear infinite;
-}
-.spinner-border-sm {
-  width: 1rem;
-  height: 1rem;
-  border-width: 0.2em;
-}
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/**
- * Loader + CloseButton container
- */
-.rbt-aux {
-  align-items: center;
-  display: flex;
-  bottom: 0;
-  justify-content: center;
-  pointer-events: none;
-  /* Don't block clicks on the input */
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 2rem;
-}
-.rbt-aux-lg {
-  width: 3rem;
-}
-.rbt-aux .rbt-close {
-  margin-top: -0.25rem;
-  pointer-events: auto;
-  /* Override pointer-events: none; above */
-}
-
-.has-aux .form-control {
-  padding-right: 2rem;
-}
-.has-aux .form-control.is-valid, .has-aux .form-control.is-invalid {
-  background-position: right 2rem center;
-  padding-right: 4rem;
-}
-
-.rbt-highlight-text {
-  background-color: inherit;
-  color: inherit;
-  font-weight: bold;
-  padding: 0;
-}
-
-/**
- * Input Groups
- */
-.input-group > .rbt {
-  flex: 1;
-}
-.input-group > .rbt .rbt-input-hint, .input-group > .rbt .rbt-aux {
-  z-index: 5;
-}
-.input-group > .rbt:not(:first-child) .form-control {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
-.input-group > .rbt:not(:last-child) .form-control {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-`;
+import { stringify } from 'qs';
+import _ from 'lodash';
+import '../../styles.css';
 
 const CACHE = {};
-//const SEARCH_URI = strapi.plugin(pluginId).config('baseUrl');
+const SEARCH_URI = 'https://www.ebi.ac.uk/ols4/api/select';
+
+const FALLBACK_OPTION = {
+  id: -1,
+  short_form: null,
+  ontology_prefix: null,
+  iri: null,
+};
+
+async function makeAndHandleRequest(query, ontology) {
+  const params = stringify({
+    q: query,
+    ontology,
+    rows: 50,
+  }, { addQueryPrefix: true });
+
+  return await fetch(SEARCH_URI + params)
+    .then((resp) => resp.json())
+    .then(({ response }) => {
+      const options = response.docs.map((i) => ({
+        id: i.short_form,
+        label: i.label,
+        short_form: i.short_form,
+        ontology_prefix: i.ontology_prefix,
+        iri: i.iri,
+      }));
+      const total_count = response.numFound;
+      return { options, total_count };
+    })
+    .catch((err) => {
+      return { error: err.message }; 
+    });
+}
 
 const OntologyTermSelect = ({
   value,
   onChange,
   name,
   intlLabel,
-  labelAction,
-  required,
   attribute,
-  description,
   placeholder,
-  disabled,
-  error: propsError,
+  labelAction = null,
+  required = false,
+  description = null,
+  disabled = false,
+  showFallback = true,
+  error: propsError = null,
 }) => {
-  const { formatMessage, messages } = useIntl();
-
-  const selected = value && value !== 'null' ? (Array.isArray(JSON.parse(value)) ? JSON.parse(value) : [JSON.parse(value)]) : [];
-
+  const { formatMessage } = useIntl();
   const [error, setError] = useState(propsError);
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState([]);
-  const [query, setQuery] = useState('');
 
-  const handleInputChange = (q) => {
+  const handleInputChange = () => {
     setError(null);
-    setQuery(q);
   };
 
   // `handleInputChange` updates state and triggers a re-render, so
   // use `useCallback` to prevent the debounced search handler from
   // being cancelled.
   const handleSearch = useCallback(async (q) => {
+    setIsLoading(true);
     if (CACHE[q]) {
       setOptions(CACHE[q].options);
+      setIsLoading(false);
+      setError(null);
       return;
     }
-
-    setError(null);
-    setIsLoading(true);
-    await queryOLS(q, attribute.options.ontology).then((resp) => {
+    await makeAndHandleRequest(q, attribute.options.ontology).then((resp) => {
       const { error: respError, options: respOptions } = resp;
-
       if (respError){
         setError(respError);
         setIsLoading(false);
       }
-
       CACHE[q] = { ...resp };
       setIsLoading(false);
       setOptions(respOptions);
     });
   }, []);
+
+  const parsedValue = typeof(value) === 'string' ? JSON.parse(value) : value;
+
+  const handleRemove = (index) => {
+    const newValue = parsedValue.filter((_, i) => i !== index);
+    onChange({ target: { name, value: JSON.stringify(newValue), type: attribute.type }});
+  };
+
+  // @TODO: fix ref issues 
+  const renderInput = ({...inputProps}) => (
+    <TextInput
+      id={name}
+      key={name}
+      placeholder={placeholder && formatMessage(placeholder)}
+      aria-label={formatMessage(intlLabel)}
+      {...inputProps}
+    />
+  );
+
+  const renderMenuItemChildren = (option) => (
+    <Flex key={`${option.id}-${option.label}`} justifyContent="space-between">
+      <div>{option.label}</div>
+      <div><small>{option.short_form}</small></div>
+    </Flex>
+  );
+
+  const renderMenu = useCallback((results, {renderMenuItemChildren, ...menuProps}, state) => {
+    const fallbackOption = showFallback && !isLoading ?
+      {label: state.text, ...FALLBACK_OPTION} : null;
+    return (
+      <Menu id={name} key={name} {...menuProps}>
+        {isLoading ? <MenuItem disabled>Searching...</MenuItem> :
+          results.map((option) => (
+            <MenuItem key={option.id} option={option}>
+              {renderMenuItemChildren(option)}
+            </MenuItem>
+          ))}
+        {!isLoading && !results.length && <MenuItem disabled>No matches found.</MenuItem> }
+        {fallbackOption &&
+        <>
+          <Menu.Divider />
+          <MenuItem key={-1} option={fallbackOption} className="fallback">
+            <Flex key={fallbackOption.id} justifyContent="space-between">
+              <div>{fallbackOption.label}</div>
+              <div><small>Add without matching ontology</small></div>
+            </Flex>
+          </MenuItem>
+        </>
+        }
+      </Menu>
+    );
+  }, [isLoading, showFallback]);
 
   return (
     <Field
@@ -367,56 +154,53 @@ const OntologyTermSelect = ({
         <FieldLabel action={labelAction}>
           {formatMessage(intlLabel)}
         </FieldLabel>
-        <Wrapper>
-          <AsyncTypeahead
-            id="async-ebi-ols"
-            isLoading={isLoading}
-            labelKey="label"
-            minLength={2}
-            onInputChange={handleInputChange}
-            onSearch={handleSearch}
-            options={options}
-            defaultSelected={selected}
-            placeholder="Search for an ontology term"
-            inputProps={{
-              required: { required },
-              disabled: { disabled }
-            }}
-            onChange={(selected) => {
-              const value = selected && selected.length ? JSON.stringify(selected?.[0]) : null;
-              onChange({ target: { name, value: value, type: attribute.type } });
-            }}
-            renderInput={({ inputRef, referenceElementRef, ...inputProps }) => (
-              <TextInput
-                placeholder={placeholder && formatMessage(placeholder)}
-                aria-label={formatMessage(intlLabel)}
-                {...inputProps}
-                ref={(input) => {
-                  // Be sure to correctly handle these refs. In many cases, both can simply receive
-                  // the underlying input node, but `referenceElementRef can receive a wrapper node if
-                  // your custom input is more complex (See TypeaheadInputMulti for an example).
-                  inputRef(input);
-                  referenceElementRef(input);
-                }}
-              />
-            )}
-            useCache={false}
-          />
-        </Wrapper>
-        <FieldHint />
-        <FieldError />
+        <AsyncTypeahead
+          id={name + '-typeahead'}
+          key={name + '-typeahead'}
+          isLoading={isLoading}
+          labelKey="label"
+          minLength={2}
+          onInputChange={handleInputChange}
+          onSearch={handleSearch}
+          options={options}
+          placeholder="Search for an ontology term"
+          onChange={(selected) => {
+            const newValue = _.sortBy(
+              _.unionBy(parsedValue, selected, (item) => `${item.id}-${item.label}`),
+              'label'
+            );
+            onChange({ target: { name, value: JSON.stringify(newValue), type: attribute.type } });
+          }}
+          inputProps={{
+            required: required,
+            disabled: disabled
+          }}
+          renderInput={renderInput}
+          renderMenuItemChildren={renderMenuItemChildren}
+          renderMenu={renderMenu}
+          useCache={false}
+        />
+        {parsedValue && 
+        <Box paddingTop={2}>
+          <Flex wrap="wrap" gap={1}>
+            {parsedValue.map((item, index) => (
+              <Tooltip key={`${item.id}-${item.label}`} label={item.id}>
+                <Tag 
+                  icon={<Cross aria-hidden />}
+                  onClick={()=> handleRemove(index)}
+                >
+                  {item.label}
+                </Tag>
+              </Tooltip>
+            ))}
+          </Flex>
+        </Box>
+        }
+        {description && <FieldHint>{description}</FieldHint>}
+        {error && <FieldError>{error}</FieldError>}
       </Stack>
     </Field>
   );
-};
-
-OntologyTermSelect.defaultProps = {
-  description: null,
-  disabled: false,
-  error: null,
-  labelAction: null,
-  required: false,
-  value: '',
 };
 
 OntologyTermSelect.propTypes = {
@@ -430,6 +214,7 @@ OntologyTermSelect.propTypes = {
   labelAction: PropTypes.object,
   required: PropTypes.bool,
   value: PropTypes.string,
+  showFallback: PropTypes.bool,
 };
 
 export default OntologyTermSelect;

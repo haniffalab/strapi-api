@@ -75,6 +75,37 @@
       "type": "component",
       "repeatable": true,
       "component": "data.file"
+    },
+    "tissues": {
+      "type": "customField",
+      "customField": "plugin::ebi-ols.ontology-term",
+      "options": {
+        "ontology": "uberon"
+      }
+    },
+    "organisms": {
+      "type": "customField",
+      "customField": "plugin::ebi-ols.ontology-term",
+      "options": {
+        "ontology": "ncbitaxon"
+      }
+    },
+    "assays": {
+      "type": "customField",
+      "customField": "plugin::ebi-ols.ontology-term",
+      "options": {
+        "ontology": "efo"
+      }
+    },
+    "count": {
+      "type": "integer"
+    },
+    "diseases": {
+      "type": "customField",
+      "options": {
+        "ontology": "mondo"
+      },
+      "customField": "plugin::ebi-ols.ontology-term"
     }
   }
 }

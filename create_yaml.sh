@@ -2,7 +2,7 @@
 
 FILE="app.yaml"
 /bin/cat <<EOM >$FILE
-runtime: nodejs18
+runtime: nodejs20
 env: $APP_ENV
 service: $APP_SERVICE
 env_variables:
@@ -16,6 +16,12 @@ env_variables:
   API_TOKEN_SALT: $API_TOKEN_SALT
   ADMIN_JWT_SECRET: $ADMIN_JWT_SECRET
   JWT_SECRET: $JWT_SECRET
+  GCS_BUCKET_NAME: $GCS_BUCKET_NAME
+  GCS_BASE_PATH: $GCS_BASE_PATH
+  GCS_BASE_URL: $GCS_BASE_URL
+  GCS_PUBLIC_FILES: $GCS_PUBLIC_FILES
+  GCS_UNIFORM: $GCS_UNIFORM
+  GCS_SERVICE_ACCOUNT: '$GCS_SERVICE_ACCOUNT'
 automatic_scaling:
   min_instances: $MIN_INSTANCES
   max_instances: $MAX_INSTANCES
