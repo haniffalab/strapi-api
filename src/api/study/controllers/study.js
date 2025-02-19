@@ -68,7 +68,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
           },
         },
         datasets: {
-          fields: ['name', 'description', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'count'],
+          fields: ['name', 'description', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count'],
           populate: ['media'],
         },
       },
@@ -121,7 +121,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
           },
         },
         datasets: {
-          fields: ['name', 'description', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'count'],
+          fields: ['name', 'description', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count'],
           populate: ['media'],
         },
       },
