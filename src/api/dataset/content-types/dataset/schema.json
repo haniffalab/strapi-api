@@ -106,6 +106,20 @@
         "ontology": "mondo"
       },
       "customField": "plugin::ebi-ols.ontology-term"
+    },
+    "celltypes": {
+      "type": "customField",
+      "options": {
+        "ontology": "cl"
+      },
+      "customField": "plugin::ebi-ols.ontology-term"
+    },
+    "human_developmental_stages": {
+      "type": "customField",
+      "options": {
+        "ontology": "hsapdv"
+      },
+      "customField": "plugin::ebi-ols.ontology-term"
     }
   }
 }

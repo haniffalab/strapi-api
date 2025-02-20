@@ -36,6 +36,7 @@ async function makeAndHandleRequest(query, ontology) {
         short_form: i.short_form,
         ontology_prefix: i.ontology_prefix,
         iri: i.iri,
+        obo_id: i.obo_id,
       }));
       const total_count = response.numFound;
       return { options, total_count };
@@ -73,8 +74,9 @@ const OntologyTermSelect = ({
   // being cancelled.
   const handleSearch = useCallback(async (q) => {
     setIsLoading(true);
+    setError(null);
     if (CACHE[q]) {
-      setOptions(CACHE[q].options);
+      setOptions(CACHE[q]);
       setIsLoading(false);
       setError(null);
       return;
@@ -85,7 +87,7 @@ const OntologyTermSelect = ({
         setError(respError);
         setIsLoading(false);
       }
-      CACHE[q] = { ...resp };
+      CACHE[q] = respOptions;
       setIsLoading(false);
       setOptions(respOptions);
     });
@@ -158,6 +160,7 @@ const OntologyTermSelect = ({
           id={name + '-typeahead'}
           key={name + '-typeahead'}
           isLoading={isLoading}
+          filterBy={['label', 'short_form', 'obo_id']}
           labelKey="label"
           minLength={2}
           onInputChange={handleInputChange}

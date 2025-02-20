@@ -40,11 +40,6 @@ export default {
             },
             items: [
               {
-                /*
-                  Add a "Color format" dropdown
-                  to choose between 2 different format options
-                  for the color value: hexadecimal or RGBA
-                */
                 intlLabel: {
                   id: getTrad('ebi-ols.ontology-term-select.fields.ontology.label'),
                   defaultMessage: 'Ontology',
@@ -114,6 +109,16 @@ export default {
                       intlLabel: {
                         id: getTrad('ebi-ols.ontology-term-select.fields.ontology.option.cl'),
                         defaultMessage: 'cl',
+                      },
+                    },
+                  },
+                  {
+                    key: 'hsapdv',
+                    value: 'hsapdv',
+                    metadatas: {
+                      intlLabel: {
+                        id: getTrad('ebi-ols.ontology-term-select.fields.ontology.option.hsapdv'),
+                        defaultMessage: 'hsapdv',
                       },
                     },
                   },
