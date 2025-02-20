@@ -1,10 +1,44 @@
 'use strict';
 
 const array = require('lodash/array');
+const collection = require('lodash/collection');
 const object = require('lodash/object');
 const { isEqual } = require('lodash/lang');
 
 const MAX_IDS = 500;
+
+const getEbiFieldData = async (data, ontology) => {
+  let id, iri, short_form, label;
+  if (typeof data === 'string') { // consider as `label`
+    label = data;
+  }
+  else if (typeof data === 'object' && !Array.isArray(data) && data !== null){
+    ({ id, iri, short_form, label } = data);
+  }
+  const q = id || iri || short_form || label;
+  const res = await strapi.config.functions.queryOLS(q, ontology).catch((e)=> {throw e;});
+  let options;
+  const { error } = res;
+  ({options} = res);
+
+  if (error) {
+    throw new Error(error);
+  }
+  else if (!options || !options.length){
+    throw new Error(`Provided data ${q} does not match to any ontology`);
+  }
+
+  if (label){
+    options = options.filter((o) => 
+      o.label.toLowerCase() === label.toLowerCase()
+    );
+  }
+  if (options.length > 1){
+    throw new Error(`Provided data ${q} does not match to a single ontology`);
+  }
+
+  return options[0];
+};
 
 const createOrUpdate = async (uid, entry, datafile_id, publish_on_import) => {
 
@@ -55,6 +89,21 @@ const createOrUpdate = async (uid, entry, datafile_id, publish_on_import) => {
         Array.isArray(entry[c]) ? entry[c] : [entry[c]],
         isEqual
       );
+    }
+
+    // get previous EBI ontology data to append to them, not overwrite them
+    const ebiFields = Object.keys(attrs)
+      .filter((k) => (
+        attrs[k].type === 'customField' && attrs[k].customField === 'plugin::ebi-ols.ontology-term')
+      );
+    const ebiData = array.intersection(Object.keys(entry), ebiFields);
+    for (const idx in ebiData){
+      const e = ebiData[idx];
+      entry[e] = collection.sortBy(array.unionBy(
+        e in data ? data[e] : null,
+        Array.isArray(entry[e]) ? entry[e] : [entry[e]],
+        (item) => `${item.id}-${item.label}`
+      ), 'label');
     }
 
     // published if unpublished
@@ -152,6 +201,23 @@ const importEntry = async (uid, entry, datafile_id, publish_on_import) => {
           entry[component][c][r] = rId;
         }
       }
+    }
+  }
+
+  // Get EBI ontology data for custom EBI fields
+  const ebiFields = Object.keys(attrs)
+    .filter((k) => (
+      attrs[k].type === 'customField' && attrs[k].customField === 'plugin::ebi-ols.ontology-term')
+    );
+  for (const idx in ebiFields){
+    if (entry[ebiFields[idx]]){
+      let data = [];
+      for (const i in entry[ebiFields[idx]]){
+        const res = await getEbiFieldData(entry[ebiFields[idx]][i], attrs[ebiFields[idx]].options.ontology)
+          .catch((e) => { throw e; });
+        data.push(res);
+      }
+      entry[ebiFields[idx]] = data;
     }
   }
 
