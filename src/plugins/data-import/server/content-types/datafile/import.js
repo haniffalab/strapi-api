@@ -1,6 +1,7 @@
 'use strict';
 
 const array = require('lodash/array');
+const collection = require('lodash/collection');
 const object = require('lodash/object');
 const { isEqual } = require('lodash/lang');
 
@@ -98,11 +99,11 @@ const createOrUpdate = async (uid, entry, datafile_id, publish_on_import) => {
     const ebiData = array.intersection(Object.keys(entry), ebiFields);
     for (const idx in ebiData){
       const e = ebiData[idx];
-      entry[e] = array.unionBy(
+      entry[e] = collection.sortBy(array.unionBy(
         e in data ? data[e] : null,
         Array.isArray(entry[e]) ? entry[e] : [entry[e]],
-        'id'
-      );
+        (item) => `${item.id}-${item.label}`
+      ), 'label');
     }
 
     // published if unpublished
