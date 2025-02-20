@@ -46,12 +46,14 @@ module.exports = {
       for (const c in entity[f]){
         for (const attrIdx in relAttrs){
           const a = relAttrs[attrIdx];
-          if (componentAttrs[a].relation === 'manyToMany' ||
+          if (entity[f][c][a]){ // entity[f][c][a] can be null when relation in component is empty
+            if (componentAttrs[a].relation === 'manyToMany' ||
             componentAttrs[a].relation === 'oneToMany') {
             // Map array of objects to ids
-            entity[f][c][a] = entity[f][c][a].map((i) => i.id);
+              entity[f][c][a] = entity[f][c][a].map((i) => i.id);
+            }
+            else { entity[f][c][a] = entity[f][c][a].id; }
           }
-          else { entity[f][c][a] = entity[f][c][a].id; }
         }
 
         delete entity[f][c].id;

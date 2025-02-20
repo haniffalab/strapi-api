@@ -35,8 +35,15 @@
     "orcid_id": {
       "type": "string"
     },
+    "full_name": {
+      "type": "string",
+      "unique": true,
+      "required": false,
+      "private": true
+    },
     "uid": {
       "type": "uid",
+      "targetField": "full_name",
       "required": true
     },
     "avatar": {
