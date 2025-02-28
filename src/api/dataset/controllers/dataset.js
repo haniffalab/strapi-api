@@ -37,7 +37,10 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
         media: true,
         study: {
           fields: ['name', 'slug'],
-        }
+        },
+        data: {
+          fields: ['format', 'file_type']
+        },
       }
     };
     return await super.find(ctx);
