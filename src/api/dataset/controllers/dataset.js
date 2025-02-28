@@ -31,7 +31,7 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
     ctx.query = {
       ...ctx.query,
       fields: [
-        'name', 'category', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count'
+        'name', 'category', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count', 'description'
       ],
       populate: {
         media: true,
@@ -50,7 +50,7 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
     ctx.query = {
       ...ctx.query,
       fields: [
-        'name', 'category', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count'
+        'name', 'category', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count', 'description'
       ],
       populate: {
         media: true,
