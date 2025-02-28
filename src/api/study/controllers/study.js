@@ -19,7 +19,9 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
       });
 
       const ids = collectionEntry?.studies.map(({ id }) => id) || [];
-      if (!ids?.length) { return this.transformResponse([]); }
+      if (!ids?.length) { return this.transformResponse([], {
+        pagination: { page: 1, total: 0, pageCount: 0, pageSize: ctx.query.pagination?.pageSize || 10 }
+      }); }
 
       ctx.query.filters = {
         ...ctx.query.filters,
