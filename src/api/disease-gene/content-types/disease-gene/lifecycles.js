@@ -15,19 +15,23 @@ module.exports = {
   async beforeUpdate(event) {
     const { data, where } = event.params;
 
-    const entry = await strapi.entityService.findOne('api::disease-gene.disease-gene', where.id);
-    const disease_gene =
+    const isPublishAction = 'publishedAt' in data;
+
+    if (!isPublishAction){
+      const entry = await strapi.entityService.findOne('api::disease-gene.disease-gene', where.id);
+      const disease_gene =
       (data.disease_id || entry.disease_id) + '-' +
       (data.gene_id || entry.gene_id);
 
-    if (entry.disease_gene !== disease_gene){
-      event.params.data.disease_gene = disease_gene;
-      event.params.data.uid = await strapi.service('plugin::content-manager.uid')
-        .generateUIDField({
-          contentTypeUID: 'api::disease-gene.disease-gene',
-          field: 'uid',
-          data: event.params.data
-        });
+      if (entry.disease_gene !== disease_gene){
+        event.params.data.disease_gene = disease_gene;
+        event.params.data.uid = await strapi.service('plugin::content-manager.uid')
+          .generateUIDField({
+            contentTypeUID: 'api::disease-gene.disease-gene',
+            field: 'uid',
+            data: event.params.data
+          });
+      }
     }
   }
 };
