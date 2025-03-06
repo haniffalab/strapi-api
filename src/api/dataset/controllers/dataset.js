@@ -20,7 +20,9 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
       });
 
       const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id)) || [];
-      if (!ids?.length) { return this.transformResponse([]); }
+      if (!ids?.length) { return this.transformResponse([], {
+        pagination: { page: 1, total: 0, pageCount: 0, pageSize: ctx.query.pagination?.pageSize || 10 }
+      }); }
 
       ctx.query.filters = {
         ...ctx.query.filters,
