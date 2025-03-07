@@ -144,6 +144,7 @@ module.exports = {
     }
   },
 
+  // @TODO: add pagination support
   async findTerms(ctx, ontologyField){
     // Check if 'collection' query parameter is present
     const { collection } = ctx.query;
