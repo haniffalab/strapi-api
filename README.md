@@ -1,5 +1,5 @@
-[![deploy](https://github.com/haniffalab/cherita-strapi-api/actions/workflows/deploy-appengine.yml/badge.svg)](https://github.com/haniffalab/cherita-strapi-api/actions/workflows/deploy-appengine.yml)
-[![deploy-dev](https://github.com/haniffalab/cherita-strapi-api/actions/workflows/deploy-appengine-dev.yml/badge.svg)](https://github.com/haniffalab/cherita-strapi-api/actions/workflows/deploy-appengine-dev.yml)
+[![deploy](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine.yml/badge.svg)](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine.yml)
+[![deploy-dev](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine-dev.yml/badge.svg)](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine-dev.yml)
 
 # Cherita Strapi API
 
@@ -44,8 +44,8 @@ This command compiles the admin UI for production use.
 ## Deployment
 The Cherita Strapi App is deployed using Google Cloud App Engine. The following GitHub Actions handle deployments:
 
-- **Production Deployment:** [deploy](https://github.com/haniffalab/cherita-strapi-api/actions/workflows/deploy-appengine.yml)
-- **Development Deployment:** [deploy-dev](https://github.com/haniffalab/cherita-strapi-api/actions/workflows/deploy-appengine-dev.yml)
+- **Production Deployment:** [deploy](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine.yml)
+- **Development Deployment:** [deploy-dev](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine-dev.yml)
 
 ### Environment Variables
 The application requires several environment variables for configuration. Ensure these are set in your `.env` file:
