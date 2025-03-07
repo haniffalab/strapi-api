@@ -73,7 +73,8 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
       });
 
       const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id)) || [];
-      if (!ids.length || !ids.includes(dataset.id)) {
+      // get id from dataset.data and not only dataset as its response from findOne and not entityService
+      if (!ids.length || !ids.includes(dataset.data.id)) {
         throw new NotFoundError('Dataset not found in collection');
       }
     }
