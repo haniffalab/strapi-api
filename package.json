@@ -1,8 +1,10 @@
 {
-  "name": "strapi-api",
+  "name": "@haniffalab/strapi-api",
   "private": true,
   "version": "0.1.0",
-  "description": "A Strapi application",
+  "author": "Haniffa Lab",
+  "license": "MIT",
+  "description": "A Strapi application, providing data API scaffolding for the Cherita project.",
   "scripts": {
     "develop": "strapi develop",
     "start": "strapi start",
@@ -33,9 +35,6 @@
     "styled-components": "5.3.3",
     "typescript": "^5.3.3"
   },
-  "author": {
-    "name": "A Strapi developer"
-  },
   "strapi": {
     "uuid": "ef523884-e001-4354-862a-d889fbe73214"
   },
@@ -43,7 +42,6 @@
     "node": ">=14.19.1 <=20.x.x",
     "npm": ">=6.0.0"
   },
-  "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.26.7",
     "@babel/eslint-parser": "^7.23.10",
