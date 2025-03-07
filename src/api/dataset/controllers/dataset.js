@@ -5,6 +5,7 @@
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
+const { NotFoundError } = require('@strapi/utils').errors;
 const _ = require('lodash');
 
 module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
@@ -18,8 +19,10 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
         populate: { studies: { populate: { datasets: { select: ['id'] } } } }
       });
 
-      const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id));
-      if (!ids?.length) { return this.transformResponse([]); }
+      const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id)) || [];
+      if (!ids?.length) { return this.transformResponse([], {
+        pagination: { page: 1, total: 0, pageCount: 0, pageSize: ctx.query.pagination?.pageSize || 10 }
+      }); }
 
       ctx.query.filters = {
         ...ctx.query.filters,
@@ -30,34 +33,36 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
     ctx.query = {
       ...ctx.query,
       fields: [
-        'name', 'category', 'tissues', 'organisms'
+        'name', 'category', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count', 'description'
       ],
       populate: {
+        media: true,
         study: {
           fields: ['name', 'slug'],
-        }
+        },
+        data: {
+          fields: ['format', 'file_type']
+        },
       }
     };
     return await super.find(ctx);
   },
   async findOne(ctx) {
-    // @TODO: check collection query parameter
-    // and return 404 if not in collection
+
     ctx.query = {
       ...ctx.query,
       fields: [
-        'name', 'category', 'tissues', 'organisms',
+        'name', 'category', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count', 'description'
       ],
       populate: {
+        media: true,
         study: {
           fields: ['name', 'slug'],
         },
         data: true,
       }
     };
-    return await super.findOne(ctx);
-  },
-  async findTissues(ctx) {
+    const dataset = await super.findOne(ctx);
 
     // Check if 'collection' query parameter is present
     const { collection } = ctx.query;
@@ -67,41 +72,27 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
         populate: { studies: { populate: { datasets: { select: ['id'] } } } }
       });
 
-      const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id));
-      if (!ids?.length) { return this.transformResponse([]); }
-
-      ctx.query.filters = {
-        ...ctx.query.filters,
-        id: { $in: ids },
-      };
+      const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id)) || [];
+      if (!ids.length || !ids.includes(dataset.id)) {
+        throw new NotFoundError('Dataset not found in collection');
+      }
     }
-
-    const datasets = await strapi.entityService.findMany('api::dataset.dataset', {
-      fields: ['tissues'],
-      populate: {
-        study: {
-          fields: ['slug'],
-        }
-      },
-      filters: ctx.query.filters,
-    });
-
-    const tissues = _.values(_.reduce(datasets, (res, d) => {
-      _.forEach(d.tissues, t => {
-        var compositeId = `${t.id}-${t.label}`;
-        if (!res[compositeId]) {
-          res[compositeId] = { ...t, datasets: [], studies: [] };
-        }
-        if (!res[compositeId].datasets.includes(d.id)) {
-          res[compositeId].datasets.push(d.id);
-        }
-        if (!res[compositeId].studies.includes(d.study.slug)) {
-          res[compositeId].studies.push(d.study.slug);
-        }
-      });
-      return res;
-    }, {}));
-
+    return dataset;
+  },
+  async findTissues(ctx) {
+    const tissues = await strapi.config.functions.findTerms(ctx, 'tissues');
     return this.transformResponse(tissues);
-  }
+  },
+  async findOrganisms(ctx) {
+    const organisms = await strapi.config.functions.findTerms(ctx, 'organisms');
+    return this.transformResponse(organisms);
+  },
+  async findAssays(ctx) {
+    const assays = await strapi.config.functions.findTerms(ctx, 'assays');
+    return this.transformResponse(assays);
+  },
+  async findDiseases(ctx) {
+    const diseases = await strapi.config.functions.findTerms(ctx, 'diseases');
+    return this.transformResponse(diseases);
+  },
 }));

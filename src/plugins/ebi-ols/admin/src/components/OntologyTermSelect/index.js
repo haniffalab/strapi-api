@@ -36,6 +36,7 @@ async function makeAndHandleRequest(query, ontology) {
         short_form: i.short_form,
         ontology_prefix: i.ontology_prefix,
         iri: i.iri,
+        obo_id: i.obo_id,
       }));
       const total_count = response.numFound;
       return { options, total_count };
@@ -56,6 +57,7 @@ const OntologyTermSelect = ({
   required = false,
   description = null,
   disabled = false,
+  showFallback = true,
   error: propsError = null,
 }) => {
   const { formatMessage } = useIntl();
@@ -72,8 +74,9 @@ const OntologyTermSelect = ({
   // being cancelled.
   const handleSearch = useCallback(async (q) => {
     setIsLoading(true);
+    setError(null);
     if (CACHE[q]) {
-      setOptions(CACHE[q].options);
+      setOptions(CACHE[q]);
       setIsLoading(false);
       setError(null);
       return;
@@ -84,7 +87,7 @@ const OntologyTermSelect = ({
         setError(respError);
         setIsLoading(false);
       }
-      CACHE[q] = { ...resp };
+      CACHE[q] = respOptions;
       setIsLoading(false);
       setOptions(respOptions);
     });
@@ -116,7 +119,7 @@ const OntologyTermSelect = ({
   );
 
   const renderMenu = useCallback((results, {renderMenuItemChildren, ...menuProps}, state) => {
-    const fallbackOption = !isLoading && !results.length ?
+    const fallbackOption = showFallback && !isLoading ?
       {label: state.text, ...FALLBACK_OPTION} : null;
     return (
       <Menu id={name} key={name} {...menuProps}>
@@ -126,9 +129,9 @@ const OntologyTermSelect = ({
               {renderMenuItemChildren(option)}
             </MenuItem>
           ))}
+        {!isLoading && !results.length && <MenuItem disabled>No matches found.</MenuItem> }
         {fallbackOption &&
         <>
-          <MenuItem disabled>No matches found.</MenuItem>
           <Menu.Divider />
           <MenuItem key={-1} option={fallbackOption} className="fallback">
             <Flex key={fallbackOption.id} justifyContent="space-between">
@@ -140,7 +143,7 @@ const OntologyTermSelect = ({
         }
       </Menu>
     );
-  }, [isLoading]);
+  }, [isLoading, showFallback]);
 
   return (
     <Field
@@ -157,6 +160,7 @@ const OntologyTermSelect = ({
           id={name + '-typeahead'}
           key={name + '-typeahead'}
           isLoading={isLoading}
+          filterBy={['label', 'short_form', 'obo_id']}
           labelKey="label"
           minLength={2}
           onInputChange={handleInputChange}
@@ -213,6 +217,7 @@ OntologyTermSelect.propTypes = {
   labelAction: PropTypes.object,
   required: PropTypes.bool,
   value: PropTypes.string,
+  showFallback: PropTypes.bool,
 };
 
 export default OntologyTermSelect;

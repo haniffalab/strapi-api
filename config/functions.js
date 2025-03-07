@@ -1,6 +1,8 @@
 'use strict';
 const array = require('lodash/array');
 const bcrypt = require('bcryptjs');
+const qs = require('qs');
+const _ = require('lodash');
 
 module.exports = {
   // TODO: move function to data-import plugin
@@ -44,12 +46,14 @@ module.exports = {
       for (const c in entity[f]){
         for (const attrIdx in relAttrs){
           const a = relAttrs[attrIdx];
-          if (componentAttrs[a].relation === 'manyToMany' ||
+          if (entity[f][c][a]){ // entity[f][c][a] can be null when relation in component is empty
+            if (componentAttrs[a].relation === 'manyToMany' ||
             componentAttrs[a].relation === 'oneToMany') {
             // Map array of objects to ids
-            entity[f][c][a] = entity[f][c][a].map((i) => i.id);
+              entity[f][c][a] = entity[f][c][a].map((i) => i.id);
+            }
+            else { entity[f][c][a] = entity[f][c][a].id; }
           }
-          else { entity[f][c][a] = entity[f][c][a].id; }
         }
 
         delete entity[f][c].id;
@@ -57,6 +61,34 @@ module.exports = {
     }
 
     return entity;
+  },
+  
+  // @TODO: unify with OntologyTermSelect component
+  async queryOLS(query, ontology) {
+    const SEARCH_URI = 'https://www.ebi.ac.uk/ols4/api/select';
+    const params = qs.stringify({
+      q: query,
+      ontology,
+      rows: 50,
+    }, { addQueryPrefix: true });
+
+    return await fetch(SEARCH_URI + params)
+      .then((resp) => resp.json())
+      .then(({ response }) => {
+        const options = response.docs.map((i) => ({
+          id: i.short_form,
+          label: i.label,
+          short_form: i.short_form,
+          ontology_prefix: i.ontology_prefix,
+          iri: i.iri,
+          obo_id: i.obo_id,
+        }));
+        const total_count = response.numFound;
+        return { options, total_count };
+      })
+      .catch((err) => {
+        return { error: err.message }; 
+      });
   },
 
   async validateStudyAccess(study, request){
@@ -74,7 +106,7 @@ module.exports = {
       if (authType === 'Basic') {
         const base64Credentials = authHeader.split(' ')[1];
         const decodedCredentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
-        const [_, password] = decodedCredentials.split(':');
+        const [_username, password] = decodedCredentials.split(':');
   
         if (!password) {
           return 'Password is required';
@@ -110,5 +142,52 @@ module.exports = {
         return 'Invalid authorization';
       }
     }
+  },
+
+  async findTerms(ctx, ontologyField){
+    // Check if 'collection' query parameter is present
+    const { collection } = ctx.query;
+    if (collection) {
+      const collectionEntry = await strapi.db.query('api::collection.collection').findOne({
+        where: { name: collection },
+        populate: { studies: { populate: { datasets: { select: ['id'] } } } }
+      });
+    
+      const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id)) || [];
+      if (!ids?.length) { return []; }
+    
+      ctx.query.filters = {
+        ...ctx.query.filters,
+        id: { $in: ids },
+      };
+    }
+    
+    const datasets = await strapi.entityService.findMany('api::dataset.dataset', {
+      fields: [ontologyField],
+      populate: {
+        study: {
+          fields: ['slug'],
+        }
+      },
+      filters: ctx.query.filters,
+    });
+    
+    const terms = _.values(_.reduce(datasets, (res, d) => {
+      _.forEach(d[ontologyField], t => {
+        var compositeId = `${t.id}-${t.label}`;
+        if (!res[compositeId]) {
+          res[compositeId] = { ...t, datasets: [], studies: [] };
+        }
+        if (!res[compositeId].datasets.includes(d.id)) {
+          res[compositeId].datasets.push(d.id);
+        }
+        if (!res[compositeId].studies.includes(d.study.slug)) {
+          res[compositeId].studies.push(d.study.slug);
+        }
+      });
+      return res;
+    }, {}));
+    
+    return terms;
   }
 };

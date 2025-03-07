@@ -5,6 +5,7 @@
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
+const { NotFoundError } = require('@strapi/utils').errors;
 
 module.exports = createCoreController('api::study.study', ({ strapi }) => ({
   async find(ctx) {
@@ -17,8 +18,10 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
         populate: { studies: { select: ['id'] } },
       });
 
-      const ids = collectionEntry?.studies.map(({ id }) => id);
-      if (!ids?.length) { return this.transformResponse([]); }
+      const ids = collectionEntry?.studies.map(({ id }) => id) || [];
+      if (!ids?.length) { return this.transformResponse([], {
+        pagination: { page: 1, total: 0, pageCount: 0, pageSize: ctx.query.pagination?.pageSize || 10 }
+      }); }
 
       ctx.query.filters = {
         ...ctx.query.filters,
@@ -31,6 +34,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
       fields: [
         'name',
         'slug',
+        'subtitle',
         'createdAt',
         'updatedAt',
         'view_count',
@@ -39,7 +43,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
       populate: {
         cover_image: true,
         publications: {
-          fields: ['title', 'doi', 'url'],
+          fields: ['title', 'doi', 'url', 'abstract'],
           populate: {
             journal: {
               fields: ['name'],
@@ -66,15 +70,15 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
           },
         },
         datasets: {
-          fields: ['name', 'description', 'tissues', 'organisms', 'assays'],
+          fields: ['name', 'description', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count'],
+          populate: ['media'],
         },
       },
     };
     return await super.find(ctx);
   },
   async findOne(ctx) {
-    // @TODO: check collection query parameter
-    // and return 404 if not in collection
+
     const { slug } = ctx.params;
 
     const query = {
@@ -83,6 +87,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
       fields: [
         'name',
         'slug',
+        'subtitle',
         'createdAt',
         'updatedAt',
         'view_count',
@@ -91,7 +96,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
       populate: {
         cover_image: true,
         publications: {
-          fields: ['title', 'doi', 'url'],
+          fields: ['title', 'doi', 'url', 'abstract'],
           populate: {
             journal: {
               fields: ['name'],
@@ -118,7 +123,8 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
           },
         },
         datasets: {
-          fields: ['name', 'description', 'tissues', 'organisms', 'assays'],
+          fields: ['name', 'description', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count'],
+          populate: ['media'],
         },
       },
     };
@@ -127,6 +133,20 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
       'api::study.study',
       query
     );
+
+    // Check if 'collection' query parameter is present
+    const { collection } = ctx.query;
+    if (collection) {
+      const collectionEntry = await strapi.db.query('api::collection.collection').findOne({
+        where: { name: collection },
+        populate: { studies: { select: ['id'] } },
+      });
+
+      const ids = collectionEntry?.studies.map(({ id }) => id) || [];
+      if (!ids.length || !ids.includes(study.id)){
+        throw new NotFoundError('Study not found in collection');
+      }
+    }
 
     return this.transformResponse(study);
   },

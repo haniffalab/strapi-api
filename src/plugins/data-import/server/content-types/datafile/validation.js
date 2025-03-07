@@ -5,6 +5,30 @@ const { parseType } = require('@strapi/utils');
 const array = require('lodash/array');
 const object = require('lodash/object');
 
+// Check EbiField is an array of strings or objects
+const validateEbiField = (data) => {
+  if (!Array.isArray(data)){
+    return false;
+  }
+  for (const idx in data){
+    let valid;
+    if (typeof data[idx] === 'string') { // consider as `label`
+      valid = true;
+    }
+    else if (typeof data[idx] === 'object' && !Array.isArray(data[idx]) && data[idx] !== null){
+      const { id, iri, short_form, label } = data[idx];
+      valid = id || iri || short_form || label;
+    }
+    else {
+      valid = false;
+    }
+    if (!valid){
+      return false;
+    }
+  }
+  return true;
+};
+
 const validateEntry = async (uid, entry, parents, is_component=false) => {
   parents.push(uid);
 
@@ -118,6 +142,24 @@ const validateEntry = async (uid, entry, parents, is_component=false) => {
     }
   }
 
+  // Validate custom EBI ontology fields
+  const ebiFields = Object.keys(attrs)
+    .filter((k) => (
+      attrs[k].type === 'customField' && attrs[k].customField === 'plugin::ebi-ols.ontology-term')
+    );
+  for (const idx in ebiFields){
+    if (!attrs[ebiFields[idx]].options || !attrs[ebiFields[idx]].options.ontology){
+      console.log(ebiFields[idx] + ' must have an ontology value in its attributes\' options');
+      throw new ValidationError(ebiFields[idx] + ' must have an ontology value in its attributes\' options');
+    }
+    if (entry[ebiFields[idx]] && !validateEbiField(entry[ebiFields[idx]])){
+      console.log(ebiFields[idx] + ' should be an array of strings representing the ontologies `label`' +
+      ' or objects that must contain one of the following: `id`, `iri`, `short_form`, `label`');
+      throw new ValidationError(ebiFields[idx] + ' should be an array of strings representing the ontologies `label`' +
+      ' or objects that must contain one of the following: `id`, `iri`, `short_form`, `label`');
+    }
+  }
+
   // Loop trough 'relation' fields and validate them as entries
   const ctRelationFields = Object.keys(attrs)
     .filter((k) => attrs[k].type === 'relation');
@@ -127,7 +169,7 @@ const validateEntry = async (uid, entry, parents, is_component=false) => {
     if (attrs[r].relation === 'manyToMany' ||
     attrs[r].relation === 'oneToMany'){
       if (!Array.isArray(entry[r])) {
-        throw ValidationError(attrs[r].target + ' must contain an array');
+        throw new ValidationError(attrs[r].target + ' must contain an array');
       }
       await validateEntries(attrs[r].target, entry[r], parents)
         .catch((e) => { throw e; });
@@ -154,7 +196,7 @@ const validateEntry = async (uid, entry, parents, is_component=false) => {
     }
     else { // component field contains an array
       if (!Array.isArray(entry[component])){
-        throw ValidationError(component + ' must contain an array');
+        throw new ValidationError(component + ' must contain an array');
       }
       for (const c in entry[component]){
         const comp = entry[component][c];
@@ -170,7 +212,7 @@ const validateEntry = async (uid, entry, parents, is_component=false) => {
 const validateEntries = async (uid, entries, parents) => {
   
   if (!Array.isArray(entries)){
-    throw ValidationError(uid + ' in ' +
+    throw new ValidationError(uid + ' in ' +
     parents.join('>') + ' must contain an array');
   }
   for (const idx in entries){

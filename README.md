@@ -1,72 +1,66 @@
-# 🚀 Getting started with Strapi
+[![deploy](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine.yml/badge.svg)](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine.yml)
+[![deploy-dev](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine-dev.yml/badge.svg)](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine-dev.yml)
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/developer-docs/latest/developer-resources/cli/CLI.html) (CLI) which lets you scaffold and manage your project in seconds.
+# Cherita Strapi API
 
-### `install`
+A backend API powered by [Strapi](https://strapi.io/), designed to manage and serve content within the Cherita infrastructure. It provides structured data storage, API endpoints, and authentication for applications consuming data.
 
-Install your Strapi application
+## Installation
+To install dependencies, run:
 
-```
+```sh
 npm install
 ```
 
-Then copy `.env.example` to `.env`
+Then, copy `.env.example` to `.env` and update the environment variables accordingly.
 
-### `develop`
+## Development
+To start the Strapi application in development mode (with auto-reload enabled):
 
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/developer-docs/latest/developer-resources/cli/CLI.html#strapi-develop)
-
-```
+```sh
 npm run develop
-# or
-yarn develop
 ```
 
-### `start`
+This will launch the Strapi admin panel and expose API endpoints.
 
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/developer-docs/latest/developer-resources/cli/CLI.html#strapi-start)
+## Production
+To start the Strapi application in production mode:
 
-```
+```sh
 npm run start
-# or
-yarn start
 ```
 
-### `build`
+Ensure that the `.env` file is properly configured before running in production.
 
-Build your admin panel. [Learn more](https://docs.strapi.io/developer-docs/latest/developer-resources/cli/CLI.html#strapi-build)
+## Building the Admin Panel
+To build the Strapi admin panel for deployment:
 
-```
+```sh
 npm run build
-# or
-yarn build
 ```
 
-## ⚙️ Deployment
+This command compiles the admin UI for production use.
 
-Strapi gives you many possible deployment options for your project. Find the one that suits you on the [deployment section of the documentation](https://docs.strapi.io/developer-docs/latest/setup-deployment-guides/deployment.html).
+## Deployment
+The Cherita Strapi App is deployed using Google Cloud App Engine. The following GitHub Actions handle deployments:
 
-## 📚 Learn more
+- **Production Deployment:** [deploy](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine.yml)
+- **Development Deployment:** [deploy-dev](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine-dev.yml)
 
-- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
-- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
-- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
-- [Strapi blog](https://docs.strapi.io) - Official Strapi blog containing articles made by the Strapi team and the community.
-- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
+### Environment Variables
+The application requires several environment variables for configuration. Ensure these are set in your `.env` file:
 
-Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
-
-## ✨ Community
-
-- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
-- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
-- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
-
----
-
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
-
-## Useful stuff
-
-cat /your-service-account.json | base64 | tr -d '\n'
-node -e "console.log(require('crypto').randomBytes(16).toString('base64'))"
+```sh
+APP_KEYS="your-app-keys"
+API_TOKEN_SALT="your-api-token-salt"
+ADMIN_JWT_SECRET="your-admin-jwt-secret"
+JWT_SECRET="your-jwt-secret"
+TRANSFER_TOKEN_SALT="your-transfer-token-salt"
+SENDGRID_API_KEY="your-sendgrid-api-key"
+GCS_BUCKET_NAME="your-gcp-bucket-name"
+GCS_BASE_PATH="your-gcp-base-path"
+GCS_BASE_URL="https://storage.googleapis.com/your-gcp-bucket-name"
+GCS_PUBLIC_FILES=true
+GCS_UNIFORM=false
+GCS_SERVICE_ACCOUNT="your-gcp-service-acocunt-json"
+```
