@@ -1,7 +1,7 @@
 {
   "name": "@haniffalab/strapi-api",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "author": "Haniffa Lab",
   "license": "MIT",
   "description": "A Strapi application, providing data API scaffolding for the Cherita project.",

@@ -1,45 +1,73 @@
-[![deploy](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine.yml/badge.svg)](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine.yml)
-[![deploy-dev](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine-dev.yml/badge.svg)](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine-dev.yml)
+[![deploy](https://github.com/haniffalab/cherita-strapi-app/actions/workflows/deploy-appengine.yml/badge.svg)](https://github.com/haniffalab/cherita-strapi-app/actions/workflows/deploy-appengine.yml)
+[![deploy-dev](https://github.com/haniffalab/cherita-strapi-app/actions/workflows/deploy-appengine-dev.yml/badge.svg)](https://github.com/haniffalab/cherita-strapi-app/actions/workflows/deploy-appengine-dev.yml)
 
-# @haniffalab/strapi-api
+# Cherita Strapi API
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/developer-docs/latest/developer-resources/cli/CLI.html) (CLI) which lets you scaffold and manage your project in seconds.
+A backend API powered by [Strapi](https://strapi.io/), designed to manage and serve content within the Cherita infrastructure. It provides structured data storage, API endpoints, and authentication for applications consuming Cherita's data.
 
-### `install`
+## Installation
+To install dependencies, run:
 
-Install your Strapi application
-
-```
+```sh
 npm install
 ```
 
-Then copy `.env.example` to `.env`
+Then, copy `.env.example` to `.env` and update the environment variables accordingly.
 
-### `develop`
+## Development
+To start the Strapi application in development mode (with auto-reload enabled):
 
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/developer-docs/latest/developer-resources/cli/CLI.html#strapi-develop)
-
-```
+```sh
 npm run develop
 ```
 
-### `start`
+This will launch the Strapi admin panel and expose API endpoints.
 
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/developer-docs/latest/developer-resources/cli/CLI.html#strapi-start)
+## Production
+To start the Strapi application in production mode:
 
-```
+```sh
 npm run start
 ```
 
-### `build`
+Ensure that the `.env` file is properly configured before running in production.
 
-Build your admin panel. [Learn more](https://docs.strapi.io/developer-docs/latest/developer-resources/cli/CLI.html#strapi-build)
+## Building the Admin Panel
+To build the Strapi admin panel for deployment:
 
-```
+```sh
 npm run build
 ```
 
-## Useful stuff
+This command compiles the admin UI for production use.
 
+## Deployment
+The Cherita Strapi App is deployed using Google Cloud App Engine. The following GitHub Actions handle deployments:
+
+- **Production Deployment:** [deploy](https://github.com/haniffalab/cherita-strapi-app/actions/workflows/deploy-appengine.yml)
+- **Development Deployment:** [deploy-dev](https://github.com/haniffalab/cherita-strapi-app/actions/workflows/deploy-appengine-dev.yml)
+
+### Environment Variables
+The application requires several environment variables for configuration. Ensure these are set in your `.env` file:
+
+```sh
+APP_KEYS="your-app-keys"
+API_TOKEN_SALT="your-api-token-salt"
+ADMIN_JWT_SECRET="your-admin-jwt-secret"
+JWT_SECRET="your-jwt-secret"
+DATABASE_URL="your-database-url"
+CLOUD_STORAGE_BUCKET="your-gcs-bucket-name"
+SENDGRID_API_KEY="your-sendgrid-api-key"
+```
+
+## Useful Commands
+Generate a base64-encoded service account key:
+```sh
 cat /your-service-account.json | base64 | tr -d '\n'
+```
+
+Generate a random encryption key:
+```sh
 node -e "console.log(require('crypto').randomBytes(16).toString('base64'))"
+```
+

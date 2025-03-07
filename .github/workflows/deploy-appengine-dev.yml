@@ -1,8 +1,8 @@
-name: Deploy dev
+name: deploy-dev
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: ["dev"]
 
 jobs:
   deploy:
@@ -30,20 +30,20 @@ jobs:
       GCS_PUBLIC_FILES: ${{ secrets.GCS_PUBLIC_FILES }}
       GCS_UNIFORM: ${{ secrets.GCS_UNIFORM }}
       GCS_SERVICE_ACCOUNT: ${{ secrets.GCP_SA_KEY }}
-      
+
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: create yaml
         run: ./create_yaml.sh
-      
+
       - name: auth
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: '${{ secrets.GCP_SA_KEY }}'
-      
+          credentials_json: "${{ secrets.GCP_SA_KEY }}"
+
       - name: deploy
         uses: google-github-actions/deploy-appengine@v2
         with:
-          project_id: '${{ secrets.GCP_PROJECT }}'
+          project_id: "${{ secrets.GCP_PROJECT }}"
           deliverables: app.yaml
