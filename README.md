@@ -1,5 +1,5 @@
-[![deploy](https://github.com/haniffalab/cherita-strapi-app/actions/workflows/deploy-appengine.yml/badge.svg)](https://github.com/haniffalab/cherita-strapi-app/actions/workflows/deploy-appengine.yml)
-[![deploy-dev](https://github.com/haniffalab/cherita-strapi-app/actions/workflows/deploy-appengine-dev.yml/badge.svg)](https://github.com/haniffalab/cherita-strapi-app/actions/workflows/deploy-appengine-dev.yml)
+[![deploy](https://github.com/haniffalab/cherita-strapi-api/actions/workflows/deploy-appengine.yml/badge.svg)](https://github.com/haniffalab/cherita-strapi-api/actions/workflows/deploy-appengine.yml)
+[![deploy-dev](https://github.com/haniffalab/cherita-strapi-api/actions/workflows/deploy-appengine-dev.yml/badge.svg)](https://github.com/haniffalab/cherita-strapi-api/actions/workflows/deploy-appengine-dev.yml)
 
 # Cherita Strapi API
 
@@ -44,8 +44,8 @@ This command compiles the admin UI for production use.
 ## Deployment
 The Cherita Strapi App is deployed using Google Cloud App Engine. The following GitHub Actions handle deployments:
 
-- **Production Deployment:** [deploy](https://github.com/haniffalab/cherita-strapi-app/actions/workflows/deploy-appengine.yml)
-- **Development Deployment:** [deploy-dev](https://github.com/haniffalab/cherita-strapi-app/actions/workflows/deploy-appengine-dev.yml)
+- **Production Deployment:** [deploy](https://github.com/haniffalab/cherita-strapi-api/actions/workflows/deploy-appengine.yml)
+- **Development Deployment:** [deploy-dev](https://github.com/haniffalab/cherita-strapi-api/actions/workflows/deploy-appengine-dev.yml)
 
 ### Environment Variables
 The application requires several environment variables for configuration. Ensure these are set in your `.env` file:
@@ -55,19 +55,12 @@ APP_KEYS="your-app-keys"
 API_TOKEN_SALT="your-api-token-salt"
 ADMIN_JWT_SECRET="your-admin-jwt-secret"
 JWT_SECRET="your-jwt-secret"
-DATABASE_URL="your-database-url"
-CLOUD_STORAGE_BUCKET="your-gcs-bucket-name"
+TRANSFER_TOKEN_SALT="your-transfer-token-salt"
 SENDGRID_API_KEY="your-sendgrid-api-key"
+GCS_BUCKET_NAME="your-gcp-bucket-name"
+GCS_BASE_PATH="your-gcp-base-path"
+GCS_BASE_URL="your-gcp-base-url"
+GCS_PUBLIC_FILES=true
+GCS_UNIFORM=false
+GCS_SERVICE_ACCOUNT="your-gcp-service-acocunt-json"
 ```
-
-## Useful Commands
-Generate a base64-encoded service account key:
-```sh
-cat /your-service-account.json | base64 | tr -d '\n'
-```
-
-Generate a random encryption key:
-```sh
-node -e "console.log(require('crypto').randomBytes(16).toString('base64'))"
-```
-
