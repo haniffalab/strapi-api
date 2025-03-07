@@ -3,7 +3,7 @@
 
 # Cherita Strapi API
 
-A backend API powered by [Strapi](https://strapi.io/), designed to manage and serve content within the Cherita infrastructure. It provides structured data storage, API endpoints, and authentication for applications consuming Cherita's data.
+A backend API powered by [Strapi](https://strapi.io/), designed to manage and serve content within the Cherita infrastructure. It provides structured data storage, API endpoints, and authentication for applications consuming data.
 
 ## Installation
 To install dependencies, run:

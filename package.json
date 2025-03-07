@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "author": "Haniffa Lab",
   "license": "MIT",
-  "description": "A Strapi application, providing data API scaffolding for the Cherita project.",
+  "description": "A backend API powered by Strapi, designed to manage and serve content within the Cherita infrastructure.",
   "scripts": {
     "develop": "strapi develop",
     "start": "strapi start",
