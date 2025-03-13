@@ -6,6 +6,7 @@
 A backend API powered by [Strapi](https://strapi.io/), designed to manage and serve content within the Cherita infrastructure. It provides structured data storage, API endpoints, and authentication for applications consuming data.
 
 ## Installation
+
 To install dependencies, run:
 
 ```sh
@@ -15,6 +16,7 @@ npm install
 Then, copy `.env.example` to `.env` and update the environment variables accordingly.
 
 ## Development
+
 To start the Strapi application in development mode (with auto-reload enabled):
 
 ```sh
@@ -24,6 +26,7 @@ npm run develop
 This will launch the Strapi admin panel and expose API endpoints.
 
 ## Production
+
 To start the Strapi application in production mode:
 
 ```sh
@@ -33,6 +36,7 @@ npm run start
 Ensure that the `.env` file is properly configured before running in production.
 
 ## Building the Admin Panel
+
 To build the Strapi admin panel for deployment:
 
 ```sh
@@ -42,12 +46,14 @@ npm run build
 This command compiles the admin UI for production use.
 
 ## Deployment
+
 The Cherita Strapi App is deployed using Google Cloud App Engine. The following GitHub Actions handle deployments:
 
 - **Production Deployment:** [deploy](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine.yml)
 - **Development Deployment:** [deploy-dev](https://github.com/haniffalab/strapi-api/actions/workflows/deploy-appengine-dev.yml)
 
 ### Environment Variables
+
 The application requires several environment variables for configuration. Ensure these are set in your `.env` file:
 
 ```sh
