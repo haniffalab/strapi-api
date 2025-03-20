@@ -28,6 +28,11 @@
     "name": {
       "type": "string",
       "unique": true
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
     }
   }
 }
