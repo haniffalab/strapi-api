@@ -120,6 +120,11 @@
         "ontology": "hsapdv"
       },
       "customField": "plugin::ebi-ols.ontology-term"
+    },
+    "resources": {
+      "type": "component",
+      "repeatable": true,
+      "component": "data.resource"
     }
   }
 }
