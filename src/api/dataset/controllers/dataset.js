@@ -41,7 +41,7 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
           fields: ['name', 'slug'],
         },
         data: {
-          fields: ['format', 'file_type']
+          fields: ['type']
         },
       }
     };
@@ -60,6 +60,7 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
           fields: ['name', 'slug'],
         },
         data: true,
+        resources: true,
       }
     };
     const dataset = await super.findOne(ctx);
