@@ -42,6 +42,11 @@
     },
     "email": {
       "type": "email"
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
     }
   }
 }

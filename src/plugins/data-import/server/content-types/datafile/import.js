@@ -1,5 +1,6 @@
 'use strict';
 
+const { ApplicationError } = require('@strapi/utils').errors;
 const array = require('lodash/array');
 const collection = require('lodash/collection');
 const object = require('lodash/object');
@@ -22,10 +23,10 @@ const getEbiFieldData = async (data, ontology) => {
   ({options} = res);
 
   if (error) {
-    throw new Error(error);
+    throw new ApplicationError(error);
   }
   else if (!options || !options.length){
-    throw new Error(`Provided data ${q} does not match to any ontology`);
+    throw new ApplicationError(`Provided data ${q} does not match to any ontology`);
   }
 
   if (label){
@@ -34,7 +35,7 @@ const getEbiFieldData = async (data, ontology) => {
     );
   }
   if (options.length > 1){
-    throw new Error(`Provided data ${q} does not match to a single ontology`);
+    throw new ApplicationError(`Provided data ${q} does not match to a single ontology`);
   }
 
   return options[0];
