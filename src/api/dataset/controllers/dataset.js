@@ -43,6 +43,9 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
         data: {
           fields: ['type']
         },
+        resources: {
+          fields: ['name', 'description', 'type', 'category', 'is_primary_data']
+        }
       }
     };
     return await super.find(ctx);

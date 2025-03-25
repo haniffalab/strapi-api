@@ -43,7 +43,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
       populate: {
         cover_image: true,
         publications: {
-          fields: ['title', 'doi', 'url', 'abstract'],
+          fields: ['title', 'doi', 'url', 'abstract', 'date', 'is_published', 'is_preprint'],
           populate: {
             journal: {
               fields: ['name'],
@@ -96,7 +96,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
       populate: {
         cover_image: true,
         publications: {
-          fields: ['title', 'doi', 'url', 'abstract'],
+          fields: ['title', 'doi', 'url', 'abstract', 'date', 'is_published', 'is_preprint'],
           populate: {
             journal: {
               fields: ['name'],
@@ -124,7 +124,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
         },
         datasets: {
           fields: ['name', 'description', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count'],
-          populate: ['media'],
+          populate: ['media', 'resources'],
         },
         resources: true
       },

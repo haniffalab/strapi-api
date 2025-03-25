@@ -27,7 +27,8 @@
     },
     "name": {
       "type": "string",
-      "unique": true
+      "unique": true,
+      "required": true
     },
     "uid": {
       "type": "uid",
