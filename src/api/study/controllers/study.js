@@ -124,7 +124,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
         },
         datasets: {
           fields: ['name', 'description', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count'],
-          populate: ['media', 'resources'],
+          populate: ['media', 'data', 'resources'],
         },
         resources: true
       },
