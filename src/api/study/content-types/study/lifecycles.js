@@ -13,6 +13,8 @@ module.exports = {
     event.params.data.password = data.password?.length ?
       bcrypt.hashSync(data.password, 10) :
       null;
+
+    event.state = data.datasets;
   },
   async beforeUpdate(event) {
     const { data, where } = event.params;
@@ -37,5 +39,29 @@ module.exports = {
           null;
       }
     }
+
+    event.state = data.datasets;
   },
+  // Update datasets' dataset_id when connecting/disconnecting to/from study
+  async afterCreate(event) {
+    const datasets = event.state;
+    for (const idx in datasets) {
+      await strapi.entityService.update('api::dataset.dataset', datasets[idx], {
+        data: { study: event.result.id }
+      });
+    }
+  },
+  async afterUpdate(event) {
+    const { disconnect, connect } = event.state;
+    for (const idx in disconnect) {
+      await strapi.entityService.update('api::dataset.dataset', disconnect[idx].id, {
+        data: { study: null }
+      });
+    }
+    for (const idx in connect) {
+      await strapi.entityService.update('api::dataset.dataset', connect[idx].id, {
+        data: { study: event.result.id }
+      });
+    }
+  }
 };

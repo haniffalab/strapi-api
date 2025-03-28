@@ -21,7 +21,9 @@
       "configurable": false
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "unique": true,
+      "required": true
     },
     "logo": {
       "type": "media",

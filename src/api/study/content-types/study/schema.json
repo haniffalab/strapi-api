@@ -98,6 +98,11 @@
       "type": "customField",
       "customField": "plugin::custom-fields.customPassword",
       "private": true
+    },
+    "resources": {
+      "type": "component",
+      "repeatable": true,
+      "component": "data.resource"
     }
   }
 }

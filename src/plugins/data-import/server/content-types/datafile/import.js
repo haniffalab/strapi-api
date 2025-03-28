@@ -56,9 +56,10 @@ const createOrUpdate = async (uid, entry, datafile_id, publish_on_import) => {
   entry.datafile = datafile_id;
 
   // Search for entry in database
-  const ctFields = Object.keys(attrs)
-    .filter((k) => attrs[k].type !== 'component');
-  const entityData = object.pick(entry, ctFields);
+  // keep all fields that are not component
+  const componentFields = Object.keys(attrs)
+    .filter((k) => attrs[k].type === 'component');
+  const entityData = object.omit(entry, componentFields);
 
   const data = await strapi.service(uid).findByUid({params: entityData})
     .catch((e) => { throw e; });
