@@ -10,7 +10,7 @@ module.exports = {
       });
 
     event.params.data.uid = uid;
-    event.params.data.dataset_id = data.study?.connect?.[0] || null + ':' + uid;
+    event.params.data.dataset_id = (data.study?.connect?.[0]?.id || null) + ':' + uid;
   },
   async beforeUpdate(event) {
     const { data, where } = event.params;
