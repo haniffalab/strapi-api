@@ -1,0 +1,41 @@
+{
+  "collectionName": "components_data_resources",
+  "info": {
+    "displayName": "resource",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "url": {
+      "type": "string"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "link",
+        "file"
+      ],
+      "default": "link",
+      "required": true
+    },
+    "is_primary_data": {
+      "type": "boolean",
+      "default": false
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "repository",
+        "other"
+      ],
+      "default": "other"
+    }
+  }
+}
