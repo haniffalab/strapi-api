@@ -30,6 +30,7 @@ jobs:
       GCS_PUBLIC_FILES: ${{ secrets.GCS_PUBLIC_FILES }}
       GCS_UNIFORM: ${{ secrets.GCS_UNIFORM }}
       GCS_SERVICE_ACCOUNT: ${{ secrets.GCP_SA_KEY }}
+      SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
 
     steps:
       - uses: actions/checkout@v3

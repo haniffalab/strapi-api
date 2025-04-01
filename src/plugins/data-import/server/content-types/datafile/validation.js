@@ -71,11 +71,12 @@ const validateEntry = async (uid, entry, parents, is_component=false) => {
   }
 
   // Check if unrecognized fields are present
+  // log but don't throw error
   const unrecognized = array.difference(Object.keys(entry), Object.keys(attrs));
   if (unrecognized.length) {
     console.log('Unrecognized fields', parents.concat([unrecognized]));
-    throw new ValidationError('Unrecognized fields ' +
-      unrecognized + ' in ' + parents.join('>'));
+    // throw new ValidationError('Unrecognized fields ' +
+    //   unrecognized + ' in ' + parents.join('>'));
   }
 
   // Check all required fields are present

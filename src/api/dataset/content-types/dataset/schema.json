@@ -23,7 +23,7 @@
     "name": {
       "type": "string",
       "required": true,
-      "unique": true
+      "unique": false
     },
     "description": {
       "type": "text"
@@ -59,7 +59,7 @@
     },
     "uid": {
       "type": "uid",
-      "targetField": "name",
+      "targetField": "dataset_id",
       "required": true
     },
     "metadata": {
@@ -120,6 +120,15 @@
         "ontology": "hsapdv"
       },
       "customField": "plugin::ebi-ols.ontology-term"
+    },
+    "resources": {
+      "type": "component",
+      "repeatable": true,
+      "component": "data.resource"
+    },
+    "dataset_id": {
+      "type": "string",
+      "unique": true
     }
   }
 }
