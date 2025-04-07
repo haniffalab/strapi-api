@@ -43,24 +43,29 @@ module.exports = {
     event.state = data.datasets;
   },
   // Update datasets' dataset_id when connecting/disconnecting to/from study
+
+  // If created through admin event.state will be an object with connect, disconnect
+  // If created through import plugin datasets will be an array of ids
   async afterCreate(event) {
-    const datasets = event.state;
+    let datasets = event.state;
+    if (!Array.isArray(datasets)){
+      datasets = datasets.connect?.map((d) => d.id) || [];
+    }
     for (const idx in datasets) {
       await strapi.entityService.update('api::dataset.dataset', datasets[idx], {
-        data: { study: event.result.id }
+        data: {} // study id will already be added to the dataset
       });
     }
   },
   async afterUpdate(event) {
-    const { disconnect, connect } = event.state;
-    for (const idx in disconnect) {
-      await strapi.entityService.update('api::dataset.dataset', disconnect[idx].id, {
-        data: { study: null }
-      });
+    let datasets = event.state;
+    if (!Array.isArray(datasets)){
+      const {connect = [], disconnect = []} = datasets;
+      datasets = [...connect.map((d) => d.id), ...disconnect.map((d) => d.id)];
     }
-    for (const idx in connect) {
-      await strapi.entityService.update('api::dataset.dataset', connect[idx].id, {
-        data: { study: event.result.id }
+    for (const idx in datasets) {
+      await strapi.entityService.update('api::dataset.dataset', datasets[idx], {
+        data: {} // study id will already be added to the dataset
       });
     }
   }
