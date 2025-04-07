@@ -31,7 +31,15 @@ module.exports = {
           });
       }
 
-      event.params.data.dataset_id = (data.study?.connect?.[0] || entry.study?.id || null) + ':' + (event.params.data.uid || entry.uid);
+      const {connect, disconnect} = data.study || {};
+      let study_id = entry.study?.id || null;
+      if (connect?.length) {
+        study_id = connect[0].id;
+      }
+      if (disconnect?.length && disconnect[0].id === study_id) {
+        study_id = null;
+      }
+      event.params.data.dataset_id = (study_id) + ':' + (event.params.data.uid || entry.uid);
     }
   },
 };
