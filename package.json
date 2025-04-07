@@ -7,6 +7,7 @@
   "author": "Haniffa Lab",
   "scripts": {
     "build": "strapi build",
+    "dev": "npm run develop",
     "develop": "strapi develop",
     "gcp-build": "strapi build",
     "lint": "eslint --ext .js src",
