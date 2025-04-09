@@ -1,12 +1,13 @@
 {
   "name": "@haniffalab/strapi-api",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "description": "A backend API powered by Strapi, designed to manage and serve content within the Cherita infrastructure.",
   "license": "MIT",
   "author": "Haniffa Lab",
   "scripts": {
     "build": "strapi build",
+    "dev": "npm run develop",
     "develop": "strapi develop",
     "gcp-build": "strapi build",
     "lint": "eslint --ext .js src",
