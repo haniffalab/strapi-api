@@ -45,31 +45,17 @@
       "target": "api::study.study",
       "inversedBy": "datasets"
     },
-    "category": {
-      "type": "enumeration",
-      "enum": [
-        "scRNA-seq",
-        "CITE-seq",
-        "Smart-seq2",
-        "VDJ",
-        "Visium",
-        "Xenium",
-        "MERFISH"
-      ]
-    },
     "uid": {
       "type": "uid",
       "targetField": "dataset_id",
       "required": true
     },
+    "is_featured": {
+      "type": "boolean",
+      "default": false
+    },
     "metadata": {
       "type": "json"
-    },
-    "experiments": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::experiment.experiment",
-      "inversedBy": "datasets"
     },
     "data": {
       "type": "component",
@@ -99,6 +85,10 @@
     },
     "count": {
       "type": "integer"
+    },
+    "unit": {
+      "type": "string",
+      "default": "cell"
     },
     "diseases": {
       "type": "customField",
