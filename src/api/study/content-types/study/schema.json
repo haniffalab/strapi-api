@@ -37,21 +37,10 @@
       "relation": "oneToMany",
       "target": "api::publication.publication"
     },
-    "analyses": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::analysis.analysis"
-    },
     "uid": {
       "type": "uid",
       "targetField": "study_id",
       "required": true
-    },
-    "experiments": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::experiment.experiment",
-      "mappedBy": "study"
     },
     "datasets": {
       "type": "relation",
@@ -69,16 +58,10 @@
       "repeatable": true,
       "component": "contributions.people"
     },
-    "view_count": {
-      "type": "integer"
-    },
     "teams": {
       "type": "component",
       "repeatable": true,
       "component": "contributions.team"
-    },
-    "cell_count": {
-      "type": "integer"
     },
     "subtitle": {
       "type": "text"
