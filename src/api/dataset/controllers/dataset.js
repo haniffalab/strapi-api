@@ -61,6 +61,7 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
         media: true,
         study: {
           fields: ['name', 'slug'],
+          populate: ['disease_datasets']
         },
         data: true,
         resources: true,
