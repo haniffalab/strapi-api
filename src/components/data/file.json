@@ -6,6 +6,9 @@
   },
   "options": {},
   "attributes": {
+    "name": {
+      "type": "string"
+    },
     "url": {
       "type": "string"
     },
@@ -19,6 +22,10 @@
         "VitessceConfig"
       ],
       "required": true
+    },
+    "is_primary_data": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
