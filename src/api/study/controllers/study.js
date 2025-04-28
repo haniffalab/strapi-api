@@ -29,6 +29,11 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
       };
     }
 
+    ctx.query.filters = {
+      ...ctx.query.filters,
+      is_listed: true,
+    };
+
     ctx.query = {
       ...ctx.query,
       fields: [
