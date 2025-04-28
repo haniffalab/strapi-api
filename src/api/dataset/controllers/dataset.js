@@ -41,7 +41,7 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
           fields: ['name', 'slug'],
         },
         data: {
-          fields: ['type']
+          fields: ['name', 'type', 'is_primary_data']
         },
         resources: {
           fields: ['name', 'description', 'type', 'category', 'is_primary_data']
