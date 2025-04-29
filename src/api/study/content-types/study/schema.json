@@ -86,6 +86,10 @@
       "type": "component",
       "repeatable": true,
       "component": "data.resource"
+    },
+    "is_listed": {
+      "type": "boolean",
+      "default": true
     }
   }
 }
