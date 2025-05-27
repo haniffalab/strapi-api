@@ -162,7 +162,16 @@ module.exports = {
         id: { $in: ids },
       };
     }
-    
+
+    // If not providing a study id, return only datasets from studies that are listed
+    if (!ctx.query.filters?.study?.id?.$eq) {
+      ctx.query.filters = {
+        ...ctx.query.filters,
+        study: {
+          is_listed: true },
+      };
+    }
+
     const datasets = await strapi.entityService.findMany('api::dataset.dataset', {
       fields: [ontologyField],
       populate: {

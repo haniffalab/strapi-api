@@ -29,6 +29,11 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
       };
     }
 
+    ctx.query.filters = {
+      ...ctx.query.filters,
+      is_listed: true,
+    };
+
     ctx.query = {
       ...ctx.query,
       fields: [
@@ -37,8 +42,6 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
         'subtitle',
         'createdAt',
         'updatedAt',
-        'view_count',
-        'cell_count',
       ],
       populate: {
         cover_image: true,
@@ -70,7 +73,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
           },
         },
         datasets: {
-          fields: ['name', 'description', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count'],
+          fields: ['name', 'description', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count', 'unit'],
           populate: ['media'],
         },
         resources: {
@@ -93,8 +96,6 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
         'subtitle',
         'createdAt',
         'updatedAt',
-        'view_count',
-        'cell_count',
       ],
       populate: {
         cover_image: true,
@@ -126,7 +127,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
           },
         },
         datasets: {
-          fields: ['name', 'description', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count'],
+          fields: ['name', 'description', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count', 'unit'],
           populate: ['media', 'data', 'resources'],
         },
         resources: true

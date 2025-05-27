@@ -30,10 +30,19 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
       };
     }
 
+    // If not providing a study id, return only datasets from studies that are listed
+    if (!ctx.query.filters?.study?.id?.$eq) {
+      ctx.query.filters = {
+        ...ctx.query.filters,
+        study: {
+          is_listed: true },
+      };
+    }
+
     ctx.query = {
       ...ctx.query,
       fields: [
-        'name', 'category', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count', 'description'
+        'name', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count', 'unit', 'description', 'is_featured'
       ],
       populate: {
         media: true,
@@ -41,7 +50,7 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
           fields: ['name', 'slug'],
         },
         data: {
-          fields: ['type']
+          fields: ['name', 'type', 'is_primary_data']
         },
         resources: {
           fields: ['name', 'description', 'type', 'category', 'is_primary_data']
@@ -55,12 +64,13 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
     ctx.query = {
       ...ctx.query,
       fields: [
-        'name', 'category', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count', 'description'
+        'name', 'tissues', 'organisms', 'assays', 'diseases', 'celltypes', 'human_developmental_stages', 'count', 'unit', 'description', 'is_featured'
       ],
       populate: {
         media: true,
         study: {
           fields: ['name', 'slug'],
+          populate: ['disease_datasets']
         },
         data: true,
         resources: true,
