@@ -66,17 +66,6 @@
     "subtitle": {
       "type": "text"
     },
-    "cover_image": {
-      "type": "media",
-      "multiple": false,
-      "required": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
     "password": {
       "type": "customField",
       "customField": "plugin::custom-fields.customPassword",
@@ -90,6 +79,11 @@
     "is_listed": {
       "type": "boolean",
       "default": true
+    },
+    "cover_dataset": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::dataset.dataset"
     }
   }
 }
