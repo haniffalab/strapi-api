@@ -56,6 +56,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
         },
         teams: {
           fields: ['is_lead'],
+          filters: { team: { publishedAt: { $notNull: true } } },
           populate: {
             team: {
               fields: ['name', 'website', 'description'],
@@ -65,6 +66,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
         },
         contributors: {
           fields: ['is_lead', 'role'],
+          filters: { person: { publishedAt: { $notNull: true } } },
           populate: {
             person: {
               fields: ['first_name', 'last_name'],
@@ -114,6 +116,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
         },
         teams: {
           fields: ['is_lead'],
+          filters: { team: { publishedAt: { $notNull: true } } },
           populate: {
             team: {
               fields: ['name', 'website', 'description'],
@@ -123,6 +126,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
         },
         contributors: {
           fields: ['is_lead', 'role'],
+          filters: { person: { publishedAt: { $notNull: true } } },
           populate: {
             person: {
               fields: ['first_name', 'last_name'],
