@@ -11,31 +11,14 @@ const _ = require('lodash');
 module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
   async find(ctx) {
 
-    // Check if 'collection' query parameter is present
-    const { collection } = ctx.query;
-    if (collection) {
-      const collectionEntry = await strapi.db.query('api::collection.collection').findOne({
-        where: { name: collection },
-        populate: { studies: { populate: { datasets: { select: ['id'] } } } }
-      });
-
-      const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id)) || [];
-      if (!ids?.length) { return this.transformResponse([], {
-        pagination: { page: 1, total: 0, pageCount: 0, pageSize: ctx.query.pagination?.pageSize || 10 }
-      }); }
-
-      ctx.query.filters = {
-        ...ctx.query.filters,
-        id: { $in: ids },
-      };
-    }
-
     // If not providing a study id, return only datasets from studies that are listed
     if (!ctx.query.filters?.study?.id?.$eq) {
       ctx.query.filters = {
         ...ctx.query.filters,
         study: {
-          is_listed: true },
+          ...(ctx.query.filters?.study || {}),
+          is_listed: true,
+        },
       };
     }
 
@@ -57,6 +40,27 @@ module.exports = createCoreController('api::dataset.dataset', ({ strapi }) => ({
         }
       }
     };
+
+    // Check if 'collection' query parameter is present
+    // Add to query filters last to avoid spreading the ids array into an object
+    const { collection } = ctx.query;
+    if (collection) {
+      const collectionEntry = await strapi.db.query('api::collection.collection').findOne({
+        where: { name: collection },
+        populate: { studies: { populate: { datasets: { select: ['id'] } } } }
+      });
+
+      const ids = _.flatMap(collectionEntry?.studies, s => s.datasets.map(d => d.id)) || [];
+      if (!ids?.length) { return this.transformResponse([], {
+        pagination: { page: 1, total: 0, pageCount: 0, pageSize: ctx.query.pagination?.pageSize || 10 }
+      }); }
+
+      ctx.query.filters = {
+        ...ctx.query.filters,
+        id: { $in: ids },
+      };
+    }
+
     return await super.find(ctx);
   },
   async findOne(ctx) {
