@@ -10,25 +10,6 @@ const { NotFoundError } = require('@strapi/utils').errors;
 module.exports = createCoreController('api::study.study', ({ strapi }) => ({
   async find(ctx) {
 
-    // Check if 'collection' query parameter is present
-    const { collection } = ctx.query;
-    if (collection) {
-      const collectionEntry = await strapi.db.query('api::collection.collection').findOne({
-        where: { name: collection },
-        populate: { studies: { select: ['id'] } },
-      });
-
-      const ids = collectionEntry?.studies.map(({ id }) => id) || [];
-      if (!ids?.length) { return this.transformResponse([], {
-        pagination: { page: 1, total: 0, pageCount: 0, pageSize: ctx.query.pagination?.pageSize || 10 }
-      }); }
-
-      ctx.query.filters = {
-        ...ctx.query.filters,
-        id: { $in: ids },
-      };
-    }
-
     ctx.query.filters = {
       ...ctx.query.filters,
       is_listed: true,
@@ -87,6 +68,27 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
         }
       },
     };
+
+    // Check if 'collection' query parameter is present
+    // Add to query filters last to avoid spreading the ids array into an object
+    const { collection } = ctx.query;
+    if (collection) {
+      const collectionEntry = await strapi.db.query('api::collection.collection').findOne({
+        where: { name: collection },
+        populate: { studies: { select: ['id'] } },
+      });
+
+      const ids = collectionEntry?.studies.map(({ id }) => id) || [];
+      if (!ids?.length) { return this.transformResponse([], {
+        pagination: { page: 1, total: 0, pageCount: 0, pageSize: ctx.query.pagination?.pageSize || 10 }
+      }); }
+
+      ctx.query.filters = {
+        ...ctx.query.filters,
+        id: { $in: ids },
+      };
+    }
+
     return await super.find(ctx);
   },
   async findOne(ctx) {
