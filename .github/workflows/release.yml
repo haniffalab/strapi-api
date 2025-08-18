@@ -12,7 +12,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # needed for tags
+          fetch-depth: 0
+          token: ${{ secrets.GH_PAC }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -25,5 +26,5 @@ jobs:
 
       - name: Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAC }}
         run: npx semantic-release
