@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.2.0](https://github.com/haniffalab/strapi-api/compare/v1.1.9...v1.2.0) (2025-08-18)
+
+
+### Features
+
+* support multiple files for version bump ([462c7b2](https://github.com/haniffalab/strapi-api/commit/462c7b2bc0d09602da610b418c479abea232df2b))
+
 ## [1.1.9](https://github.com/haniffalab/strapi-api/compare/v1.1.8...v1.1.9) (2025-08-18)
 
 
