@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.8](https://github.com/haniffalab/strapi-api/compare/v1.1.7...v1.1.8) (2025-08-18)
+
+
+### Bug Fixes
+
+* pass updated version to prep script ([dc18c47](https://github.com/haniffalab/strapi-api/commit/dc18c476ad43b9e91e2fe0c6fe08eb2a058537bb))
+
 ## [1.1.7](https://github.com/haniffalab/strapi-api/compare/v1.1.6...v1.1.7) (2025-08-18)
 
 
