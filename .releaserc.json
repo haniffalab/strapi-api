@@ -20,7 +20,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "node prepare-release.js"
+        "prepareCmd": "node prepare-release.js ${nextRelease.version}"
       }
     ],
     [
