@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/haniffalab/strapi-api/compare/v1.2.1...v1.2.2) (2025-08-18)
+
+
+### Bug Fixes
+
+* again remove v prefix from releases ([dc2d70d](https://github.com/haniffalab/strapi-api/commit/dc2d70db178d8f379f69a0704a5a219cf6f17b7a))
+
 ## [1.2.1](https://github.com/haniffalab/strapi-api/compare/v1.2.0...v1.2.1) (2025-08-18)
 
 
