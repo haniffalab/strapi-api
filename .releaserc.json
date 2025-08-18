@@ -37,7 +37,7 @@
     ],
     [
       "@semantic-release/github",
-      { "releaseName": "${nextRelease.gitTag.replace(/^v/, '')}" }
+      { "releaseNameTemplate": "<%= nextRelease.version %>" }
     ]
   ]
 }
