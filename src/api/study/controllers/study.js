@@ -1,13 +1,13 @@
-"use strict";
+'use strict';
 
 /**
  *  study controller
  */
 
-const { createCoreController } = require("@strapi/strapi").factories;
-const { NotFoundError } = require("@strapi/utils").errors;
+const { createCoreController } = require('@strapi/strapi').factories;
+const { NotFoundError } = require('@strapi/utils').errors;
 
-module.exports = createCoreController("api::study.study", ({ strapi }) => ({
+module.exports = createCoreController('api::study.study', ({ strapi }) => ({
   async find(ctx) {
     ctx.query.filters = {
       ...ctx.query.filters,
@@ -16,67 +16,67 @@ module.exports = createCoreController("api::study.study", ({ strapi }) => ({
 
     ctx.query = {
       ...ctx.query,
-      fields: ["name", "slug", "lay_summary", "createdAt", "updatedAt"],
+      fields: ['name', 'slug', 'lay_summary', 'createdAt', 'updatedAt'],
       populate: {
         cover_image: true,
         publications: {
           fields: [
-            "title",
-            "doi",
-            "url",
-            "abstract",
-            "date",
-            "is_published",
-            "is_preprint",
+            'title',
+            'doi',
+            'url',
+            'abstract',
+            'date',
+            'is_published',
+            'is_preprint',
           ],
           populate: {
             journal: {
-              fields: ["name"],
-              populate: ["logo"],
+              fields: ['name'],
+              populate: ['logo'],
             },
           },
         },
         teams: {
-          fields: ["is_lead"],
+          fields: ['is_lead'],
           filters: { team: { publishedAt: { $notNull: true } } },
           populate: {
             team: {
-              fields: ["name", "website", "description"],
-              populate: ["logo"],
+              fields: ['name', 'website', 'description'],
+              populate: ['logo'],
             },
           },
         },
         contributors: {
-          fields: ["is_lead", "role"],
+          fields: ['is_lead', 'role'],
           filters: { person: { publishedAt: { $notNull: true } } },
           populate: {
             person: {
-              fields: ["first_name", "last_name"],
-              populate: ["avatar"],
+              fields: ['first_name', 'last_name'],
+              populate: ['avatar'],
             },
           },
         },
         datasets: {
           fields: [
-            "name",
-            "description",
-            "tissues",
-            "organisms",
-            "assays",
-            "diseases",
-            "celltypes",
-            "human_developmental_stages",
-            "count",
-            "unit",
+            'name',
+            'description',
+            'tissues',
+            'organisms',
+            'assays',
+            'diseases',
+            'celltypes',
+            'human_developmental_stages',
+            'count',
+            'unit',
           ],
-          populate: ["media"],
+          populate: ['media'],
         },
         resources: {
-          fields: ["name", "description", "type", "category"],
+          fields: ['name', 'description', 'type', 'category'],
         },
         cover_dataset: {
           fields: [false],
-          populate: ["media"],
+          populate: ['media'],
         },
       },
     };
@@ -86,10 +86,10 @@ module.exports = createCoreController("api::study.study", ({ strapi }) => ({
     const { collection } = ctx.query;
     if (collection) {
       const collectionEntry = await strapi.db
-        .query("api::collection.collection")
+        .query('api::collection.collection')
         .findOne({
           where: { name: collection },
-          populate: { studies: { select: ["id"] } },
+          populate: { studies: { select: ['id'] } },
         });
 
       const ids = collectionEntry?.studies.map(({ id }) => id) || [];
@@ -119,79 +119,79 @@ module.exports = createCoreController("api::study.study", ({ strapi }) => ({
       ...ctx.query,
       filters: { slug },
       fields: [
-        "name",
-        "slug",
-        "lay_summary",
-        "cover_video",
-        "createdAt",
-        "updatedAt",
+        'name',
+        'slug',
+        'lay_summary',
+        'cover_video',
+        'createdAt',
+        'updatedAt',
       ],
       populate: {
         cover_image: true,
         cover_video: true,
         publications: {
           fields: [
-            "title",
-            "doi",
-            "url",
-            "abstract",
-            "date",
-            "is_published",
-            "is_preprint",
+            'title',
+            'doi',
+            'url',
+            'abstract',
+            'date',
+            'is_published',
+            'is_preprint',
           ],
           populate: {
             journal: {
-              fields: ["name"],
-              populate: ["logo"],
+              fields: ['name'],
+              populate: ['logo'],
             },
           },
         },
         teams: {
-          fields: ["is_lead"],
+          fields: ['is_lead'],
           filters: { team: { publishedAt: { $notNull: true } } },
           populate: {
             team: {
-              fields: ["name", "website", "description"],
-              populate: ["logo"],
+              fields: ['name', 'website', 'description'],
+              populate: ['logo'],
             },
           },
         },
         contributors: {
-          fields: ["is_lead", "role"],
+          fields: ['is_lead', 'role'],
           filters: { person: { publishedAt: { $notNull: true } } },
           populate: {
             person: {
-              fields: ["first_name", "last_name"],
-              populate: ["avatar"],
+              fields: ['first_name', 'last_name'],
+              populate: ['avatar'],
             },
           },
         },
         datasets: {
           fields: [
-            "name",
-            "description",
-            "tissues",
-            "organisms",
-            "assays",
-            "diseases",
-            "celltypes",
-            "human_developmental_stages",
-            "count",
-            "is_featured",
-            "unit",
+            'name',
+            'description',
+            'tissues',
+            'organisms',
+            'assays',
+            'diseases',
+            'celltypes',
+            'human_developmental_stages',
+            'count',
+            'is_featured',
+            'unit',
           ],
-          populate: ["media", "data", "resources"],
+          populate: ['media', 'data', 'resources'],
         },
         resources: true,
         cover_dataset: {
           fields: [],
-          populate: ["media"],
+          populate: ['media'],
         },
       },
     };
 
     const [study] = await strapi.entityService.findMany(
-      "api::study.study",
+      'api::study.study',
       query
     );
 
@@ -199,15 +199,15 @@ module.exports = createCoreController("api::study.study", ({ strapi }) => ({
     const { collection } = ctx.query;
     if (collection) {
       const collectionEntry = await strapi.db
-        .query("api::collection.collection")
+        .query('api::collection.collection')
         .findOne({
           where: { name: collection },
-          populate: { studies: { select: ["id"] } },
+          populate: { studies: { select: ['id'] } },
         });
 
       const ids = collectionEntry?.studies.map(({ id }) => id) || [];
       if (!ids.length || !ids.includes(study.id)) {
-        throw new NotFoundError("Study not found in collection");
+        throw new NotFoundError('Study not found in collection');
       }
     }
 
