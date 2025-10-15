@@ -63,8 +63,9 @@
       "repeatable": true,
       "component": "contributions.team"
     },
-    "subtitle": {
-      "type": "text"
+    "lay_summary": {
+      "type": "text",
+      "maxLength": 400
     },
     "password": {
       "type": "customField",
@@ -84,6 +85,10 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::dataset.dataset"
+    },
+    "cover_video": {
+      "type": "string",
+      "regex": "^https"
     }
   }
 }
