@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.3.0](https://github.com/haniffalab/strapi-api/compare/v1.2.0...v1.3.0) (2025-11-07)
+
+
+### Features
+
+* add media component and add media field to study ([818ade2](https://github.com/haniffalab/strapi-api/commit/818ade2dc4f74cfbcefd4329af96e2b4b4fd4040))
+
 # [1.2.0](https://github.com/haniffalab/strapi-api/compare/v1.1.5...v1.2.0) (2025-08-19)
 
 ### Bug Fixes
