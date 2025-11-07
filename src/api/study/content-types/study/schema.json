@@ -89,6 +89,11 @@
     "cover_video": {
       "type": "string",
       "regex": "^https"
+    },
+    "media": {
+      "type": "component",
+      "repeatable": true,
+      "component": "data.media"
     }
   }
 }

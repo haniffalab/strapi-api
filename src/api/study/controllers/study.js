@@ -183,6 +183,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
           populate: ['media', 'data', 'resources'],
         },
         resources: true,
+        media: { fields: ['title', 'type'], populate: ['file']},
         cover_dataset: {
           fields: [],
           populate: ['media'],
