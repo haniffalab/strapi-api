@@ -9,10 +9,14 @@ const { NotFoundError } = require('@strapi/utils').errors;
 
 module.exports = createCoreController('api::study.study', ({ strapi }) => ({
   async find(ctx) {
-    ctx.query.filters = {
-      ...ctx.query.filters,
-      is_listed: true,
-    };
+
+    // If not providing a dataset id, return only studies that are listed
+    if (!ctx.query.filters?.datasets?.id?.$eq){
+      ctx.query.filters = {
+        ...ctx.query.filters,
+        is_listed: true,
+      };
+    }
 
     ctx.query = {
       ...ctx.query,
