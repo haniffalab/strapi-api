@@ -161,8 +161,20 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
           filters: { person: { publishedAt: { $notNull: true } } },
           populate: {
             person: {
-              fields: ['first_name', 'last_name'],
-              populate: ['avatar'],
+              fields: [
+                'first_name',
+                'last_name',
+                'full_name',
+                'email',
+                'orcid_id',
+                'position',
+              ],
+              populate: {
+                avatar: true,
+                team: {
+                  fields: ['name', 'website'],
+                },
+              },
             },
           },
         },
