@@ -6,7 +6,7 @@ module.exports = {
       handler: 'api::study.study.findResource',
       config: {
         policies: ['api::study.password'],
-      }
+      },
     },
     {
       method: 'GET',
@@ -14,7 +14,7 @@ module.exports = {
       handler: 'api::study.study.findMedia',
       config: {
         policies: ['api::study.password'],
-      }
+      },
     },
-  ]
+  ],
 };

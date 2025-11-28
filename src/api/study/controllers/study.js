@@ -9,9 +9,8 @@ const { NotFoundError } = require('@strapi/utils').errors;
 
 module.exports = createCoreController('api::study.study', ({ strapi }) => ({
   async find(ctx) {
-
     // If not providing a dataset id, return only studies that are listed
-    if (!ctx.query.filters?.datasets?.id?.$eq){
+    if (!ctx.query.filters?.datasets?.id?.$eq) {
       ctx.query.filters = {
         ...ctx.query.filters,
         is_listed: true,
@@ -199,7 +198,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
           populate: ['media', 'data', 'resources'],
         },
         resources: true,
-        media: { fields: ['title', 'type'], populate: ['file']},
+        media: { fields: ['title', 'type'], populate: ['file'] },
         cover_dataset: {
           fields: [],
           populate: ['media'],
@@ -236,31 +235,29 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
     // Try to find resource in study
     let resource = await strapi.db.query('api::study.study').findOne({
       where: { slug, resources: { id: rid } },
-      populate: { resources: { where: { id: rid } } }
+      populate: { resources: { where: { id: rid } } },
     });
 
     // Try to find resource in datasets of the study
     if (!resource) {
       resource = await strapi.db.query('api::dataset.dataset').findOne({
         where: { study: { slug }, resources: { id: rid } },
-        populate: { resources: { where: { id: rid } } }
+        populate: { resources: { where: { id: rid } } },
       });
       if (resource) resource.resources[0]['dataset_id'] = resource.id;
     }
 
     return this.transformResponse(resource?.resources[0] || null);
-
   },
   async findMedia(ctx) {
     const { slug, mid } = ctx.params;
 
-    // Try to find resource in study
+    // Try to find media in study
     const media = await strapi.db.query('api::study.study').findOne({
       where: { slug, media: { id: mid } },
-      populate: { media: { where: { id: mid }, populate: ['file'] } }
+      populate: { media: { where: { id: mid }, populate: ['file'] } },
     });
-    
-    return this.transformResponse(media?.media[0] || null);
 
+    return this.transformResponse(media?.media[0] || null);
   },
 }));
