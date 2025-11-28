@@ -1,5 +1,17 @@
 # Changelog
 
+# [1.4.0](https://github.com/haniffalab/strapi-api/compare/v1.3.0...v1.4.0) (2025-11-28)
+
+
+### Bug Fixes
+
+* allow finding unlisted studies when providing a dataset id ([66e0565](https://github.com/haniffalab/strapi-api/commit/66e05652100a5f93b694835585b147edae5f54f4))
+
+
+### Features
+
+* populate person and team fields to close [#75](https://github.com/haniffalab/strapi-api/issues/75) ([d7b55c5](https://github.com/haniffalab/strapi-api/commit/d7b55c5e73f9d978e8d808896f1d2d988d3d021d))
+
 # [1.3.0](https://github.com/haniffalab/strapi-api/compare/v1.2.0...v1.3.0) (2025-11-07)
 
 
