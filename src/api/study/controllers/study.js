@@ -230,4 +230,36 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
 
     return this.transformResponse(study);
   },
+  async findResource(ctx) {
+    const { slug, rid } = ctx.params;
+
+    // Try to find resource in study
+    let resource = await strapi.db.query('api::study.study').findOne({
+      where: { slug, resources: { id: rid } },
+      populate: { resources: { where: { id: rid } } }
+    });
+
+    // Try to find resource in datasets of the study
+    if (!resource) {
+      resource = await strapi.db.query('api::dataset.dataset').findOne({
+        where: { study: { slug }, resources: { id: rid } },
+        populate: { resources: { where: { id: rid } } }
+      });
+    }
+
+    return this.transformResponse(resource?.resources[0] || null);
+
+  },
+  async findMedia(ctx) {
+    const { slug, mid } = ctx.params;
+
+    // Try to find resource in study
+    const media = await strapi.db.query('api::study.study').findOne({
+      where: { slug, media: { id: mid } },
+      populate: { media: { where: { id: mid }, populate: ['file'] } }
+    });
+    
+    return this.transformResponse(media?.media[0] || null);
+
+  },
 }));
