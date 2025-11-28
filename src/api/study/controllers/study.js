@@ -245,6 +245,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
         where: { study: { slug }, resources: { id: rid } },
         populate: { resources: { where: { id: rid } } }
       });
+      if (resource) resource.resources[0]['dataset_id'] = resource.id;
     }
 
     return this.transformResponse(resource?.resources[0] || null);
