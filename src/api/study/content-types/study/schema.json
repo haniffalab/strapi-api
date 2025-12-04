@@ -94,6 +94,9 @@
       "type": "component",
       "repeatable": true,
       "component": "data.media"
+    },
+    "landing_page": {
+      "type": "richtext"
     }
   }
 }
