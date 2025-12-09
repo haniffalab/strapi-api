@@ -127,6 +127,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
         'slug',
         'lay_summary',
         'cover_video',
+        'landing_page',
         'createdAt',
         'updatedAt',
       ],
