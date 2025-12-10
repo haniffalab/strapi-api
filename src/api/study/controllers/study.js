@@ -9,9 +9,8 @@ const { NotFoundError } = require('@strapi/utils').errors;
 
 module.exports = createCoreController('api::study.study', ({ strapi }) => ({
   async find(ctx) {
-
     // If not providing a dataset id, return only studies that are listed
-    if (!ctx.query.filters?.datasets?.id?.$eq){
+    if (!ctx.query.filters?.datasets?.id?.$eq) {
       ctx.query.filters = {
         ...ctx.query.filters,
         is_listed: true,
@@ -79,7 +78,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
           fields: ['name', 'description', 'type', 'category'],
         },
         cover_dataset: {
-          fields: [false],
+          fields: ['id'],
           populate: ['media'],
         },
       },
@@ -112,6 +111,33 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
         ...ctx.query.filters,
         id: { $in: ids },
       };
+    }
+
+    // If sorting by publication date, get studies and manually sort
+    // as nested sorting returns duplicates (https://github.com/strapi/strapi/issues/11892)
+    const [sort, order = 'asc'] = ctx.query.sort?.split(':') || [];
+    if (sort === 'publications.date') {
+      const studies = await strapi.entityService.findMany(
+        'api::study.study',
+        ctx.query
+      );
+
+      studies.sort((a, b) => {
+        const aLatest = Math.max(
+          ...(a.publications || []).map((p) => new Date(p.date)),
+          0
+        );
+        const bLatest = Math.max(
+          ...(b.publications || []).map((p) => new Date(p.date)),
+          0
+        );
+        return order === 'asc' ? aLatest - bLatest : bLatest - aLatest;
+      });
+
+      const { results: paginatedStudies, meta } =
+        strapi.config.functions.paginate(studies, ctx.query.pagination || {});
+
+      return this.transformResponse(paginatedStudies, meta);
     }
 
     return await super.find(ctx);
@@ -200,7 +226,7 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
           populate: ['media', 'data', 'resources'],
         },
         resources: true,
-        media: { fields: ['title', 'type'], populate: ['file']},
+        media: { fields: ['title', 'type'], populate: ['file'] },
         cover_dataset: {
           fields: [],
           populate: ['media'],
