@@ -106,7 +106,7 @@ module.exports = {
       if (authType === 'Basic') {
         const base64Credentials = authHeader.split(' ')[1];
         const decodedCredentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
-        const [_username, password] = decodedCredentials.split(':');
+        const [, password] = decodedCredentials.split(':');
   
         if (!password) {
           return 'Password is required';
@@ -199,5 +199,21 @@ module.exports = {
     }, {}));
     
     return terms;
-  }
+  },
+
+  paginate(results, { page = 1, pageSize = 25 }) {
+    const paginatedResults = results.slice(
+      (page - 1) * pageSize,
+      page * pageSize
+    );
+    const meta = {
+      pagination: {
+        page: page,
+        total: results.length,
+        pageCount: Math.ceil(results.length / pageSize),
+        pageSize: pageSize,
+      }
+    };
+    return { results: paginatedResults, meta };
+  },
 };
