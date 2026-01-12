@@ -1,5 +1,18 @@
 # Changelog
 
+# [1.5.0](https://github.com/haniffalab/strapi-api/compare/v1.4.0...v1.5.0) (2026-01-12)
+
+
+### Bug Fixes
+
+* add TRANSFER_TOKEN_SALT to env in github workflows ([7f0f528](https://github.com/haniffalab/strapi-api/commit/7f0f528a9e5b8041ec607b296e1d3011d5d30cc1)), closes [#25](https://github.com/haniffalab/strapi-api/issues/25)
+
+
+### Features
+
+* add markdown landing_page field to study to hold mdx strings ([c5d540a](https://github.com/haniffalab/strapi-api/commit/c5d540aa9c5d23582c7e6d230e143550be656ecc))
+* add sorting to studies by publication date ([42bd634](https://github.com/haniffalab/strapi-api/commit/42bd634274d48f48b77a1d2ef8c16369e752c784))
+
 # [1.4.0](https://github.com/haniffalab/strapi-api/compare/v1.3.0...v1.4.0) (2025-11-28)
 
 
