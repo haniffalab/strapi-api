@@ -119,7 +119,10 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
     if (sort === 'publications.date') {
       const studies = await strapi.entityService.findMany(
         'api::study.study',
-        ctx.query
+        {
+          ...ctx.query,
+          sort: null
+        }
       );
 
       studies.sort((a, b) => {
