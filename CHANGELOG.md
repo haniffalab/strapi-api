@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/haniffalab/strapi-api/compare/v1.5.0...v1.5.1) (2026-01-22)
+
+
+### Bug Fixes
+
+* remove sort from query when fetching studies to sort by publication date ([607a27e](https://github.com/haniffalab/strapi-api/commit/607a27e4968a8a10193090dd2ee47d9078e05e76))
+
 # [1.5.0](https://github.com/haniffalab/strapi-api/compare/v1.4.0...v1.5.0) (2026-01-12)
 
 
