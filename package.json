@@ -1,6 +1,6 @@
 {
   "name": "@haniffalab/strapi-api",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "description": "A backend API powered by Strapi, designed to manage and serve content within the Cherita infrastructure.",
   "license": "MIT",
