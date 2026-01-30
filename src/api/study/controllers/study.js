@@ -117,15 +117,18 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
     // as nested sorting returns duplicates (https://github.com/strapi/strapi/issues/11892)
     const [sort, order = 'asc'] = ctx.query.sort?.split(':') || [];
     if (sort === 'publications.date') {
-      const studies = await strapi.entityService.findMany(
+      const studiesDates = await strapi.entityService.findMany(
         'api::study.study',
         {
-          ...ctx.query,
-          sort: null
+          fields: ['id'],
+          populate: {
+            publications: { fields: ['date'] },
+          },
+          filters: ctx.query.filters,
         }
       );
 
-      studies.sort((a, b) => {
+      studiesDates.sort((a, b) => {
         const aLatest = Math.max(
           ...(a.publications || []).map((p) => new Date(p.date)),
           0
@@ -137,10 +140,23 @@ module.exports = createCoreController('api::study.study', ({ strapi }) => ({
         return order === 'asc' ? aLatest - bLatest : bLatest - aLatest;
       });
 
-      const { results: paginatedStudies, meta } =
-        strapi.config.functions.paginate(studies, ctx.query.pagination || {});
+      const { results: paginatedStudiesDates, meta } =
+        strapi.config.functions.paginate(studiesDates, ctx.query.pagination || {});
 
-      return this.transformResponse(paginatedStudies, meta);
+      const paginatedIds = paginatedStudiesDates.map((s) => s.id);
+
+      let studies = await strapi.entityService.findMany('api::study.study', {
+        ...ctx.query,
+        filters: {
+          ...ctx.query.filters,
+          id: { $in: paginatedIds },
+        },
+        sort: null,
+      });
+
+      studies = paginatedIds.map((id) => studies.find((s) => s.id === id));
+
+      return this.transformResponse(studies, meta);
     }
 
     return await super.find(ctx);
