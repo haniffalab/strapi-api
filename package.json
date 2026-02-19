@@ -49,10 +49,6 @@
     "eslint": "^8.56.0",
     "semantic-release": "^24.2.7"
   },
-  "engines": {
-    "node": ">=14.19.1 <=24.x.x",
-    "npm": ">=6.0.0"
-  },
   "strapi": {
     "uuid": "ef523884-e001-4354-862a-d889fbe73214"
   }
