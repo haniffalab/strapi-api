@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.5.2](https://github.com/haniffalab/strapi-api/compare/v1.5.1...v1.5.2) (2026-02-24)
+
+
+### Bug Fixes
+
+* add .npmrc file ([af8436d](https://github.com/haniffalab/strapi-api/commit/af8436da985d48b496be5ce2c1849e449b99cb8d))
+* remove engines from package.json ([af0030a](https://github.com/haniffalab/strapi-api/commit/af0030ad553c7f9e613b108b17ba358d4c8dbd2e))
+* sorting studies by date first sorting with only date fields to lighten query ([c00adab](https://github.com/haniffalab/strapi-api/commit/c00adabd626ec640cef412d8602fa4687a34a2a0))
+* update nodejs version ([369a661](https://github.com/haniffalab/strapi-api/commit/369a66138dbb690699955726df10d9b261d59d01))
+* update workflows google actions versions ([15e8735](https://github.com/haniffalab/strapi-api/commit/15e873509e2fab35ffb789783df0cc21fc78636d))
+
 ## [1.5.1](https://github.com/haniffalab/strapi-api/compare/v1.5.0...v1.5.1) (2026-01-22)
 
 
