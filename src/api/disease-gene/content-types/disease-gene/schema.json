@@ -43,7 +43,9 @@
         "moderate",
         "strong",
         "definitive",
-        "unspecified"
+        "unspecified",
+        "refuted",
+        "disputed"
       ],
       "default": "unspecified"
     },
